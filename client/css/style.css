@@ -96,12 +96,16 @@ a {
     color: #57b201 !important;
     font-size: 1.5em !important;
 }
+
 .login-button {
     display: inline-block;
     background-color: #42A5F5;
-    padding: 5px 15px;
-    border-radius: 10px;
+    padding: 1px;
+    border-radius: 6px;
+    font-size: 25px !important;
+    margin-left: 10px;
 }
+
 .login-button:hover {
     background-color: #3f8302;
     transition: .4s;
@@ -138,4 +142,54 @@ a {
 .card .btn-dark {
     background-color: #57b201 !important;
     font-size: 12px !important;
+}
+
+/* MODALS */
+
+.modal-content {
+    color: #979797 !important;
+    background-color: #101010;
+    border: 1px solid #222222;
+}
+.modal-header {
+    border-bottom: 1px solid #222222;
+}
+.modal-footer {
+    border-top: 1px solid #222222;
+}
+.modal-footer .btn-primary {
+    background-color: #57b201;
+    border-color: rgba(87, 178, 1, 0.5);
+}
+.modal-content input, .modal-content select {
+    background-color: #0a1610;
+    color: #d2d2d2;
+    font-weight: bold;
+    border: 1px solid #0a1610;
+    outline: none !important;
+}
+.modal-content input:focus, .modal-content select:focus {
+    background-color: #0a1610;
+    color: #d2d2d2;
+    border: 1px solid #0a1610;
+    outline: none !important;
+}
+.btn-close {
+    color: #ffffff !important;
+}
+.modal-content .form-control:focus {
+    border: 1px solid #57b201;
+    box-shadow: none;
+}
+
+.modal-title i {
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #0c252a;
+    color: #ffffff;
+    text-align: center;
+    line-height: 38px;
+    margin-right: 9px;
 }

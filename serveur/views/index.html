@@ -40,10 +40,13 @@
                 </div>
                 <ul class="navbar-nav nav-perso-droit">
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Devenir membre</a>
+                    <a type="button" class="btn btn-primary nav-link login-button" data-bs-toggle="modal" data-bs-target="#inscriptionModal" >
+                        <i class="bi bi-person-plus"></i>
+                    </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link login-button" href="#">Connexion</a>
+                        <a type="button" class="btn btn-primary nav-link login-button" data-bs-toggle="modal" data-bs-target="#connexionModal">
+                            <i class="bi bi-box-arrow-in-left"></i></a>
                     </li>
                 </ul>
             </div>
@@ -133,7 +136,88 @@
         </div>
         <!-- Fin du modal pour rechercher les films d'un réalisateur-->
 
+
+
+
     </main>
+    <div class="modal fade  " id="inscriptionModal" tabindex="-1" aria-labelledby="inscriptionModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="inscriptionModalLabel"><i class="bi bi-person-plus"></i> Devenir Membre</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-4">
+                        <label for="firstname" class="form-label">Votre prénom *</label>
+                        <input type="text" id="firstname" class="form-control" aria-describedby="firstnameHelpBlock" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="lastname" class="form-label" >Votre nom *</label>
+                        <input type="text" id="lastname" class="form-control" aria-describedby="lastnameHelpBlock" required>
+
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="address" class="form-label">Votre adresse *</label>
+                        <input type="text" id="address" class="form-control" aria-describedby="addressHelpBlock" required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="sex" class="form-label">Votre sex</label>
+                        <select id="sex" class="form-control" >
+                            <option value=""></option>
+                            <option value="homme">Homme</option>
+                            <option value="femme">Femme</option>
+                            <option value="">Autre</option>
+                        </select>
+                    </div>
+
+                    <div class="form-text text-warning">
+                        Les champs avec (*) sont obligatoires !
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-primary">Enregistrer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Connexion -->
+    <div class="modal fade  " id="connexionModal" tabindex="-1" aria-labelledby="connexionModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form>
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="connexionModalLabel"><i class="bi bi-box-arrow-in-left"></i> Se Connecter</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-4">
+                            <label for="email" class="form-label">Votre E-mail *</label>
+                            <input type="email" id="email" class="form-control" aria-describedby="emailHelpBlock" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="password" class="form-label" >Votre password *</label>
+                            <input type="password" id="password" class="form-control" aria-describedby="passwordHelpBlock" required>
+
+                        </div>
+
+
+                        <div class="form-text text-warning">
+                            Les champs avec (*) sont obligatoires !
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                        <button type="button" class="btn btn-primary">Se connecter</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Fin Modal Connexion-->
     <footer>
         <p>© 2024 - Cocktello</p>
     </footer>

@@ -8,4 +8,7 @@ const __dirname = path.dirname(__filename);
 export const index = async (req,res)=>{
     res.sendFile(path.join(__dirname, "../views/index.html"));
 }
+export const admin = async (req,res)=>{
+    res.sendFile(path.join(__dirname, "../views/admin.html"));
+}
 

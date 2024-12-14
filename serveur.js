@@ -6,6 +6,8 @@ import { fileURLToPath } from "url";
 import cocktailRouter from "./serveur/routes/cocktailRouter.js";
 import mainRouter from "./serveur/routes/mainRouter.js";
 import adminRouter from "./serveur/routes/adminRouter.js";
+import memberRouter from "./serveur/routes/membreRouter.js";
+
 
 const app = express();
 
@@ -18,6 +20,7 @@ app.use(express.static(path.join(__dirname, "client")));
 app.use(express.json())
 app.use("/", mainRouter);
 app.use("/admin",adminRouter);
+app.use("/membres",memberRouter);
 app.use("/cocktails",cocktailRouter);
 
 
