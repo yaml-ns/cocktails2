@@ -1,6 +1,5 @@
 import { afficherCocktailsParPagination } from "./affichage.js";
 
-// Récupérer la liste des éléments
 const requeteListerCocktails = async () => {
   try {
     const response = await fetch("http://127.0.0.1:3000/cocktails");
@@ -46,4 +45,88 @@ function requeteAvecFiltres() {
   });
 }
 
-export { requeteListerCocktails, requeteAvecFiltres };
+const register = ()=>{
+  const form = document.querySelector("#inscriptionForm");
+  const erreurs = document.querySelector("#erreursInscription");
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+    try {
+      fetch('/membres/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      }).then((response)=>{
+        response.json().then((result)=>{
+          if (!response.ok) {
+            erreurs.innerHTML = result.errors
+                .map((err) => {
+                      return `<p class="alert alert-danger" role="alert">
+                                <i class="bi bi-exclamation-triangle-fill text-danger"></i>
+                                ${err.msg}
+                               </p>`
+                }).join("");
+          } else {
+            alert('Login réussie !');
+            form.reset();
+          }
+        });
+      });
+
+    } catch (error) {
+      console.error('Erreur lors de l\'inscription', error);
+      erreurs.textContent = 'Une erreur est survenue.';
+    }
+
+  })
+
+}
+const login = ()=>{
+  const form = document.querySelector("#loginForm");
+  const erreurs = document.querySelector("#erreursLogin");
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+    try {
+      fetch('/membres/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      }).then((response)=>{
+        response.json().then((result)=>{
+          if (!response.ok) {
+            erreurs.innerHTML = result.errors
+                .map((err) => {
+                  return `<p class="alert alert-danger" role="alert">
+                                <i class="bi bi-exclamation-triangle-fill text-danger"></i>
+                                ${err.msg}
+                               </p>`
+                }).join("");
+          } else {
+            alert("Vous êtes connecté !")
+            form.reset();
+          }
+        });
+
+
+      });
+
+    } catch (error) {
+      console.error('Erreur lors de la connexion', error);
+      erreurs.innerHTML = `<p class="alert alert-danger" role="alert">Une erreur est survenue.</p>`;
+    }
+
+  })
+
+}
+
+export { requeteListerCocktails, requeteAvecFiltres,register,login };

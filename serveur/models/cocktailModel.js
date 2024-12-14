@@ -1,19 +1,48 @@
 import {readData, writeData} from "../../services/cocktailDataReader.js";
+import connexion from "../../services/connexion.js";
+
+const processRows = async (rows)=> {
+
+    const cocktails = []
+    let cocktail = null;
+    rows.forEach(row => {
+        if (cocktail === null || cocktail.id !== row.id) {
+            cocktail = {
+                id: row.id,
+                nom: row.nom,
+                type: row.type,
+                prix: row.prix,
+                image: row.image,
+                ingredients: []
+            };
+            cocktails.push(cocktail);
+        }
+        if (row.ingredient) {
+            cocktail.ingredients.push(row.ingredient);
+        }
+    });
+    return cocktails
+}
 
 export const getAll = async (filters)=>{
-    const data =   await readData();
-    return filter(data, filters)
+    const [rows] = await connexion.query(`SELECT c.*, i.ingredient FROM cocktails c 
+                                          LEFT JOIN ingredients i 
+                                          ON c.id = i.cocktail_id`);
+
+    return await processRows(rows);
 }
 export const getById = async (id)=>{
-    const cocktails = await readData();
-    return cocktails.find((item)=> item.id === id)
+    const rows = await connexion.query(`SELECT c.*, i.ingredient FROM cocktails c 
+                                          LEFT JOIN ingredients i 
+                                          ON c.id = i.cocktail_id
+                                          WHERE c.id = ?`,[id])
+    const cocktails = await processRows(rows[0]);
+    return cocktails[0];
 }
 
 export const deleteById = async (id)=>{
-    const cocktails = await readData();
-    const index = cocktails.findIndex((item)=> item.id === id);
-    cocktails.splice(index,1);
-    await writeData(JSON.stringify(cocktails));
+    const rows = await connexion.query(`SELECT FROM WHERE cocktails.id = ?`,[id])
+    console.log()
 }
 
 export const createCocktail = async (cocktail)=>{

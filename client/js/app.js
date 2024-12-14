@@ -1,12 +1,15 @@
-import { requeteListerCocktails, requeteAvecFiltres } from "./modules/requetes.js";
+import {requeteListerCocktails, requeteAvecFiltres, register, login} from "./modules/requetes.js";
 import { afficherDetailsCocktail } from "./modules/affichage.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
 
-  const conteneur = document.querySelector("#mainContent");
+  register();
+  login();
+
+    const conteneur = document.querySelector("#mainContent");
     await requeteListerCocktails();
 
-  conteneur.addEventListener("click", async (e) => {
+    conteneur.addEventListener("click", async (e) => {
     const card = e.target.closest(".card");
     if (!card) return;
 
@@ -29,17 +32,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
 
-$("#filter input, #filter select").on("input",(e)=>{
-
-  if(e.target.id ==="nom" && e.target.value.length >=3){
-    requeteAvecFiltres();
-  }
-  if (e.target.value.length === 0){
-     requeteListerCocktails()
-  }else{
-    requeteAvecFiltres()
-  }
-})
+// $("#filter input, #filter select").on("input",(e)=>{
+//
+//   if(e.target.id ==="nom" && e.target.value.length >=3){
+//     requeteAvecFiltres();
+//   }
+//   if (e.target.value.length === 0){
+//      requeteListerCocktails()
+//   }else{
+//     requeteAvecFiltres()
+//   }
+// })
 
 
 

@@ -140,36 +140,52 @@
 
 
     </main>
+    <!-- Modal Inscription -->
     <div class="modal fade  " id="inscriptionModal" tabindex="-1" aria-labelledby="inscriptionModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
+                <form id="inscriptionForm">
                 <div class="modal-header">
                     <h5 class="modal-title" id="inscriptionModalLabel"><i class="bi bi-person-plus"></i> Devenir Membre</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="mb-4">
+                    <div id="erreursInscription"></div>
+                    <div class="mb-3 input-group">
                         <label for="firstname" class="form-label">Votre prénom *</label>
-                        <input type="text" id="firstname" class="form-control" aria-describedby="firstnameHelpBlock" required>
+                        <input type="text" name="firstname" id="firstname" class="form-control" aria-describedby="firstnameHelpBlock" required>
                     </div>
-                    <div class="mb-4">
+                    <div class="mb-3 input-group">
                         <label for="lastname" class="form-label" >Votre nom *</label>
-                        <input type="text" id="lastname" class="form-control" aria-describedby="lastnameHelpBlock" required>
+                        <input type="text" name="lastname" id="lastname" class="form-control" aria-describedby="lastnameHelpBlock" required>
 
                     </div>
+                    <div class="mb-3 input-group">
+                        <label for="email" class="form-label" >Votre Email *</label>
+                        <input type="email" name="email" id="email" class="form-control" aria-describedby="courrielHelpBlock" required>
+                    </div>
 
-                    <div class="mb-4">
+                    <div class="mb-3 input-group">
                         <label for="address" class="form-label">Votre adresse *</label>
-                        <input type="text" id="address" class="form-control" aria-describedby="addressHelpBlock" required>
+                        <input type="text" id="address" name="address" class="form-control" aria-describedby="addressHelpBlock" required>
                     </div>
-                    <div class="mb-4">
-                        <label for="sex" class="form-label">Votre sex</label>
-                        <select id="sex" class="form-control" >
+                    <div class="mb-3 input-group">
+                        <label for="sex" class="form-label">Votre sexe</label>
+                        <select id="sex" name="sex" class="form-control" >
                             <option value=""></option>
                             <option value="homme">Homme</option>
                             <option value="femme">Femme</option>
                             <option value="">Autre</option>
                         </select>
+                    </div>
+
+                    <div class="mb-3 input-group">
+                        <label for="password" class="form-label" >Mot de passe *</label>
+                        <input type="password" id="password" name="password" class="form-control" aria-describedby="register_passwordHelpBlock" required>
+                    </div>
+                    <div class="mb-3 input-group">
+                        <label for="repeat_password" class="form-label" >Répéter le mot de passe *</label>
+                        <input type="password" id="repeat_password" name="repeat_password" class="form-control" aria-describedby="repeat_passwordHelpBlock" required>
                     </div>
 
                     <div class="form-text text-warning">
@@ -178,32 +194,33 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <button type="button" class="btn btn-primary">Enregistrer</button>
+                    <button type="submit" class="btn btn-primary" id="registerBtn">Enregistrer</button>
                 </div>
+                </form>
             </div>
         </div>
     </div>
+    <!-- Fin Modal Inscription -->
 
     <!-- Modal Connexion -->
     <div class="modal fade  " id="connexionModal" tabindex="-1" aria-labelledby="connexionModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <form>
+                <form id="loginForm">
                     <div class="modal-header">
                         <h5 class="modal-title" id="connexionModalLabel"><i class="bi bi-box-arrow-in-left"></i> Se Connecter</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
                     </div>
                     <div class="modal-body">
+                        <div id="erreursLogin"></div>
                         <div class="mb-4">
-                            <label for="email" class="form-label">Votre E-mail *</label>
-                            <input type="email" id="email" class="form-control" aria-describedby="emailHelpBlock" required>
+                            <label for="login_email"  class="form-label">Votre E-mail *</label>
+                            <input type="email" name="email" id="login_email" class="form-control" aria-describedby="loginEmailHelpBlock" required>
                         </div>
                         <div class="mb-4">
-                            <label for="password" class="form-label" >Votre password *</label>
-                            <input type="password" id="password" class="form-control" aria-describedby="passwordHelpBlock" required>
-
+                            <label for="login_password" class="form-label" >Votre password *</label>
+                            <input type="password" name="password" id="login_password" class="form-control" aria-describedby="loginPasswordHelpBlock" required>
                         </div>
-
 
                         <div class="form-text text-warning">
                             Les champs avec (*) sont obligatoires !
@@ -211,7 +228,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                        <button type="button" class="btn btn-primary">Se connecter</button>
+                        <button type="submit" class="btn btn-primary">Se connecter</button>
                     </div>
                 </form>
             </div>
