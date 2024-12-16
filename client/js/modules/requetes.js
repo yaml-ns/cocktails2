@@ -1,13 +1,16 @@
 import { afficherCocktailsParPagination } from "./affichage.js";
 
+
+const isAdmin = document.querySelector("#admin")
 const requeteListerCocktails = async () => {
+
   try {
     const response = await fetch("http://127.0.0.1:3000/cocktails");
     if (!response.ok) {
       throw new Error("Erreur lors de la récupération des données");
     }
     const cocktails = await response.json();
-    afficherCocktailsParPagination(cocktails);
+    afficherCocktailsParPagination(cocktails,isAdmin);
   } catch (erreur) {
     console.log("Erreur lors de la requête:", erreur);
     return [];
@@ -29,11 +32,9 @@ function requeteAvecFiltres() {
     type: 'GET',
     data: { id, nom, ingredient, minPrix, maxPrix, orderBy, order },
     success: function (data) {
-      console.log(data)
-
       $('#contenu').empty();
       if (data.length > 0) {
-        afficherCocktailsParPagination(data)
+        afficherCocktailsParPagination(data,isAdmin)
 
       } else {
         $('#contenu').append('<p class="text-center">Aucun cocktail trouvé</p>');
@@ -48,6 +49,8 @@ function requeteAvecFiltres() {
 const register = ()=>{
   const form = document.querySelector("#inscriptionForm");
   const erreurs = document.querySelector("#erreursInscription");
+
+  if (!form) return;
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();
@@ -90,6 +93,7 @@ const login = ()=>{
   const form = document.querySelector("#loginForm");
   const erreurs = document.querySelector("#erreursLogin");
 
+  if (!form) return;
   form.addEventListener("submit", (e) => {
     e.preventDefault();
     const formData = new FormData(form);

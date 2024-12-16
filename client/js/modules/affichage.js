@@ -26,6 +26,41 @@ const creerCard = (cocktail) => {
                 </div>
 `;
 }
+const creerCardAdmin = (cocktail) => {
+    let ingredients = "";
+    for (let ingredient of cocktail.ingredients){
+        ingredients += `<span class="badge me-1 text-bg-dark">${ingredient}</span>`
+    }
+
+    return `<div class="card-horizontal col-12" >
+                <img src="${cocktail.image}" class="card-img-top card-img" alt="${cocktail.nom}">
+                <div class="card-body row">
+                    <div class="col-4">
+                        <h5 class="card-title">${cocktail.id} - ${cocktail.nom}</h5>
+                    </div>
+                    <div class="col-4">                   
+                        <p class="card-text" style="text-align: left">${ingredients}</p>
+                    </div>
+                    <div class="col-4">
+                        <p class="card-text" style="text-align: left; font-weight: bold">${cocktail.prix} $</p>
+                    </div>
+                </div>
+                <div class="buttons">
+                    <button class="btn btn-outline-primary btn-modifier" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#cocktailModal"
+                    data-bs-type="update"
+                    data-bs-id="${cocktail.id}"
+                    >
+                        <i class="bi bi-pencil" data-id="${cocktail.id}"></i>
+                    </button>
+                    <button class="btn btn-outline-danger btn-supprimer" onClick="reqSupprimer(${cocktail.id});">
+                        <i class="bi bi-trash" data-id="${cocktail.id}"></i>
+                    </button>
+                </div>
+            </div>
+`;
+}
 
 const afficherListeCocktailsCards = (cocktails) => {
     let listeCards = "";
@@ -34,22 +69,29 @@ const afficherListeCocktailsCards = (cocktails) => {
     }
     document.getElementById("contenu").innerHTML = listeCards;
 }
+const afficherListeCocktailsCardsAdmin = (cocktails) => {
+    let listeCards ="";
+    for (const cocktail of cocktails) {
+      listeCards += creerCardAdmin(cocktail);
+    }
+    document.getElementById("contenu").innerHTML = listeCards;
+}
 
  
-const afficherCocktailsParPagination = (cocktails) => {
+const afficherCocktailsParPagination = (cocktails,admin) => {
   // Pagination
-  const nbCocktailsPage = 10;
+  const nbCocktailsPage = admin?4:10;
   let pageCourrante = 1;
+  const afficher = admin ? afficherListeCocktailsCardsAdmin:afficherListeCocktailsCards
 
-  // Afficher la première page de la liste
-  afficherPage(cocktails, pageCourrante, nbCocktailsPage, afficherListeCocktailsCards);
+  afficherPage(cocktails, pageCourrante, nbCocktailsPage, afficher);
 
   // Générer les boutons de pagination
   genererPagination(
     cocktails,
     nbCocktailsPage,
     afficherPage,
-    afficherListeCocktailsCards,
+    afficher,
     pageCourrante
   );
 };

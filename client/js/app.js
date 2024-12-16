@@ -32,17 +32,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
 
-// $("#filter input, #filter select").on("input",(e)=>{
-//
-//   if(e.target.id ==="nom" && e.target.value.length >=3){
-//     requeteAvecFiltres();
-//   }
-//   if (e.target.value.length === 0){
-//      requeteListerCocktails()
-//   }else{
-//     requeteAvecFiltres()
-//   }
-// })
+$("#filter input, #filter select").on("input",(e)=>{
+
+  if(e.target.id ==="nom" && e.target.value.length >=3){
+    requeteAvecFiltres();
+  }
+  if (e.target.value.length === 0){
+     requeteListerCocktails()
+  }else{
+    requeteAvecFiltres()
+  }
+})
 
 
 

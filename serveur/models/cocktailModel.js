@@ -1,34 +1,10 @@
 import {readData, writeData} from "../../services/cocktailDataReader.js";
 import connexion from "../../services/connexion.js";
 
-const processRows = async (rows)=> {
 
-    const cocktails = []
-    let cocktail = null;
-    rows.forEach(row => {
-        if (cocktail === null || cocktail.id !== row.id) {
-            cocktail = {
-                id: row.id,
-                nom: row.nom,
-                type: row.type,
-                prix: row.prix,
-                image: row.image,
-                ingredients: []
-            };
-            cocktails.push(cocktail);
-        }
-        if (row.ingredient) {
-            cocktail.ingredients.push(row.ingredient);
-        }
-    });
-    return cocktails
-}
 
 export const getAll = async (filters)=>{
-    const [rows] = await connexion.query(`SELECT c.*, i.ingredient FROM cocktails c 
-                                          LEFT JOIN ingredients i 
-                                          ON c.id = i.cocktail_id`);
-
+    const [rows] = await filteredCocktails(filters)
     return await processRows(rows);
 }
 export const getById = async (id)=>{
@@ -99,4 +75,67 @@ function sortCocktails(data,orderBy,order = "ASC"){
         }
         return 0;
     });
+}
+
+const filteredCocktails = async (filters)=>{
+    let query = `SELECT c.*, i.ingredient FROM cocktails c 
+                          LEFT JOIN ingredients i 
+                          ON c.id = i.cocktail_id
+                          WHERE 1
+                          `
+    const params = []
+    const { id, nom, ingredient,alcohol, minPrix,maxPrix, orderBy, order } = filters;
+
+
+    if (id){
+        query += ` AND c.id = ?`;
+        params.push(id)
+    }
+    if (nom){
+        query += ` AND c.nom LIKE ?`;
+        params.push(`${nom}%`)
+    }
+
+    if (ingredient){
+        query += ` AND i.ingredient LIKE ?`;
+        params.push(params.push(`%${ingredient}%`))
+    }
+    if (minPrix){
+        query += ` AND c.prix >= ?`;
+        params.push(minPrix)
+    }
+    if (maxPrix){
+        query += ` AND c.prix <= ?`;
+        params.push(maxPrix)
+    }
+    if (orderBy){
+        query += ` Order By c.${orderBy}`;
+        if (order){
+            query += ` ${order}`;
+        }
+    }
+    return connexion.query(query, params);
+}
+
+const processRows = async (rows)=> {
+
+    const cocktails = []
+    let cocktail = null;
+    rows.forEach(row => {
+        if (cocktail === null || cocktail.id !== row.id) {
+            cocktail = {
+                id: row.id,
+                nom: row.nom,
+                type: row.type,
+                prix: row.prix,
+                image: row.image,
+                ingredients: []
+            };
+            cocktails.push(cocktail);
+        }
+        if (row.ingredient) {
+            cocktail.ingredients.push(row.ingredient);
+        }
+    });
+    return cocktails
 }

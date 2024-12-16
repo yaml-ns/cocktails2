@@ -39,6 +39,12 @@ export const getCocktail = async (req,res)=>{
         res.json({status: "erreur", message:"Oups ! Cocktail non trouvé."})
     }
 }
+export const updateCocktail = async (req,res)=>{
+    const cocktail = await getById(parseInt(req.params.id))
+    console.log(cocktail)
+    res.statusCode = 400
+    res.json({message:"Okeyyyyy"})
+}
 
 export const deleteCocktail = async (req,res)=>{
     const cocktail = await getById(parseInt(req.params.id))
