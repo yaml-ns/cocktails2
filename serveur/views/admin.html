@@ -134,8 +134,8 @@
 
 
 </main>
-<!-- Modal Inscription -->
-<div class="modal fade" id="cocktailModal" tabindex="-1" aria-labelledby="cocktailModalLabel" aria-hidden="true">
+<!-- Modal Cocktail -->
+<div class="modal fade" id="cocktailModal" tabindex="-1" aria-labelledby="cocktailModalLabel">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <form id="cocktailForm">
@@ -147,7 +147,7 @@
                     <div id="erreursCocktail"></div>
                     <div class="mb-3 input-group">
                         <label for="name" class="form-label">Nom *</label>
-                        <input type="text" name="name" id="name" class="form-control" aria-describedby="nameHelpBlock" required>
+                        <input type="text" name="nom" id="name" class="form-control" aria-describedby="nameHelpBlock" required>
                     </div>
                     <div class="mb-3 input-group">
                         <label for="prix" class="form-label" >Prix *</label>
@@ -156,7 +156,7 @@
                     </div>
                     <div class="mb-3 input-group">
                         <label for="ingredients" class="form-label" >Ingrédients</label>
-                        <input type="text" name="prix" id="ingredients" class="form-control" aria-describedby="ingredientsHelpBlock"
+                        <input type="text" name="ingredients" id="ingredients" class="form-control" aria-describedby="ingredientsHelpBlock"
                         placeholder="Exemple : citron,menthe,gingembre">
                     </div>
 
@@ -185,6 +185,28 @@
     </div>
 </div>
 <!-- Fin Modal cocktail -->
+<!-- Modal Confirmation Suppression Cocktail -->
+<div class="modal fade" id="cocktailDeleteModal" tabindex="-1" aria-labelledby="cocktailDeleteModalLabel">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-trash-fill"></i>  <span id="cocktailDeleteModalTitle">Supprimer un cocktail</span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="erreursCocktailDelete"></div>
+                    <p class="mb-2 text-center text-danger fs-1"><i class="bi bi-exclamation-triangle-fill "></i> <b>Attention !</b></p>
+                    <p class="mb-1 text-center">Vous êtes sur le point de supprimer le cocktail <b> " <span id="cocktailName"></span> "</b></p>
+                    <p class="mb-1 text-center">Voulez-vous vraiment procéder à la suppression ?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-danger" id="deleteBtn">Supprimer</button>
+                </div>
+        </div>
+    </div>
+</div>
+<!-- Fin Modal confirmation suppression cocktail -->
 
 <footer>
     <p>© 2024 - Cocktello</p>
@@ -192,69 +214,8 @@
 
 <script>
 
-    const cocktailModal = document.getElementById('cocktailModal')
-    cocktailModal.addEventListener('show.bs.modal', event => {
-        const button = event.relatedTarget
-        const recipient = button.getAttribute('data-bs-type')
-        const modalTitle = cocktailModal.querySelector('#cocktailModalTitle')
-        const registerBtn = cocktailModal.querySelector('#registerBtn')
-        const imageLabel = cocktailModal.querySelector('#imageFileLabel')
-        if (recipient ==="new"){
-        modalTitle.textContent = `Ajouter un nouveau cocktail`
-        registerBtn.textContent = `Ajouter`
-        imageLabel.textContent = `Insérer une image`
-            registerBtn.addEventListener('click',(e)=>{
-                e.preventDefault();
-                console.log("new submitted")
-            })
-        }
 
-        if (recipient ==="update"){
-            modalTitle.textContent = `Mettre à jour un cocktail`;
-            registerBtn.textContent = `Mettre à jour`;
-            imageLabel.textContent = `Modifier l'image du cocktail`;
-            const cocktailId = button.getAttribute('data-bs-id')
-            fetchCocktail(cocktailId).then((cocktail)=>{
-                document.querySelector("#name").value = cocktail.nom;
-                document.querySelector("#prix").value = cocktail.prix;
-                document.querySelector("#type").value = cocktail.type.toLowerCase();
-                document.querySelector("#ingredients").value = cocktail.ingredients.join(",");
 
-                registerBtn.addEventListener('click',(e)=>{
-                    e.preventDefault();
-
-                    updateCocktail(cocktailId,cocktail).then((res)=>{
-                        console.log(res)
-                    }).catch((err)=>{
-                        console.log(err)
-                    })
-                })
-
-            }).catch((err)=>{
-                console.log(err)
-            });
-
-        }
-
-    })
-
-    cocktailModal.addEventListener('hidden.bs.modal', function (event) {
-        document.querySelector("#cocktailForm").reset();
-    })
-    const fetchCocktail = async (id)=>{
-        const res = await fetch(`/cocktails/${id}`)
-        return res.json();
-    }
-    const updateCocktail = async (id,data)=>{
-        const res = await fetch(`/cocktails/${id}`,{
-            method: "put",
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data)
-        })
-        return res.json();
-    }
 </script>
 
 </body>

@@ -1,4 +1,4 @@
-import {deleteById, getAll, getById} from "../models/cocktailModel.js";
+import {deleteById, getAll, getById, create, getByName, update} from "../models/cocktailModel.js";
 import {readData, writeData} from "../../services/cocktailDataReader.js";
 
 
@@ -19,11 +19,17 @@ export const getCocktails = async (req,res)=>{
 export const createCocktail = async (req,res)=>{
     const cocktail = req.body;
     try {
-        const cocktails = await readData();
-        cocktails.push(cocktail)
-        await writeData(JSON.stringify(cocktails,null,2))
-        res.statusCode = 201;
-        res.json(cocktail)
+
+        const cocktail_existe = await getByName(cocktail.nom)
+        if (cocktail_existe){
+            res.statusCode = 400;
+            res.json({ok:false,message: "Un cocktail du même nom existe déjà !"})
+        }
+        const r = await create(cocktail)
+        if (r){
+            res.statusCode = 201;
+            res.json(cocktail)
+        }
     }catch (e){
         console.log(e);
         res.statusCode = 500;
@@ -40,17 +46,33 @@ export const getCocktail = async (req,res)=>{
     }
 }
 export const updateCocktail = async (req,res)=>{
-    const cocktail = await getById(parseInt(req.params.id))
-    console.log(cocktail)
+    const cocktail_exists = await getById(parseInt(req.params.id))
+    const cocktail = req.body
+
+    if (cocktail_exists){
+        try {
+            cocktail.id = cocktail_exists.id
+            const result = await update(cocktail)
+            if (result >=1){
+                res.statusCode = 200;
+                res.json({ok:true,message:"Cocktail mis à jour avec succès !"})
+            }
+        }catch (e){
+            console.log(e)
+            res.statusCode = 500
+            res.json({ok:false,message:"Une erreur est survenue !"})
+        }
+    }else{
     res.statusCode = 400
-    res.json({message:"Okeyyyyy"})
+    res.json({ok:false,message:"Cocktail non trouvé !"})
+    }
 }
 
 export const deleteCocktail = async (req,res)=>{
     const cocktail = await getById(parseInt(req.params.id))
     if (!cocktail){
         res.statusCode = 404;
-        res.json({status: "erreur", message:"Not found"})
+        res.json({status: "erreur", message:"Cocktail non trouvé !"})
     }else{
         await deleteById(cocktail.id)
         res.json({

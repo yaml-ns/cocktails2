@@ -51,10 +51,17 @@ const creerCardAdmin = (cocktail) => {
                     data-bs-target="#cocktailModal"
                     data-bs-type="update"
                     data-bs-id="${cocktail.id}"
+                    data-bs-name="${cocktail.nom}"
                     >
                         <i class="bi bi-pencil" data-id="${cocktail.id}"></i>
                     </button>
-                    <button class="btn btn-outline-danger btn-supprimer" onClick="reqSupprimer(${cocktail.id});">
+                    <button class="btn btn-outline-danger btn-supprimer" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#cocktailDeleteModal"
+                    data-bs-type="delete"
+                    data-bs-id="${cocktail.id}"
+                    data-bs-name="${cocktail.nom}"
+                    >
                         <i class="bi bi-trash" data-id="${cocktail.id}"></i>
                     </button>
                 </div>

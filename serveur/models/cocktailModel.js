@@ -1,8 +1,6 @@
 import {readData, writeData} from "../../services/cocktailDataReader.js";
 import connexion from "../../services/connexion.js";
 
-
-
 export const getAll = async (filters)=>{
     const [rows] = await filteredCocktails(filters)
     return await processRows(rows);
@@ -16,17 +14,35 @@ export const getById = async (id)=>{
     return cocktails[0];
 }
 
-export const deleteById = async (id)=>{
-    const rows = await connexion.query(`SELECT FROM WHERE cocktails.id = ?`,[id])
-    console.log()
+export const getByName = async (name)=>{
+
+    const rows = await connexion.query(`SELECT c.*, i.ingredient FROM cocktails c 
+                                          LEFT JOIN ingredients i 
+                                          ON c.id = i.cocktail_id
+                                          WHERE c.nom = ?`,[name])
+    const cocktails = await processRows(rows[0]);
+    return cocktails[0];
 }
 
-export const createCocktail = async (cocktail)=>{
+export const deleteById = async (id)=>{
+    const rows = await connexion.query(`DELETE FROM cocktails WHERE cocktails.id = ?`,[id])
+    return rows[0].affectedRows
+}
+
+export const create = async (cocktail)=>{
     const cocktails = await readData();
     cocktails.push(cocktail)
     await writeData(JSON.stringify(cocktails))
 }
 
+export const update = async (cocktail)=>{
+    const rows = await connexion.query(`UPDATE cocktails 
+                                               SET nom = ?, type = ?, prix = ?
+                                               WHERE id = ?`,
+                                               [cocktail.nom, cocktail.type, cocktail.prix, cocktail.id]
+                                               )
+    return rows[0].affectedRows;
+}
 
 function filter(data, filters){
     const { id, nom, ingredient,alcohol, minPrix,maxPrix, orderBy, order } = filters;
