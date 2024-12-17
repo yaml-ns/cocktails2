@@ -155,6 +155,7 @@ const updateRequest = ()=>{
       updateCocktail(cocktailIdToUpdate, data)
           .then((res) => {
             if (res.ok){
+              showToastSuccess("Cocktail mis à jour avec succès !")
               requeteListerCocktails().then(() => {
                 const modalInstance  = bootstrap.Modal.getOrCreateInstance(cocktailModal)
                 modalInstance.hide();
@@ -217,6 +218,7 @@ const createRequest = ()=>{
       createCocktail(data)
           .then((res) => {
             if (res.ok){
+              showToastSuccess("Cocktail créé avec succès")
               requeteListerCocktails().then(() => {
                 const modalInstance  = bootstrap.Modal.getOrCreateInstance(createCocktailModal)
                 modalInstance.hide();
@@ -256,6 +258,7 @@ const deleteRequest = ()=>{
     if (cocktailIdToDelete) {
       deleteCocktail(cocktailIdToDelete)
           .then(() => {
+            showToastSuccess("Cocktail supprimé avec succès")
             requeteListerCocktails().then(() => {
               const modalInstance  = bootstrap.Modal.getOrCreateInstance(cocktailDeleteModal)
               modalInstance.hide();
@@ -340,5 +343,23 @@ const displayErrors = (elem, errors)=>{
                       </p>`;
   }
 }
+const showToastSuccess = (message) =>{
+  const toastEl = document.getElementById('toastSuccess');
+  const toastBody = toastEl.querySelector('.toast-body');
+  toastBody.textContent = message || "Opération réussie !";
+  const toast = new bootstrap.Toast(toastEl,{
+    animation: true,
+    autohide: true,
+    delay: 3000
+  });
+  toast.show();
+}
 
+const showToastError = (message) =>{
+  const toastEl = document.getElementById('toastError');
+  const toastBody = toastEl.querySelector('.toast-body');
+  toastBody.textContent = message || "Une erreur est survenue.";
+  const toast = new bootstrap.Toast(toastEl);
+  toast.show();
+}
 export {requeteListerCocktails, requeteAvecFiltres, register, login, updateRequest, deleteRequest, createRequest};
