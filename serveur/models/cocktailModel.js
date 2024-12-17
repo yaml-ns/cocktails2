@@ -1,4 +1,3 @@
-import {readData, writeData} from "../../services/cocktailDataReader.js";
 import connexion from "../../services/connexion.js";
 
 export const getAll = async (filters)=>{
@@ -30,9 +29,11 @@ export const deleteById = async (id)=>{
 }
 
 export const create = async (cocktail)=>{
-    const cocktails = await readData();
-    cocktails.push(cocktail)
-    await writeData(JSON.stringify(cocktails))
+    const rows = await connexion.query(`INSERT INTO cocktails 
+                                               (nom, type, prix, image) VALUES(?,?,?,"https://www.thecocktaildb.com/images/media/drink/ewjxui1504820428.jpg")`,
+        [cocktail.nom, cocktail.type, cocktail.prix]
+    )
+    return rows[0].affectedRows;
 }
 
 export const update = async (cocktail)=>{
@@ -42,55 +43,6 @@ export const update = async (cocktail)=>{
                                                [cocktail.nom, cocktail.type, cocktail.prix, cocktail.id]
                                                )
     return rows[0].affectedRows;
-}
-
-function filter(data, filters){
-    const { id, nom, ingredient,alcohol, minPrix,maxPrix, orderBy, order } = filters;
-    let results = data;
-
-    if (id){
-        results = results.filter( cocktail =>  cocktail.id === parseInt(id));
-    }
-    if (nom){
-        results = results.filter(cocktail=> {
-            const pos = cocktail.nom.toLowerCase().indexOf(nom.toLowerCase());
-            return pos !==-1;
-        });
-    }
-
-    if (ingredient){
-        results = results.filter(cocktail =>
-            cocktail.ingredients.some(ing => ing.toLowerCase().includes(ingredient.toLowerCase()))
-        );
-    }
-    if (minPrix){
-        results = results.filter(cocktail => cocktail.prix >= parseFloat(minPrix))
-    }
-    if (maxPrix){
-        results = results.filter(cocktail => cocktail.prix <= parseFloat(maxPrix))
-    }
-
-    sortCocktails(results,orderBy,order)
-
-    return results
-
-}
-
-function sortCocktails(data,orderBy,order = "ASC"){
-
-    if (!orderBy) return data;
-
-    const isAscending = order.toUpperCase() === 'ASC' || order.trim() ==="";
-
-    return data.sort((a, b) => {
-        if (a[orderBy] < b[orderBy]) {
-            return isAscending ? -1 : 1;
-        }
-        if (a[orderBy] > b[orderBy]) {
-            return isAscending ? 1 : -1;
-        }
-        return 0;
-    });
 }
 
 const filteredCocktails = async (filters)=>{

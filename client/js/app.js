@@ -1,11 +1,21 @@
-import {requeteListerCocktails, requeteAvecFiltres, register, login} from "./modules/requetes.js";
+import {
+    requeteListerCocktails,
+    requeteAvecFiltres,
+    register,
+    login,
+    updateRequest,
+    deleteRequest,
+    createRequest
+} from "./modules/requetes.js";
 import { afficherDetailsCocktail } from "./modules/affichage.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
 
-  register();
-  login();
-
+    login();
+    register();
+    createRequest()
+    updateRequest();
+    deleteRequest();
     const conteneur = document.querySelector("#mainContent");
     await requeteListerCocktails();
 

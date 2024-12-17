@@ -1,5 +1,4 @@
 import {deleteById, getAll, getById, create, getByName, update} from "../models/cocktailModel.js";
-import {readData, writeData} from "../../services/cocktailDataReader.js";
 
 
 export const getCocktails = async (req,res)=>{
@@ -19,21 +18,22 @@ export const getCocktails = async (req,res)=>{
 export const createCocktail = async (req,res)=>{
     const cocktail = req.body;
     try {
-
         const cocktail_existe = await getByName(cocktail.nom)
         if (cocktail_existe){
             res.statusCode = 400;
-            res.json({ok:false,message: "Un cocktail du même nom existe déjà !"})
-        }
-        const r = await create(cocktail)
-        if (r){
-            res.statusCode = 201;
-            res.json(cocktail)
+            res.json({ok:false,errors: "Un cocktail du même nom existe déjà !"})
+        }else{
+            const r = await create(cocktail)
+            if (r===1){
+                res.statusCode = 201;
+                res.json({ok:true,message:"Cocktail crée avec succès"})
+            }
         }
     }catch (e){
         console.log(e);
         res.statusCode = 500;
-        res.json({error:"une erreur s'est produite"});
+        res.json({ok:false, errors:"une erreur s'est produite"});
+
     }
 }
 export const getCocktail = async (req,res)=>{

@@ -88,7 +88,7 @@
                     <button id="addCocktailBtn" class="btn btn-primary">
                         <i class="bi bi-plus-circle"
                            data-bs-toggle="modal"
-                           data-bs-target="#cocktailModal"
+                           data-bs-target="#createCocktailModal"
                            data-bs-type="new"
                            title="Ajouter un cocktail" >
                         </i>
@@ -104,41 +104,63 @@
 
     </section>
 
-    <!-- Modal pour rechercher les films d'un réalisateur-->
-    <div class="modal" id="modal_res" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Recherche des films d'un réalisateur</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form class="row g-3">
-                        <div class="col-md-8">
-                            <label for="res" class="form-label">Nom du réalisateur</label>
-                            <input type="text" class="form-control is-valid" id="res" name="res" value="" required>
-                            <div class="valid-feedback">
-                            </div>
-                        </div>
-                        <div class="col-12">
-                            <button class="btn btn-primary" type="button" id="btnEnvoyer">Envoyer</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Fin du modal pour rechercher les films d'un réalisateur-->
-
-
-
-
 </main>
-<!-- Modal Cocktail -->
-<div class="modal fade" id="cocktailModal" tabindex="-1" aria-labelledby="cocktailModalLabel">
+<!-- Create Modal Cocktail -->
+<div class="modal fade" id="createCocktailModal" tabindex="-1" aria-labelledby="createCocktailModalLabel">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <form id="cocktailForm">
+            <form id="createCocktailForm">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-cup-straw"></i>  Nouveau cocktail</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="erreursCreateCocktail"></div>
+                    <div class="mb-3 input-group">
+                        <label for="create_name" class="form-label">Nom *</label>
+                        <input type="text" name="nom" id="create_name" class="form-control" aria-describedby="nameHelpBlock" required>
+                    </div>
+                    <div class="mb-3 input-group">
+                        <label for="create_prix" class="form-label" >Prix *</label>
+                        <input type="text" name="prix" id="create_prix" class="form-control" aria-describedby="create_prixHelpBlock" required>
+
+                    </div>
+                    <div class="mb-3 input-group">
+                        <label for="create_ingredients" class="form-label" >Ingrédients</label>
+                        <input type="text" name="ingredients" id="create_ingredients" class="form-control" aria-describedby="create_ingredientsHelpBlock"
+                        placeholder="Exemple : citron,menthe,gingembre">
+                    </div>
+
+                    <div class="mb-3 input-group">
+                        <label for="create_type" class="form-label">Type</label>
+                        <select id="create_type" name="type" class="form-control" >
+                            <option value=""></option>
+                            <option value="alcoolisé">Alcoolisé</option>
+                            <option value="non alcoolisé">Non Alcoolisé</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="create_image" class="form-label" id="create_imageFileLabel">Image du cocktail</label>
+                        <input class="form-control form-control-sm" name="image" id="create_image" type="file">
+                    </div>
+                    <div class="form-text text-warning">
+                        Les champs avec (*) sont obligatoires !
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    <button type="submit" class="btn btn-primary" id="registerBtn">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Fin Modal create cocktail -->
+<!-- update Modal Cocktail -->
+<div class="modal fade" id="updateCocktailModal" tabindex="-1" aria-labelledby="updateCocktailModalLabel">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form id="updateCocktailForm">
                 <div class="modal-header">
                     <h5 class="modal-title"><i class="bi bi-cup-straw"></i>  <span id="cocktailModalTitle"></span></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
@@ -178,13 +200,13 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                    <button type="submit" class="btn btn-primary" id="registerBtn">Enregistrer</button>
+                    <button type="submit" class="btn btn-primary" id="updateBtn">Mettre à jour</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
-<!-- Fin Modal cocktail -->
+<!-- Fin Modal update cocktail -->
 <!-- Modal Confirmation Suppression Cocktail -->
 <div class="modal fade" id="cocktailDeleteModal" tabindex="-1" aria-labelledby="cocktailDeleteModalLabel">
     <div class="modal-dialog modal-dialog-centered">
