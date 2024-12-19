@@ -35,13 +35,16 @@ const creerCardAdmin = (cocktail) => {
     return `<div class="card-horizontal col-12" >
                 <img src="${cocktail.image}" class="card-img-top card-img" alt="${cocktail.nom}">
                 <div class="card-body row">
-                    <div class="col-4">
+                    <div class="col-3">
                         <h5 class="card-title">${cocktail.id} - ${cocktail.nom}</h5>
                     </div>
                     <div class="col-4">                   
                         <p class="card-text" style="text-align: left">${ingredients}</p>
                     </div>
-                    <div class="col-4">
+                    <div class="col-3">
+                        <p class="card-text" style="text-align: left;font-style: italic">${cocktail.type.toLowerCase()}</p>
+                    </div>
+                    <div class="col-2">
                         <p class="card-text" style="text-align: left; font-weight: bold">${cocktail.prix} $</p>
                     </div>
                 </div>

@@ -29,19 +29,32 @@ export const deleteById = async (id)=>{
 }
 
 export const create = async (cocktail)=>{
-    const rows = await connexion.query(`INSERT INTO cocktails 
+    const [result] = await connexion.query(`INSERT INTO cocktails 
                                                (nom, type, prix, image) VALUES(?,?,?,"https://www.thecocktaildb.com/images/media/drink/ewjxui1504820428.jpg")`,
         [cocktail.nom, cocktail.type, cocktail.prix]
     )
-    return rows[0].affectedRows;
+    if (result.affectedRows > 0 ){
+        const values = cocktail.ingredients.map((ingredient) => [result.insertId,ingredient]);
+        const query = `INSERT INTO ingredients (cocktail_id,ingredient) VALUES ?`
+        await connexion.query(query,[values]);
+        return result.affectedRows
+    }
+    return 0;
+
 }
 
 export const update = async (cocktail)=>{
+    await connexion.query(`DELETE FROM ingredients WHERE cocktail_id = ?`,cocktail.id);
     const rows = await connexion.query(`UPDATE cocktails 
                                                SET nom = ?, type = ?, prix = ?
                                                WHERE id = ?`,
                                                [cocktail.nom, cocktail.type, cocktail.prix, cocktail.id]
                                                )
+    if (cocktail.ingredients.length > 0){
+        const values = cocktail.ingredients.map((ingredient) => [cocktail.id,ingredient, ]);
+        const query = `INSERT INTO ingredients (cocktail_id,ingredient) VALUES ?`
+        await connexion.query(query,[values]);
+    }
     return rows[0].affectedRows;
 }
 

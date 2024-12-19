@@ -40,6 +40,10 @@ body {
     color: #f1f1f1;
     outline: none;
 }
+#admin .accordion-body input, #admin .accordion-body select {
+    background-color: #eaeaea;
+    color: #646464;
+}
 .accordion-body .price {
     width: 110px;
 }
@@ -96,6 +100,12 @@ a {
     margin-bottom: 35px !important;
 }
 
+#admin #mainContent {
+    min-height: 75vh;
+    background: url("../images/bg/cocktail-tweed.png") no-repeat;
+    /*background-size: contain;*/
+}
+
 .navbar-brand {
     color: #57b201 !important;
     font-size: 1.5em !important;
@@ -150,29 +160,36 @@ a {
 
 /* MODALS */
 
-.modal-content {
+.membre .modal-content {
     color: #979797 !important;
     background-color: #101010;
     border: 1px solid #222222;
 }
-.modal-header {
+.membre .modal-header {
     border-bottom: 1px solid #222222;
 }
-.modal-footer {
+.membre .modal-footer {
     border-top: 1px solid #222222;
 }
 .modal-footer .btn-primary {
     background-color: #57b201;
     border-color: rgba(87, 178, 1, 0.5);
 }
-.modal-content input, .modal-content select {
+.membre .modal-content input, .membre .modal-content select {
     background-color: #0a1610;
     color: #d2d2d2;
     font-weight: bold;
     border: 1px solid #0a1610;
     outline: none !important;
 }
-.modal-content input:focus, .modal-content select:focus {
+#admin .modal-content {
+    background-color: #E3F2FD !important;
+}
+#admin .modal-content .form-control {
+    background-color: #c0e3ff;
+    flex: 2;
+}
+.membre .modal-content input:focus, .membre .modal-content select:focus {
     background-color: #0a1610;
     color: #d2d2d2;
     border: 1px solid #0a1610;
@@ -260,31 +277,65 @@ p.alert{
     font-size: 0.9rem;
 }
 
-#admin .accordion-item, #admin .accordion-header,#admin .accordion-button {
-    color: #979797 !important;
-    background-color: #101010;
-    border: 1px solid #222222;
+#admin .accordion-item {
+    color: #000000 !important;
+    background-color: #8ad048 !important;
+    box-shadow: 1px 1px 5px #007811;
+    border: none !important;
+    overflow: hidden;
 }
+#admin .accordion-header {
+    color: #1e1e1e !important;
+    background-color: #8ad048 !important;
+    border: none !important;
+}
+#admin .accordion-button {
+    color: #1e1e1e !important;
+    background-color: #8ad048 !important;
+    border: none !important;
+    outline: none !important;
+}
+#admin .accordion-button:focus {
+
+    outline: none !important;
+    box-shadow: none !important;
+}
+
 
 
 #admin .pagination .btn-outline-primary {
-    border: 1px solid #2196F3 !important;
-    color: #2196F3 !important;
+    /*border: 1px solid #2196F3 !important;*/
+    color: #57b201 !important;
 }
 #admin .pagination .btn-outline-primary:hover {
-    background-color: #2196F3 !important;
+    /*background-color: #2196F3 !important;*/
     color: #fff !important;
 }
 #admin .pagination .btn-outline-primary.active {
-    background-color: #2196F3 !important;
+    /*background-color: #2196F3 !important;*/
     color: #fff !important;
 }
 
 #addCocktailBtn {
     font-size: 2rem;
-    height: 57px;
+    height: 52px;
     margin-left: 5px;
     display: flex;
     align-items: center;
+    overflow: hidden;
     justify-content: center;
+    background-color: #42a5f5;
+    border-color: #42a5f5;
+    box-shadow: 1px 1px 5px #034abe;
+}
+
+.deleteIngredient{
+    display: block;
+    width: 25px;
+    height: 25px;
+    background-color: #75023f;
+    text-align: center;
+    color: aliceblue;
+    border-radius: 40px;
+    cursor: pointer;
 }
