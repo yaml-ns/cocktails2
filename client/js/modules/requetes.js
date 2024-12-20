@@ -1,142 +1,11 @@
-import {afficherCocktailsParPagination, afficherListeCocktailsCards, afficherListeCocktailsCardsAdmin} from "./affichage.js";
+import {afficherListeCocktailsCards, afficherListeCocktailsCardsAdmin} from "./affichage.js";
 
 
 const isAdmin = document.querySelector("#admin")
-// const requeteListerCocktails = async () => {
-//
-//   try {
-//     const response = await fetch("http://127.0.0.1:3000/cocktails");
-//
-//     if (!response.ok) {
-//       throw new Error("Erreur lors de la récupération des données");
-//     }
-//     const cocktails = await response.json();
-//     afficherCocktailsParPagination(cocktails.result,isAdmin);
-//   } catch (erreur) {
-//     console.log("Erreur lors de la requête:", erreur);
-//     return [];
-//   }
-// };
 
-function requeteAvecFiltres() {
-
-  const id = document.querySelector('#id').value;
-  const nom = document.querySelector('#nom').value;
-  const order = document.querySelector('#order').value;
-  const orderBy = document.querySelector('#orderBy').value;
-  const minPrix = document.querySelector('#minPrix').value;
-  const maxPrix = document.querySelector('#maxPrix').value;
-  const ingredient = document.querySelector('#ingredient').value;
-
-  $.ajax({
-    url: '/cocktails',
-    type: 'GET',
-    data: { id, nom, ingredient, minPrix, maxPrix, orderBy, order },
-    success: function (data) {
-      $('#contenu').empty();
-      if (data.length > 0) {
-        afficherCocktailsParPagination(data,isAdmin)
-
-      } else {
-        $('#contenu').append('<p class="text-center">Aucun cocktail trouvé</p>');
-      }
-    },
-    error: function (error) {
-      console.error('Erreur lors de la requête:', error);
-    }
-  });
-}
-
-const register = ()=>{
-  const form = document.querySelector("#inscriptionForm");
-  const erreurs = document.querySelector("#erreursInscription");
-
-  if (!form) return;
-
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-
-    const formData = new FormData(form);
-    const data = Object.fromEntries(formData.entries());
-    try {
-      fetch('/membres/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      }).then((response)=>{
-        response.json().then((result)=>{
-          if (!response.ok) {
-            erreurs.innerHTML = result.errors
-                .map((err) => {
-                      return `<p class="alert alert-danger" role="alert">
-                                <i class="bi bi-exclamation-triangle-fill text-danger"></i>
-                                ${err.msg}
-                               </p>`
-                }).join("");
-          } else {
-            alert('Login réussie !');
-            form.reset();
-          }
-        });
-      });
-
-    } catch (error) {
-      console.error('Erreur lors de l\'inscription', error);
-      erreurs.textContent = 'Une erreur est survenue.';
-    }
-
-  })
-
-}
-const login = ()=>{
-  const form = document.querySelector("#loginForm");
-  const erreurs = document.querySelector("#erreursLogin");
-
-  if (!form) return;
-  form.addEventListener("submit", (e) => {
-    e.preventDefault();
-    const formData = new FormData(form);
-    const data = Object.fromEntries(formData.entries());
-    try {
-      fetch('/membres/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      }).then((response)=>{
-        response.json().then((result)=>{
-          if (!response.ok) {
-            erreurs.innerHTML = result.errors
-                .map((err) => {
-                  return `<p class="alert alert-danger" role="alert">
-                                <i class="bi bi-exclamation-triangle-fill text-danger"></i>
-                                ${err.msg}
-                               </p>`
-                }).join("");
-          } else {
-            alert("Vous êtes connecté !")
-            form.reset();
-          }
-        });
-
-
-      });
-
-    } catch (error) {
-      console.error('Erreur lors de la connexion', error);
-      erreurs.innerHTML = `<p class="alert alert-danger" role="alert">Une erreur est survenue.</p>`;
-    }
-
-  })
-
-}
-
-const listCocktails = async (page=1, filtres)=>{
+const listCocktails = async (page=1, filtres, last= false)=>{
   const perPage = isAdmin ? 4 : 10;
-  const queryParams = new URLSearchParams({ page, ...filtres, perPage });
+  const queryParams = new URLSearchParams({ page, ...filtres, perPage, last });
   const url = `http://127.0.0.1:3000/cocktails?${queryParams.toString()}`;
   try {
     const response = await fetch(url);
@@ -145,7 +14,6 @@ const listCocktails = async (page=1, filtres)=>{
       throw new Error("Erreur lors de la récupération des données");
     }
     const jsonResponse = await response.json();
-
       isAdmin ? afficherListeCocktailsCardsAdmin(jsonResponse.result)
               : afficherListeCocktailsCards(jsonResponse.result)
       updatePagination(jsonResponse.pagination)
@@ -194,9 +62,7 @@ function updatePagination(p,filtres) {
 }
 
 const form = document.getElementById("filter");
-
 const fields = form.querySelectorAll("input, select");
-
 fields.forEach((field) => {
   field.addEventListener("input", async () => {
     const formData = new FormData(form);
@@ -205,9 +71,31 @@ fields.forEach((field) => {
     await listCocktails(1, filters);
   });
 });
+
+
 /*===================================*/
 
-const updateRequest = ()=>{
+function addIngredient(ingredientsList) {
+  const i = document.createElement("i")
+  i.classList.add("deleteIngredient");
+  i.setAttribute("data-bs-type", "deleteIng")
+  i.textContent = "X";
+  const input = document.createElement("input")
+  input.setAttribute("type", "text")
+  input.setAttribute("name", "ingredients[]")
+  input.setAttribute("required", "required")
+  input.classList.add("form-control")
+
+  const elem = document.createElement("div");
+  elem.classList.add("mb-3");
+  elem.classList.add("input-group");
+  elem.classList.add("align-items-center");
+  elem.appendChild(input)
+  elem.appendChild(i)
+  ingredientsList.appendChild(elem);
+}
+
+const handleCreateUpdateRequests = ()=>{
   const cocktailModal = document.getElementById('cocktailModal')
   if (!cocktailModal) return;
   const processBtn = cocktailModal.querySelector('#processBtn')
@@ -218,10 +106,15 @@ const updateRequest = ()=>{
 
   processBtn.addEventListener('click', (e) => {
     e.preventDefault();
-      const btnType = processBtn.dataset.type;
-
+    const btnType = processBtn.dataset.type;
+    const currentPage = parseInt(document
+        .querySelector("button.active.disabled")
+        .textContent
+    );
       if (btnType ==="update"){
+
         if (cocktailIdToUpdate) {
+
           const formData = new FormData(form);
           const ingredients = formData.getAll("ingredients[]");
           const data = Object.fromEntries(formData.entries());
@@ -232,7 +125,7 @@ const updateRequest = ()=>{
               .then((res) => {
                 if (res.ok){
                   showToastSuccess("Cocktail mis à jour avec succès !")
-                  requeteListerCocktails().then(() => {
+                  listCocktails(currentPage).then(() => {
                     const modalInstance  = bootstrap.Modal.getOrCreateInstance(cocktailModal)
                     modalInstance.hide();
                   });
@@ -258,7 +151,7 @@ const updateRequest = ()=>{
             .then((res) => {
               if (res.ok){
                 showToastSuccess("Cocktail créé avec succès")
-                requeteListerCocktails().then(() => {
+                listCocktails(currentPage,null,true).then(() => {
                   const modalInstance  = bootstrap.Modal.getOrCreateInstance(cocktailModal)
                   modalInstance.hide();
                 });
@@ -276,14 +169,18 @@ const updateRequest = ()=>{
   });
 
   document.body.addEventListener('click', (e) => {
+
     const updateButton = e.target.closest('[data-bs-type="update"]');
     const addButton = e.target.closest('[data-bs-type="new"]');
     const processBtn = document.querySelector("#processBtn")
     const ingredientsList = document.querySelector("#ingredientsList");
+
     if (updateButton) {
       processBtn.dataset.type = "update";
       const cocktailId = updateButton.getAttribute('data-bs-id');
       const cocktailName = updateButton.getAttribute('data-bs-name');
+
+
 
       cocktailIdToUpdate = cocktailId;
       const modalTitle = cocktailModal.querySelector('#cocktailModalTitle');
@@ -332,23 +229,7 @@ const updateRequest = ()=>{
     }
 
     if (addIngButton){
-      const i = document.createElement("i")
-      i.classList.add("deleteIngredient");
-      i.setAttribute("data-bs-type","deleteIng")
-      i.textContent = "X";
-      const input = document.createElement("input")
-      input.setAttribute("type","text")
-      input.setAttribute("name","ingredients[]")
-      input.setAttribute("required","required")
-      input.classList.add("form-control")
-
-      const elem = document.createElement("div");
-      elem.classList.add("mb-3");
-      elem.classList.add("input-group");
-      elem.classList.add("align-items-center");
-      elem.appendChild(input)
-      elem.appendChild(i)
-      ingredientsList.appendChild(elem);
+      addIngredient(ingredientsList);
     }
   });
 
@@ -363,51 +244,8 @@ const updateRequest = ()=>{
   })
 }
 
-const createRequest = ()=>{
-  const createCocktailModal = document.getElementById('createCocktailModal')
-  if (!createCocktailModal) return;
-  const registerBtn = createCocktailModal.querySelector('#registerBtn')
-  const erreurs = document.querySelector("#erreursCreateCocktail");
-  const form = document.querySelector("#createCocktailForm");
-
-  registerBtn.addEventListener('click', (e) => {
-    e.preventDefault();
-
-      const formData = new FormData(form);
-      const data = Object.fromEntries(formData.entries());
-      createCocktail(data)
-          .then((res) => {
-            if (res.ok){
-              showToastSuccess("Cocktail créé avec succès")
-              requeteListerCocktails().then(() => {
-                const modalInstance  = bootstrap.Modal.getOrCreateInstance(createCocktailModal)
-                modalInstance.hide();
-              });
-            }else{
-              displayErrors(erreurs,res.errors)
-            }
-          })
-          .catch((err) => {
-            console.error('Erreur lors de la création.', err)
-            displayErrors(erreurs,"Erreur lors de la création.")
-          });
-  });
-
-  document.body.addEventListener('click', (e) => {
-    const addButton = e.target.closest('[data-bs-type="new"]');
-
-    if (addButton) {
-      registerBtn.textContent = `Ajouter un cocktail`;
-      erreurs.innerHTML="";
-      form.reset();
-
-    }
-  });
-
-
-  createCocktailModal.addEventListener('hidden.bs.modal', ()=> {form.reset()})
-}
 const deleteRequest = ()=>{
+
   const cocktailDeleteModal = document.getElementById('cocktailDeleteModal');
   if (!cocktailDeleteModal) return;
   const deleteBtn = cocktailDeleteModal.querySelector('#deleteBtn');
@@ -415,11 +253,15 @@ const deleteRequest = ()=>{
 
   deleteBtn.addEventListener('click', (e) => {
     e.preventDefault();
+    const currentPage = parseInt(document
+        .querySelector("button.active.disabled")
+        .textContent
+    );
     if (cocktailIdToDelete) {
       deleteCocktail(cocktailIdToDelete)
           .then(() => {
             showToastSuccess("Cocktail supprimé avec succès")
-            requeteListerCocktails().then(() => {
+            listCocktails(currentPage).then(() => {
               const modalInstance  = bootstrap.Modal.getOrCreateInstance(cocktailDeleteModal)
               modalInstance.hide();
             });
@@ -486,6 +328,94 @@ const deleteCocktail = async (id)=>{
 
 
 
+const register = ()=>{
+  const form = document.querySelector("#inscriptionForm");
+  const erreurs = document.querySelector("#erreursInscription");
+
+  if (!form) return;
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+    try {
+      fetch('/membres/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      }).then((response)=>{
+        response.json().then((result)=>{
+          if (!response.ok) {
+            erreurs.innerHTML = result.errors
+                .map((err) => {
+                  return `<p class="alert alert-danger" role="alert">
+                                <i class="bi bi-exclamation-triangle-fill text-danger"></i>
+                                ${err.msg}
+                               </p>`
+                }).join("");
+          } else {
+            alert('Login réussie !');
+            form.reset();
+          }
+        });
+      });
+
+    } catch (error) {
+      console.error('Erreur lors de l\'inscription', error);
+      erreurs.textContent = 'Une erreur est survenue.';
+    }
+
+  })
+
+}
+const login = ()=>{
+  const form = document.querySelector("#loginForm");
+  const erreurs = document.querySelector("#erreursLogin");
+
+  if (!form) return;
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+    try {
+      fetch('/membres/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      }).then((response)=>{
+        response.json().then((result)=>{
+          if (!response.ok) {
+            erreurs.innerHTML = result.errors
+                .map((err) => {
+                  return `<p class="alert alert-danger" role="alert">
+                                <i class="bi bi-exclamation-triangle-fill text-danger"></i>
+                                ${err.msg}
+                               </p>`
+                }).join("");
+          } else {
+            alert("Vous êtes connecté !")
+            form.reset();
+          }
+        });
+
+
+      });
+
+    } catch (error) {
+      console.error('Erreur lors de la connexion', error);
+      erreurs.innerHTML = `<p class="alert alert-danger" role="alert">Une erreur est survenue.</p>`;
+    }
+
+  })
+
+}
+
+
 const displayErrors = (elem, errors)=>{
   elem.textContent = "";
   if (Array.isArray(errors)){
@@ -525,10 +455,8 @@ const showToastError = (message) =>{
 
 export {
   listCocktails,
-  // requeteListerCocktails,
-  // requeteAvecFiltres,
   register,
   login,
-  updateRequest,
-  deleteRequest,
-  createRequest};
+  handleCreateUpdateRequests,
+  deleteRequest
+};

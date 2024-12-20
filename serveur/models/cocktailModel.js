@@ -1,9 +1,9 @@
 import connexion from "../../services/connexion.js";
-import {response} from "express";
 
 export const getAll = async (filters)=>{
     return await filteredCocktails(filters)
 }
+
 export const getById = async (id)=>{
     const rows = await connexion.query(`SELECT c.*, i.ingredient FROM cocktails c 
                                           LEFT JOIN ingredients i 
@@ -59,9 +59,11 @@ export const update = async (cocktail)=>{
 }
 
 const filteredCocktails = async (filters)=>{
-    const { id, nom, ingredient, minPrix,maxPrix, orderBy, order, page=1, perPage } = filters;
+
+    const { id, nom, ingredient, minPrix,maxPrix, orderBy, order, page=1, perPage, last } = filters;
+
     const limit = parseInt(perPage)
-    const offset = (page - 1) * limit;
+    let offset = (page - 1) * limit;
     let query = `  FROM cocktails c 
                           LEFT JOIN ingredients i 
                           ON c.id = i.cocktail_id
@@ -99,8 +101,6 @@ const filteredCocktails = async (filters)=>{
         }
     }
 
-
-
     const countQuery = "SELECT COUNT(DISTINCT c.id) AS total " + query;
     const [result] = await connexion.query(countQuery,params)
     const total  = result[0].total;
@@ -116,7 +116,7 @@ const filteredCocktails = async (filters)=>{
         }
     }
     const totalPages = Math.ceil(total / limit);
-
+    if (last ==="true") offset = (totalPages - 1) * limit;
     const fetchQuery = "SELECT DISTINCT c.*" + query + ` LIMIT ? OFFSET ? `;
     params.push(limit)
     params.push(offset)
@@ -133,9 +133,9 @@ const filteredCocktails = async (filters)=>{
     return {
         result:res,
         pagination: {
-            page,
+            page: last === "true" ? totalPages : page,
             totalPages,
-            hasNextPage: page < totalPages,
+            hasNextPage: last === true ? false : page < totalPages,
             hasPreviousPage: page > 1
         }
     }
