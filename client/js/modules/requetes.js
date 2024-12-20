@@ -2,7 +2,8 @@ import {afficherListeCocktailsCards, afficherListeCocktailsCardsAdmin} from "./a
 
 
 const isAdmin = document.querySelector("#admin")
-
+let totalPages = null;
+let currentPage = null;
 const listCocktails = async (page=1, filtres, last= false)=>{
   const perPage = isAdmin ? 4 : 10;
   const queryParams = new URLSearchParams({ page, ...filtres, perPage, last });
@@ -14,6 +15,8 @@ const listCocktails = async (page=1, filtres, last= false)=>{
       throw new Error("Erreur lors de la récupération des données");
     }
     const jsonResponse = await response.json();
+    totalPages = jsonResponse.pagination.totalPages;
+    currentPage = jsonResponse.pagination.page;
       isAdmin ? afficherListeCocktailsCardsAdmin(jsonResponse.result)
               : afficherListeCocktailsCards(jsonResponse.result)
       updatePagination(jsonResponse.pagination)
@@ -40,7 +43,7 @@ function updatePagination(p,filtres) {
 
   for (let i = 1; i <= parseInt(p.totalPages); i++) {
     const pageButton = document.createElement("button");
-    pageButton.className = `btn btn-outline-primary mx-2 ${i === parseInt(p.page) ? "active disabled" : ""}`;
+    pageButton.className = `btn btn-outline-primary mx-2 page ${i === parseInt(p.page) ? "active disabled" : ""}`;
     pageButton.innerHTML = `${i}`;
     pageButton.addEventListener("click", async (e) => {
       e.preventDefault();
@@ -247,21 +250,23 @@ const handleCreateUpdateRequests = ()=>{
 const deleteRequest = ()=>{
 
   const cocktailDeleteModal = document.getElementById('cocktailDeleteModal');
+
   if (!cocktailDeleteModal) return;
   const deleteBtn = cocktailDeleteModal.querySelector('#deleteBtn');
   let cocktailIdToDelete = null;
-
   deleteBtn.addEventListener('click', (e) => {
     e.preventDefault();
-    const currentPage = parseInt(document
-        .querySelector("button.active.disabled")
-        .textContent
-    );
+    const last = currentPage === totalPages;
     if (cocktailIdToDelete) {
+
       deleteCocktail(cocktailIdToDelete)
           .then(() => {
+            const form = document.querySelector("#filter");
+            const formData = new FormData(form);
+            const filters = Object.fromEntries(formData.entries());
+
             showToastSuccess("Cocktail supprimé avec succès")
-            listCocktails(currentPage).then(() => {
+            listCocktails(currentPage, filters, last ).then(() => {
               const modalInstance  = bootstrap.Modal.getOrCreateInstance(cocktailDeleteModal)
               modalInstance.hide();
             });
