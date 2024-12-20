@@ -89,7 +89,7 @@ const afficherListeCocktailsCardsAdmin = (cocktails) => {
 
  
 const afficherCocktailsParPagination = (cocktails,admin) => {
-  // Pagination
+
   const nbCocktailsPage = admin?4:10;
   let pageCourrante = 1;
   const afficher = admin ? afficherListeCocktailsCardsAdmin:afficherListeCocktailsCards
@@ -135,4 +135,4 @@ const  afficherDetailsCocktail = (cocktail)=>{
     `
 }
 
-export { afficherListeCocktailsCards,afficherDetailsCocktail, afficherCocktailsParPagination };
+export { afficherListeCocktailsCards,afficherListeCocktailsCardsAdmin,afficherDetailsCocktail, afficherCocktailsParPagination };

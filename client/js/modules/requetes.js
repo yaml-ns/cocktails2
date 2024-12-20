@@ -1,23 +1,22 @@
-import { afficherCocktailsParPagination } from "./affichage.js";
+import {afficherCocktailsParPagination, afficherListeCocktailsCards, afficherListeCocktailsCardsAdmin} from "./affichage.js";
 
 
 const isAdmin = document.querySelector("#admin")
-const requeteListerCocktails = async () => {
-
-  try {
-    const response = await fetch("http://127.0.0.1:3000/cocktails");
-
-    if (!response.ok) {
-      throw new Error("Erreur lors de la récupération des données");
-    }
-    const cocktails = await response.json();
-    console.log(cocktails)
-    afficherCocktailsParPagination(cocktails.result,isAdmin);
-  } catch (erreur) {
-    console.log("Erreur lors de la requête:", erreur);
-    return [];
-  }
-};
+// const requeteListerCocktails = async () => {
+//
+//   try {
+//     const response = await fetch("http://127.0.0.1:3000/cocktails");
+//
+//     if (!response.ok) {
+//       throw new Error("Erreur lors de la récupération des données");
+//     }
+//     const cocktails = await response.json();
+//     afficherCocktailsParPagination(cocktails.result,isAdmin);
+//   } catch (erreur) {
+//     console.log("Erreur lors de la requête:", erreur);
+//     return [];
+//   }
+// };
 
 function requeteAvecFiltres() {
 
@@ -135,8 +134,77 @@ const login = ()=>{
 
 }
 
+const listCocktails = async (page=1, filtres)=>{
+  const perPage = isAdmin ? 4 : 10;
+  const queryParams = new URLSearchParams({ page, ...filtres, perPage });
+  const url = `http://127.0.0.1:3000/cocktails?${queryParams.toString()}`;
+  try {
+    const response = await fetch(url);
 
+    if (!response.ok) {
+      throw new Error("Erreur lors de la récupération des données");
+    }
+    const jsonResponse = await response.json();
 
+      isAdmin ? afficherListeCocktailsCardsAdmin(jsonResponse.result)
+              : afficherListeCocktailsCards(jsonResponse.result)
+      updatePagination(jsonResponse.pagination)
+  } catch (erreur) {
+    console.log("Erreur lors de la requête:", erreur);
+    return [];
+  }
+}
+
+function updatePagination(p,filtres) {
+  const pagination = document.getElementById("pagination");
+  pagination.innerHTML = ""; // Réinitialiser la pagination
+
+  const prevButton = document.createElement("button");
+  prevButton.className = `btn btn-outline-primary mx-2 ${parseInt(p.page) === 1 ? "disabled" : ""}`;
+  prevButton.innerHTML = `<i class="bi bi-chevron-double-left"></i>`;
+  prevButton.addEventListener("click", async (e) => {
+    e.preventDefault();
+    if (p.hasPreviousPage){
+      await listCocktails(parseInt(p.page) - 1,filtres)
+    }
+  });
+  pagination.appendChild(prevButton);
+
+  for (let i = 1; i <= parseInt(p.totalPages); i++) {
+    const pageButton = document.createElement("button");
+    pageButton.className = `btn btn-outline-primary mx-2 ${i === parseInt(p.page) ? "active disabled" : ""}`;
+    pageButton.innerHTML = `${i}`;
+    pageButton.addEventListener("click", async (e) => {
+      e.preventDefault();
+      await listCocktails(i,filtres)
+    });
+    pagination.appendChild(pageButton);
+  }
+
+  const nextButton = document.createElement("button");
+  nextButton.className = `btn btn-outline-primary mx-2 ${parseInt(p.page) === parseInt(p.totalPages) ? "disabled" : ""}`;
+  nextButton.innerHTML = `<i class="bi bi-chevron-double-right"></i>`;
+  nextButton.addEventListener("click", async (e) => {
+    e.preventDefault();
+    if (p.hasNextPage){
+      await listCocktails(parseInt(p.page) + 1,filtres)
+    }
+  });
+  pagination.appendChild(nextButton);
+}
+
+const form = document.getElementById("filter");
+
+const fields = form.querySelectorAll("input, select");
+
+fields.forEach((field) => {
+  field.addEventListener("input", async () => {
+    const formData = new FormData(form);
+    const filters = Object.fromEntries(formData.entries());
+
+    await listCocktails(1, filters);
+  });
+});
 /*===================================*/
 
 const updateRequest = ()=>{
@@ -456,8 +524,9 @@ const showToastError = (message) =>{
 }
 
 export {
-  requeteListerCocktails,
-  requeteAvecFiltres,
+  listCocktails,
+  // requeteListerCocktails,
+  // requeteAvecFiltres,
   register,
   login,
   updateRequest,

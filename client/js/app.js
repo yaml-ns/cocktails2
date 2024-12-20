@@ -1,6 +1,7 @@
 import {
-    requeteListerCocktails,
-    requeteAvecFiltres,
+    listCocktails,
+    // requeteListerCocktails,
+    // requeteAvecFiltres,
     register,
     login,
     updateRequest,
@@ -17,7 +18,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     updateRequest();
     deleteRequest();
     const conteneur = document.querySelector("#mainContent");
-    await requeteListerCocktails();
+    // await requeteListerCocktails();
+    await listCocktails();
 
     conteneur.addEventListener("click", async (e) => {
     const card = e.target.closest(".card");
@@ -42,17 +44,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
 
-$("#filter input, #filter select").on("input",(e)=>{
-
-  if(e.target.id ==="nom" && e.target.value.length >=3){
-    requeteAvecFiltres();
-  }
-  if (e.target.value.length === 0){
-     requeteListerCocktails()
-  }else{
-    requeteAvecFiltres()
-  }
-})
+// $("#filter input, #filter select").on("input",(e)=>{
+//
+//   if(e.target.id ==="nom" && e.target.value.length >=3){
+//     requeteAvecFiltres();
+//   }
+//   if (e.target.value.length === 0){
+//      listCocktails()
+//   }else{
+//     requeteAvecFiltres()
+//   }
+// })
 
     const photo = document.getElementById('image');
     if(photo) {

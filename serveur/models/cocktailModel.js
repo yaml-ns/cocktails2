@@ -58,7 +58,9 @@ export const update = async (cocktail)=>{
     return rows[0].affectedRows;
 }
 
-const filteredCocktails = async (filters,page=1,limit=5)=>{
+const filteredCocktails = async (filters)=>{
+    const { id, nom, ingredient, minPrix,maxPrix, orderBy, order, page=1, perPage } = filters;
+    const limit = parseInt(perPage)
     const offset = (page - 1) * limit;
     let query = `  FROM cocktails c 
                           LEFT JOIN ingredients i 
@@ -66,7 +68,7 @@ const filteredCocktails = async (filters,page=1,limit=5)=>{
                           WHERE 1
                           `
     const params = []
-    const { id, nom, ingredient, minPrix,maxPrix, orderBy, order } = filters;
+
 
 
     if (id){
@@ -102,6 +104,17 @@ const filteredCocktails = async (filters,page=1,limit=5)=>{
     const countQuery = "SELECT COUNT(DISTINCT c.id) AS total " + query;
     const [result] = await connexion.query(countQuery,params)
     const total  = result[0].total;
+    if (total === 0){
+        return {
+            result:[],
+            pagination: {
+                page:1,
+                totalPages:1,
+                hasNextPage: false,
+                hasPreviousPage: false
+            }
+        }
+    }
     const totalPages = Math.ceil(total / limit);
 
     const fetchQuery = "SELECT DISTINCT c.*" + query + ` LIMIT ? OFFSET ? `;
