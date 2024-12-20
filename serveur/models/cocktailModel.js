@@ -1,8 +1,8 @@
 import connexion from "../../services/connexion.js";
+import {response} from "express";
 
 export const getAll = async (filters)=>{
-    const [rows] = await filteredCocktails(filters)
-    return await processRows(rows);
+    return await filteredCocktails(filters)
 }
 export const getById = async (id)=>{
     const rows = await connexion.query(`SELECT c.*, i.ingredient FROM cocktails c 
@@ -58,14 +58,15 @@ export const update = async (cocktail)=>{
     return rows[0].affectedRows;
 }
 
-const filteredCocktails = async (filters)=>{
-    let query = `SELECT c.*, i.ingredient FROM cocktails c 
+const filteredCocktails = async (filters,page=1,limit=5)=>{
+    const offset = (page - 1) * limit;
+    let query = `  FROM cocktails c 
                           LEFT JOIN ingredients i 
                           ON c.id = i.cocktail_id
                           WHERE 1
                           `
     const params = []
-    const { id, nom, ingredient,alcohol, minPrix,maxPrix, orderBy, order } = filters;
+    const { id, nom, ingredient, minPrix,maxPrix, orderBy, order } = filters;
 
 
     if (id){
@@ -95,7 +96,36 @@ const filteredCocktails = async (filters)=>{
             query += ` ${order}`;
         }
     }
-    return connexion.query(query, params);
+
+
+
+    const countQuery = "SELECT COUNT(DISTINCT c.id) AS total " + query;
+    const [result] = await connexion.query(countQuery,params)
+    const total  = result[0].total;
+    const totalPages = Math.ceil(total / limit);
+
+    const fetchQuery = "SELECT DISTINCT c.*" + query + ` LIMIT ? OFFSET ? `;
+    params.push(limit)
+    params.push(offset)
+    const results =  await connexion.query(fetchQuery, params);
+    const cocktailIds = results[0].map((c)=> c.id);
+    const [ingRows] = await connexion.query("SELECT * FROM ingredients WHERE cocktail_id IN (?) ",[cocktailIds])
+    const res = results[0].map((cock)=>{
+        return {
+            ...cock,
+            ingredients: ingRows.filter((i)=> cock.id === i.cocktail_id)
+        }
+    })
+
+    return {
+        result:res,
+        pagination: {
+            page,
+            totalPages,
+            hasNextPage: page < totalPages,
+            hasPreviousPage: page > 1
+        }
+    }
 }
 
 const processRows = async (rows)=> {

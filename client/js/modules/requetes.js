@@ -6,11 +6,13 @@ const requeteListerCocktails = async () => {
 
   try {
     const response = await fetch("http://127.0.0.1:3000/cocktails");
+
     if (!response.ok) {
       throw new Error("Erreur lors de la récupération des données");
     }
     const cocktails = await response.json();
-    afficherCocktailsParPagination(cocktails,isAdmin);
+    console.log(cocktails)
+    afficherCocktailsParPagination(cocktails.result,isAdmin);
   } catch (erreur) {
     console.log("Erreur lors de la requête:", erreur);
     return [];
@@ -289,6 +291,7 @@ const updateRequest = ()=>{
     cocktailModal.querySelector("#cocktailErrors").innerHTML="";
     cocktailModal.querySelector("#ingredientsList").innerHTML="";
     cocktailModal.querySelector('#processBtn').value = "Enregistrer"
+    cocktailModal.querySelector("#imagePreview").setAttribute("src","/images/bg/no_image.jpg")
   })
 }
 

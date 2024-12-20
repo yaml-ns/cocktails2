@@ -6,7 +6,12 @@ export const getCocktails = async (req,res)=>{
     try{
         const cocktails = await getAll(filters);
         res.statusCode = 200;
-        res.json(cocktails)
+        res.json({
+            ok:true,
+            result: cocktails.result,
+            pagination:cocktails.pagination
+
+        })
     }catch (e) {
         console.log(e);
         res.statusCode = 500;

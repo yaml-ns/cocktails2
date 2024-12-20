@@ -54,6 +54,24 @@ $("#filter input, #filter select").on("input",(e)=>{
   }
 })
 
+    const photo = document.getElementById('image');
+    if(photo) {
+        photo.addEventListener('change', function (event) {
+            const file = event.target.files[0];
+            const imgPreview = document.getElementById('imagePreview');
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    imgPreview.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }else{
+                imgPreview.src = "/images/bg/no_image.jpg";
+            }
+        });
+    }
+
+
 
 
 

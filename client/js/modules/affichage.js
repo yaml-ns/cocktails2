@@ -3,7 +3,7 @@ import { afficherPage, genererPagination } from "./pagination.js";
 const creerCard = (cocktail) => {
     let ingredients = "";
     for (let ingredient of cocktail.ingredients){
-        ingredients += `<span class="badge me-1 text-bg-dark">${ingredient}</span>`
+        ingredients += `<span class="badge me-1 text-bg-dark">${ingredient.ingredient}</span>`
     }
 
     return `
@@ -29,7 +29,7 @@ const creerCard = (cocktail) => {
 const creerCardAdmin = (cocktail) => {
     let ingredients = "";
     for (let ingredient of cocktail.ingredients){
-        ingredients += `<span class="badge me-1 text-bg-dark">${ingredient}</span>`
+        ingredients += `<span class="badge me-1 text-bg-dark">${ingredient.ingredient}</span>`
     }
 
     return `<div class="card-horizontal col-12" >
