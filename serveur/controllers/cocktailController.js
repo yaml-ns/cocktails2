@@ -1,10 +1,13 @@
-import {deleteById, getAll, getById, create, getByName, update} from "../models/cocktailModel.js";
+import {deleteById, getAll, getById, create, getByName, update, getOneCocktail} from "../models/cocktailModel.js";
+import fs from "node:fs";
+import {fileURLToPath} from "url";
+import path from "path";
 
 
 export const getCocktails = async (req,res)=>{
     const filters = req.query
     try{
-        const cocktails = await getAll(filters);
+        const cocktails = await getAll(filters,req);
         res.statusCode = 200;
         res.json({
             ok:true,
@@ -21,6 +24,8 @@ export const getCocktails = async (req,res)=>{
 }
 
 export const createCocktail = async (req,res)=>{
+    console.log("req.body:", req.body);
+    console.log("req.file:", req.file.filename);
     const cocktail = req.body;
     try {
         const cocktail_existe = await getByName(cocktail.nom)
@@ -28,6 +33,8 @@ export const createCocktail = async (req,res)=>{
             res.statusCode = 400;
             res.json({ok:false,errors: "Un cocktail du même nom existe déjà !"})
         }else{
+
+                cocktail.image = req.file ? req.file.filename: null;
             const r = await create(cocktail)
             if (r===1){
                 res.statusCode = 201;
@@ -42,7 +49,7 @@ export const createCocktail = async (req,res)=>{
     }
 }
 export const getCocktail = async (req,res)=>{
-    const cocktail = await getById(parseInt(req.params.id))
+    const cocktail = await getById(parseInt(req.params.id),req)
     if (cocktail){
         res.json(cocktail)
     }else{
@@ -51,12 +58,30 @@ export const getCocktail = async (req,res)=>{
     }
 }
 export const updateCocktail = async (req,res)=>{
-    const cocktail_exists = await getById(parseInt(req.params.id))
+    const cocktail_exists = await getOneCocktail(parseInt(req.params.id))
     const cocktail = req.body
 
     if (cocktail_exists){
         try {
             cocktail.id = cocktail_exists.id
+            if (req.file){
+                const __filename = fileURLToPath(import.meta.url);
+                const __dirname = path.dirname(__filename);
+                const image_path = path.join(__dirname,"../../" ,'client/uploads/images/cocktail/'+cocktail_exists.image)
+                cocktail.image = req.file.filename;
+                console.log("image : "+cocktail_exists.image)
+                console.log(image_path)
+                if (cocktail_exists.image){
+                    if (fs.existsSync(image_path)) {
+                        await fs.promises.unlink(image_path);
+                        console.log("le fichier est supprimé")
+                    }else{
+                        console.log("le fichier n'existe pas")
+                    }
+                }
+            }
+            cocktail.image = req.file ? req.file.filename: cocktail_exists.image;
+
             const result = await update(cocktail)
             if (result >=1){
                 res.statusCode = 200;
@@ -74,7 +99,7 @@ export const updateCocktail = async (req,res)=>{
 }
 
 export const deleteCocktail = async (req,res)=>{
-    const cocktail = await getById(parseInt(req.params.id))
+    const cocktail = await getById(parseInt(req.params.id),req)
     if (!cocktail){
         res.statusCode = 404;
         res.json({status: "erreur", message:"Cocktail non trouvé !"})

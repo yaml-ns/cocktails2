@@ -30,8 +30,10 @@ function updatePagination(p,filtres) {
   const pagination = document.getElementById("pagination");
   pagination.innerHTML = ""; // Réinitialiser la pagination
 
+  const maxButtons = 5;
+
   const prevButton = document.createElement("button");
-  prevButton.className = `btn btn-outline-primary mx-2 ${parseInt(p.page) === 1 ? "disabled" : ""}`;
+  prevButton.className = `btn btn-outline-primary me-1 ${parseInt(p.page) === 1 ? "disabled" : ""}`;
   prevButton.innerHTML = `<i class="bi bi-chevron-double-left"></i>`;
   prevButton.addEventListener("click", async (e) => {
     e.preventDefault();
@@ -41,9 +43,16 @@ function updatePagination(p,filtres) {
   });
   pagination.appendChild(prevButton);
 
-  for (let i = 1; i <= parseInt(p.totalPages); i++) {
+  let startPage = Math.max(currentPage - Math.floor(maxButtons / 2), 1);
+  let endPage = Math.min(startPage + maxButtons - 1, p.totalPages);
+
+  if (endPage - startPage + 1 < maxButtons) {
+    startPage = Math.max(endPage - maxButtons + 1, 1);
+  }
+
+  for (let i = startPage; i <= parseInt(p.totalPages); i++) {
     const pageButton = document.createElement("button");
-    pageButton.className = `btn btn-outline-primary mx-2 page ${i === parseInt(p.page) ? "active disabled" : ""}`;
+    pageButton.className = `btn btn-outline-primary me-1 page ${i === parseInt(p.page) ? "active disabled" : ""}`;
     pageButton.innerHTML = `${i}`;
     pageButton.addEventListener("click", async (e) => {
       e.preventDefault();
@@ -52,8 +61,16 @@ function updatePagination(p,filtres) {
     pagination.appendChild(pageButton);
   }
 
+
+  if (endPage < p.totalPages) {
+    const ellipsis = document.createElement('span');
+    ellipsis.textContent = '...';
+    ellipsis.classList.add('me-2');
+    pagination.appendChild(ellipsis);
+  }
+
   const nextButton = document.createElement("button");
-  nextButton.className = `btn btn-outline-primary mx-2 ${parseInt(p.page) === parseInt(p.totalPages) ? "disabled" : ""}`;
+  nextButton.className = `btn btn-outline-primary me-1 ${parseInt(p.page) === parseInt(p.totalPages) ? "disabled" : ""}`;
   nextButton.innerHTML = `<i class="bi bi-chevron-double-right"></i>`;
   nextButton.addEventListener("click", async (e) => {
     e.preventDefault();
@@ -110,21 +127,13 @@ const handleCreateUpdateRequests = ()=>{
   processBtn.addEventListener('click', (e) => {
     e.preventDefault();
     const btnType = processBtn.dataset.type;
-    const currentPage = parseInt(document
-        .querySelector("button.active.disabled")
-        .textContent
-    );
       if (btnType ==="update"){
 
         if (cocktailIdToUpdate) {
 
           const formData = new FormData(form);
-          const ingredients = formData.getAll("ingredients[]");
-          const data = Object.fromEntries(formData.entries());
-          delete data["ingredients[]"];
-          data.ingredients = [ ...ingredients];
 
-          updateCocktail(cocktailIdToUpdate, data)
+          updateCocktail(cocktailIdToUpdate, formData)
               .then((res) => {
                 if (res.ok){
                   showToastSuccess("Cocktail mis à jour avec succès !")
@@ -145,13 +154,9 @@ const handleCreateUpdateRequests = ()=>{
 
       if (btnType === "new"){
         const createFormData = new FormData(form);
-        const ingredients = createFormData.getAll("ingredients[]");
-        const createData = Object.fromEntries(createFormData.entries());
-        delete createData["ingredients[]"];
-        createData.ingredients = [ ...ingredients];
-
-        createCocktail(createData)
+        createCocktail(createFormData)
             .then((res) => {
+              console.log(createFormData)
               if (res.ok){
                 showToastSuccess("Cocktail créé avec succès")
                 listCocktails(currentPage,null,true).then(() => {
@@ -195,6 +200,7 @@ const handleCreateUpdateRequests = ()=>{
         document.querySelector("#name").value = cocktail.nom;
         document.querySelector("#prix").value = cocktail.prix;
         document.querySelector("#type").value = cocktail.type.toLowerCase();
+        document.querySelector("#imagePreview").src = cocktail.image;
 
 
         let list = "";
@@ -239,11 +245,11 @@ const handleCreateUpdateRequests = ()=>{
 
   cocktailModal.addEventListener('hidden.bs.modal', (e)=> {
     form.reset()
+    cocktailModal.querySelector("#imagePreview").setAttribute("src","/images/bg/no_image.jpg")
     cocktailModal.querySelector("#cocktailModalTitle").textContent = "Ajouter un Cocktail";
+    cocktailModal.querySelector('#processBtn').value = "Enregistrer"
     cocktailModal.querySelector("#cocktailErrors").innerHTML="";
     cocktailModal.querySelector("#ingredientsList").innerHTML="";
-    cocktailModal.querySelector('#processBtn').value = "Enregistrer"
-    cocktailModal.querySelector("#imagePreview").setAttribute("src","/images/bg/no_image.jpg")
   })
 }
 
@@ -256,7 +262,7 @@ const deleteRequest = ()=>{
   let cocktailIdToDelete = null;
   deleteBtn.addEventListener('click', (e) => {
     e.preventDefault();
-    const last = currentPage === totalPages;
+    const last = parseInt(currentPage) === parseInt(totalPages);
     if (cocktailIdToDelete) {
 
       deleteCocktail(cocktailIdToDelete)
@@ -304,20 +310,14 @@ const createCocktail = async (data)=>{
 
   const res = await fetch(`/cocktails`,{
     method: "post",
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data)
+    body: data
   })
   return res.json();
 }
 const updateCocktail = async (id,data)=>{
   const res = await fetch(`/cocktails/${id}`,{
     method: "put",
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(data)
+    body: data
   })
   return res.json();
 }

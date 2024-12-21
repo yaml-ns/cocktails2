@@ -16,8 +16,11 @@ dotenv.config()
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-app.use(express.static(path.join(__dirname, "client")));
 app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+app.use(express.static(path.join(__dirname, "client")));
+// app.use('/uploads/images', express.static(path.join(__dirname, 'client/uploads/images')));
+
 app.use("/", mainRouter);
 app.use("/admin",adminRouter);
 app.use("/membres",memberRouter);

@@ -1,8 +1,7 @@
 import connexion from "../../services/connexion.js";
 
-export const getAll = async (filters)=>{
+export const getAll = async (filters,req)=>{
     let { id, nom, ingredient, minPrix,maxPrix, orderBy, order, page=1, perPage, last } = filters;
-
     const limit = parseInt(perPage)
     let offset = (page - 1) * limit;
     let query = `  FROM cocktails c 
@@ -11,8 +10,6 @@ export const getAll = async (filters)=>{
                           WHERE 1
                           `
     const params = []
-
-
 
     if (id){
         query += ` AND c.id = ?`;
@@ -59,7 +56,8 @@ export const getAll = async (filters)=>{
     const totalPages = Math.ceil(total / limit);
     if (last ==="true") offset = (totalPages - 1) * limit;
     if (totalPages < page) page = totalPages;
-    const fetchQuery = "SELECT DISTINCT c.*" + query + ` LIMIT ? OFFSET ? `;
+    const fetchQuery = "SELECT DISTINCT c.*, CONCAT(?,'/',c.image) as image" + query + ` LIMIT ? OFFSET ? `;
+    params.push(`${req.protocol}://${req.get("host")}/uploads/images/cocktail`)
     params.push(limit)
     params.push(offset)
     const results =  await connexion.query(fetchQuery, params);
@@ -86,7 +84,15 @@ export const getAll = async (filters)=>{
     }
 }
 
-export const getById = async (id)=>{
+export const getById = async (id,req)=>{
+    const rows = await connexion.query(`SELECT c.*,CONCAT(?,"/",c.image) as image, i.ingredient FROM cocktails c 
+                                          LEFT JOIN ingredients i 
+                                          ON c.id = i.cocktail_id
+                                          WHERE c.id = ?`,[`${req.protocol}://${req.get("host")}/uploads/images/cocktail`,id])
+    const cocktails = await processRows(rows[0]);
+    return cocktails[0];
+}
+export const getOneCocktail = async (id)=>{
     const rows = await connexion.query(`SELECT c.*, i.ingredient FROM cocktails c 
                                           LEFT JOIN ingredients i 
                                           ON c.id = i.cocktail_id
@@ -112,8 +118,8 @@ export const deleteById = async (id)=>{
 
 export const create = async (cocktail)=>{
     const [result] = await connexion.query(`INSERT INTO cocktails 
-                                               (nom, type, prix, image) VALUES(?,?,?,"https://www.thecocktaildb.com/images/media/drink/ewjxui1504820428.jpg")`,
-        [cocktail.nom, cocktail.type, cocktail.prix]
+                                               (nom, type, prix, image) VALUES(?,?,?,?)`,
+        [cocktail.nom, cocktail.type, cocktail.prix,cocktail.image]
     )
     if (result.affectedRows > 0 ){
         const values = cocktail.ingredients.map((ingredient) => [result.insertId,ingredient]);
@@ -128,9 +134,9 @@ export const create = async (cocktail)=>{
 export const update = async (cocktail)=>{
     await connexion.query(`DELETE FROM ingredients WHERE cocktail_id = ?`,cocktail.id);
     const rows = await connexion.query(`UPDATE cocktails 
-                                               SET nom = ?, type = ?, prix = ?
+                                               SET nom = ?, type = ?, prix = ?, image=?
                                                WHERE id = ?`,
-                                               [cocktail.nom, cocktail.type, cocktail.prix, cocktail.id]
+                                               [cocktail.nom, cocktail.type, cocktail.prix, cocktail.image,cocktail.id,]
                                                )
     if (cocktail.ingredients.length > 0){
         const values = cocktail.ingredients.map((ingredient) => [cocktail.id,ingredient, ]);
