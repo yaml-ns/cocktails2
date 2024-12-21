@@ -186,7 +186,7 @@ a {
     background-color: #E3F2FD !important;
 }
 #admin .modal-content .form-control {
-    background-color: #c0e3ff;
+    background-color: #d5e0f4;
     flex: 2;
 }
 .membre .modal-content input:focus, .membre .modal-content select:focus {
@@ -279,19 +279,19 @@ p.alert{
 
 #admin .accordion-item {
     color: #000000 !important;
-    background-color: #8ad048 !important;
-    box-shadow: 1px 1px 5px #007811;
+    background-color: #bac5ff !important;
+    box-shadow: 1px 1px 5px #636faf;
     border: none !important;
     overflow: hidden;
 }
 #admin .accordion-header {
     color: #1e1e1e !important;
-    background-color: #8ad048 !important;
+    background-color: #bac5ff !important;
     border: none !important;
 }
 #admin .accordion-button {
     color: #1e1e1e !important;
-    background-color: #8ad048 !important;
+    background-color: #bac5ff !important;
     border: none !important;
     outline: none !important;
 }

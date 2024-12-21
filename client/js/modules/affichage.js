@@ -10,7 +10,7 @@ const creerCard = (cocktail) => {
                 <div class="card h-100" data-ref="${cocktail.id}">
                     <img src="${
                       cocktail.image
-                    }" class="card-img-top " alt="Cocktail ${cocktail.name}">
+                    }" class="card-img-top " alt="Cocktail ${cocktail.nom}" height="200">
                     <div class="card-body d-flex flex-column">
                         <h6 class="card-title">${cocktail.nom.substring(0, 25)}</h6>
                         <div style="min-height: 100px">${ingredients}</div>
@@ -32,7 +32,10 @@ const creerCardAdmin = (cocktail) => {
         ingredients += `<span class="badge me-1 text-bg-dark">${ingredient.ingredient}</span>`
     }
 
-    return `<div class="card-horizontal col-12" >
+    return `<div class="card-horizontal col-12" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#detailsCocktailModal"
+                    data-cocktail-id="${cocktail.id}" >
                 <img src="${cocktail.image}" class="card-img-top card-img" alt="${cocktail.nom}">
                 <div class="card-body row">
                     <div class="col-3">
@@ -88,23 +91,7 @@ const afficherListeCocktailsCardsAdmin = (cocktails) => {
 }
 
  
-const afficherCocktailsParPagination = (cocktails,admin) => {
 
-  const nbCocktailsPage = admin?4:10;
-  let pageCourrante = 1;
-  const afficher = admin ? afficherListeCocktailsCardsAdmin:afficherListeCocktailsCards
-
-  afficherPage(cocktails, pageCourrante, nbCocktailsPage, afficher);
-
-  // Générer les boutons de pagination
-  genererPagination(
-    cocktails,
-    nbCocktailsPage,
-    afficherPage,
-    afficher,
-    pageCourrante
-  );
-};
 
 const  afficherDetailsCocktail = (cocktail)=>{
     let ingredients = "";
@@ -135,4 +122,4 @@ const  afficherDetailsCocktail = (cocktail)=>{
     `
 }
 
-export { afficherListeCocktailsCards,afficherListeCocktailsCardsAdmin,afficherDetailsCocktail, afficherCocktailsParPagination };
+export { afficherListeCocktailsCards,afficherListeCocktailsCardsAdmin,afficherDetailsCocktail };

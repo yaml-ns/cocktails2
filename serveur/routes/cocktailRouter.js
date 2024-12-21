@@ -14,8 +14,11 @@ const router = Router();
 
 router.get("/",getCocktails);
 router.post("/",
-    uploadParams({type:"cocktail"}),
-    upload.single("image")
+    [
+        uploadParams({type:"cocktail"}),
+        upload.single("image"),
+        validerCocktail
+    ]
     , createCocktail
 );
 router.get("/:id",getCocktail);

@@ -105,7 +105,7 @@
     </section>
 
 </main>
-
+<!-- Debut Modal cocktail -->
 <div class="modal fade" id="cocktailModal" tabindex="-1" aria-labelledby="cocktailModalLabel">
     <div class="modal-dialog modal-dialog-centered ">
         <div class="modal-content">
@@ -165,7 +165,53 @@
         </div>
     </div>
 </div>
-<!-- Fin Modal update cocktail -->
+<!-- Fin Modal cocktail -->
+
+<!-- Debut Modal Details cocktail -->
+<div class="modal fade" id="detailsCocktailModal" tabindex="-1" aria-labelledby="cocktailModalLabel">
+    <div class="modal-dialog modal-dialog-centered modal-fullscreen">
+        <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-cup-straw"></i> Détail du cocktail  <span id="cocktailDetailModalTitle"></span></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+                <div class="row">
+                    <div class="col-4">
+                        <div style="height: 220px;width: 220px; overflow: clip">
+                            <img id="cocktailImage" src="" height="220">
+                        </div>
+                    </div>
+                    <div class="col-8">
+                        <h2 id="cocktailDetailsName"></h2>
+                    </div>
+                </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="updateCocktail" class="btn btn-primary btn-modifier"
+                            data-bs-toggle="modal"
+                            data-bs-target="#updateCocktailModal"
+                            data-bs-type="update"
+                            data-bs-id=""
+                            data-bs-name=""
+                    >
+                        <i class="bi bi-pencil" data-id=""></i> Mettre à jour
+                    </button>
+
+                    <button id="deleteCocktail" class="btn btn-danger btn-supprimer"
+                            data-bs-toggle="modal"
+                            data-bs-target="#cocktailDeleteModal"
+                            data-bs-type="delete"
+                            data-bs-id=""
+                            data-bs-name=""
+                    >
+                        <i class="bi bi-trash" data-id=""></i> Supprimer
+                    </button>
+                </div>
+        </div>
+    </div>
+</div>
+<!-- Fin Modal details cocktail -->
 <!-- Modal Confirmation Suppression Cocktail -->
 <div class="modal fade" id="cocktailDeleteModal" tabindex="-1" aria-labelledby="cocktailDeleteModalLabel">
     <div class="modal-dialog modal-dialog-centered">

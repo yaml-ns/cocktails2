@@ -24,8 +24,6 @@ export const getCocktails = async (req,res)=>{
 }
 
 export const createCocktail = async (req,res)=>{
-    console.log("req.body:", req.body);
-    console.log("req.file:", req.file.filename);
     const cocktail = req.body;
     try {
         const cocktail_existe = await getByName(cocktail.nom)
@@ -39,6 +37,10 @@ export const createCocktail = async (req,res)=>{
             if (r===1){
                 res.statusCode = 201;
                 res.json({ok:true,message:"Cocktail crée avec succès"})
+            }else{
+                console.log(e);
+                res.statusCode = 500;
+                res.json({ok:false, errors:"une erreur s'est produite"});
             }
         }
     }catch (e){
@@ -69,14 +71,9 @@ export const updateCocktail = async (req,res)=>{
                 const __dirname = path.dirname(__filename);
                 const image_path = path.join(__dirname,"../../" ,'client/uploads/images/cocktail/'+cocktail_exists.image)
                 cocktail.image = req.file.filename;
-                console.log("image : "+cocktail_exists.image)
-                console.log(image_path)
                 if (cocktail_exists.image){
                     if (fs.existsSync(image_path)) {
                         await fs.promises.unlink(image_path);
-                        console.log("le fichier est supprimé")
-                    }else{
-                        console.log("le fichier n'existe pas")
                     }
                 }
             }

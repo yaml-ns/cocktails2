@@ -122,10 +122,13 @@ export const create = async (cocktail)=>{
         [cocktail.nom, cocktail.type, cocktail.prix,cocktail.image]
     )
     if (result.affectedRows > 0 ){
-        const values = cocktail.ingredients.map((ingredient) => [result.insertId,ingredient]);
-        const query = `INSERT INTO ingredients (cocktail_id,ingredient) VALUES ?`
-        await connexion.query(query,[values]);
-        return result.affectedRows
+       if (cocktail.ingredients){
+           const values = cocktail.ingredients.map((ingredient) => [result.insertId,ingredient]);
+           const query = `INSERT INTO ingredients (cocktail_id,ingredient) VALUES ?`
+           await connexion.query(query,[values]);
+           return result.affectedRows
+       }
+
     }
     return 0;
 

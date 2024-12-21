@@ -19,17 +19,16 @@ const listCocktails = async (page=1, filtres, last= false)=>{
     currentPage = jsonResponse.pagination.page;
       isAdmin ? afficherListeCocktailsCardsAdmin(jsonResponse.result)
               : afficherListeCocktailsCards(jsonResponse.result)
-      updatePagination(jsonResponse.pagination)
+      updatePagination(jsonResponse.pagination, filtres)
   } catch (erreur) {
-    console.log("Erreur lors de la requête:", erreur);
+    console.log("Erreur s'est produite lors de la requête:");
     return [];
   }
 }
 
 function updatePagination(p,filtres) {
   const pagination = document.getElementById("pagination");
-  pagination.innerHTML = ""; // Réinitialiser la pagination
-
+  pagination.innerHTML = "";
   const maxButtons = 5;
 
   const prevButton = document.createElement("button");
@@ -115,6 +114,28 @@ function addIngredient(ingredientsList) {
   ingredientsList.appendChild(elem);
 }
 
+const detailRequest = ()=>{
+  const detailModal = document.getElementById('detailsCocktailModal')
+  detailModal.addEventListener("shown.bs.modal",(e)=>{
+      const target = e.relatedTarget;
+      const title = detailModal.querySelector("#cocktailDetailModalTitle")
+      const name = detailModal.querySelector("#cocktailDetailsName")
+      const cocktailImage = detailModal.querySelector("#cocktailImage")
+      const updateButton = detailModal.querySelector("#updateCocktail")
+      const deleteButton = detailModal.querySelector("#deleteCocktail")
+      fetchCocktail(target.dataset.cocktailId).then((response)=>{
+        title.textContent = response.nom
+        cocktailImage.src = response.image
+        name.textContent = response.nom
+        updateButton.dataset.bsId = response.id
+        deleteButton.dataset.bsId = response.id
+        updateButton.dataset.bsName = response.nom
+        deleteButton.dataset.bsName = response.nom
+      })
+
+  })
+}
+
 const handleCreateUpdateRequests = ()=>{
   const cocktailModal = document.getElementById('cocktailModal')
   if (!cocktailModal) return;
@@ -156,7 +177,6 @@ const handleCreateUpdateRequests = ()=>{
         const createFormData = new FormData(form);
         createCocktail(createFormData)
             .then((res) => {
-              console.log(createFormData)
               if (res.ok){
                 showToastSuccess("Cocktail créé avec succès")
                 listCocktails(currentPage,null,true).then(() => {
@@ -463,5 +483,6 @@ export {
   register,
   login,
   handleCreateUpdateRequests,
-  deleteRequest
+  deleteRequest,
+  detailRequest
 };

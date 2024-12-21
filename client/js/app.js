@@ -3,7 +3,7 @@ import {
     register,
     login,
     handleCreateUpdateRequests,
-    deleteRequest
+    deleteRequest, detailRequest
 } from "./modules/requetes.js";
 import { afficherDetailsCocktail } from "./modules/affichage.js";
 
@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     register();
     handleCreateUpdateRequests();
     deleteRequest();
+    detailRequest();
     const conteneur = document.querySelector("#mainContent");
     await listCocktails();
 
