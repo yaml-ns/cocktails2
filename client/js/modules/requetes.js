@@ -15,12 +15,14 @@ const listCocktails = async (page=1, filtres, last= false)=>{
       throw new Error("Erreur lors de la récupération des données");
     }
     const jsonResponse = await response.json();
+    console.log(jsonResponse)
     totalPages = jsonResponse.pagination.totalPages;
     currentPage = jsonResponse.pagination.page;
       isAdmin ? afficherListeCocktailsCardsAdmin(jsonResponse.result)
               : afficherListeCocktailsCards(jsonResponse.result)
       updatePagination(jsonResponse.pagination, filtres)
   } catch (erreur) {
+    console.log(erreur)
     console.log("Erreur s'est produite lors de la requête:");
     return [];
   }
@@ -95,27 +97,51 @@ fields.forEach((field) => {
 /*===================================*/
 
 function addIngredient(ingredientsList) {
-  const i = document.createElement("i")
-  i.classList.add("deleteIngredient");
-  i.setAttribute("data-bs-type", "deleteIng")
-  i.textContent = "X";
-  const input = document.createElement("input")
-  input.setAttribute("type", "text")
-  input.setAttribute("name", "ingredients[]")
-  input.setAttribute("required", "required")
-  input.classList.add("form-control")
-
-  const elem = document.createElement("div");
-  elem.classList.add("mb-3");
-  elem.classList.add("input-group");
-  elem.classList.add("align-items-center");
-  elem.appendChild(input)
-  elem.appendChild(i)
-  ingredientsList.appendChild(elem);
+  const noIng = document.querySelector("#noIngredient");
+  if (noIng){
+    noIng.remove()
+  }
+  const elem = `
+  <div class="row ingredient-row">
+                    <div class="col-3">
+                      <div class="input-group align-items-center">
+                          <input type="text" name="ingredient[][ingredient]"  class="form-control  form-control-sm">
+                                 
+                      </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="input-group align-items-center">
+                          <input type="text" name="ingredient[][amount]"  class="form-control  form-control-sm">
+                                 
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <div class="input-group align-items-center">
+                          <input type="text" name="ingredient[][unit]"  class="form-control  form-control-sm">
+                                 
+                      </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="input-group align-items-center">
+                          <input type="text" name="ingredient[][label]"  class="form-control  form-control-sm" >
+                                 
+                        </div>
+                    </div>
+                      
+                    <div class="col-3">
+                      <div class="input-group align-items-center">
+                          <input type="text" name="ingredient[][special]"  class="form-control  form-control-sm">
+                      </div>
+                    </div>
+                     <span class="deleteIngredient" data-bs-type="deleteIng">x</span>
+                    </div>
+  `;
+  ingredientsList.innerHTML += elem;
 }
 
 const detailRequest = ()=>{
   const detailModal = document.getElementById('detailsCocktailModal')
+  if (!detailModal) return;
   detailModal.addEventListener("shown.bs.modal",(e)=>{
       const target = e.relatedTarget;
       const title = detailModal.querySelector("#cocktailDetailModalTitle")
@@ -124,13 +150,13 @@ const detailRequest = ()=>{
       const updateButton = detailModal.querySelector("#updateCocktail")
       const deleteButton = detailModal.querySelector("#deleteCocktail")
       fetchCocktail(target.dataset.cocktailId).then((response)=>{
-        title.textContent = response.nom
+        title.textContent = response.name
         cocktailImage.src = response.image
-        name.textContent = response.nom
+        name.textContent = response.name
         updateButton.dataset.bsId = response.id
         deleteButton.dataset.bsId = response.id
-        updateButton.dataset.bsName = response.nom
-        deleteButton.dataset.bsName = response.nom
+        updateButton.dataset.bsName = response.name
+        deleteButton.dataset.bsName = response.name
       })
 
   })
@@ -207,34 +233,97 @@ const handleCreateUpdateRequests = ()=>{
       processBtn.dataset.type = "update";
       const cocktailId = updateButton.getAttribute('data-bs-id');
       const cocktailName = updateButton.getAttribute('data-bs-name');
-
-
-
+      const colors = cocktailModal.querySelector("#colors");
       cocktailIdToUpdate = cocktailId;
       const modalTitle = cocktailModal.querySelector('#cocktailModalTitle');
       modalTitle.textContent = `Mettre à jour un cocktail ${cocktailName}`;
       processBtn.textContent = `Mettre à jour`;
       erreurs.innerHTML="";
+      colors.innerHTML="";
 
       fetchCocktail(cocktailId).then((cocktail)=> {
-        document.querySelector("#name").value = cocktail.nom;
-        document.querySelector("#prix").value = cocktail.prix;
-        document.querySelector("#type").value = cocktail.type.toLowerCase();
-        document.querySelector("#imagePreview").src = cocktail.image;
+        console.log(cocktail)
+        document.querySelector("#name").value = cocktail.name;
+        document.querySelector("#prix").value = cocktail.price;
+        document.querySelector("#type").value = cocktail.category || "";
+        document.querySelector("#glass").value = cocktail.glass || "";
+        document.querySelector("#garnish").value = cocktail.garnish || "";
+        document.querySelector("#preparation").value = cocktail.preparation || "";
+        document.querySelector("#imagePreview").src = cocktail.image??"/images/bg/no_image.png";
 
+        let ingredientListContent = "";
+        if (cocktail.ingredients.length === 0 ){
+            ingredientListContent = `<p id="noIngredient" class="text-center"> Aucun ingrédient spécifié.<br> Appuyer sur ajouter pour ajouter un ingrédient </p>`
+        }else{
+          ingredientListContent = `
+        <div class="row">
+                    <div class="col-3"><label class="form-label">Nom</label></div>
+                    <div class="col-2"><label class="form-label">Quantité</label></div>
+                    <div class="col-1"><label class="form-label">Unité</label></div>
+                    <div class="col-3"><label class="form-label">Label</label></div>
+                    <div class="col-2"><label class="form-label">Spécial</label></div>
+                      
+                    </div>
+        `;
 
-        let list = "";
-        cocktail.ingredients.map((ing)=>{
-          list += `
-                    <div class="mb-3 input-group align-items-center">
-                        <input type="text" name="ingredients[]"  class="form-control" aria-describedby="ingredientsHelpBlock"
-                               value="${ing}" required>
-                               <i class="deleteIngredient" data-bs-type="deleteIng">X</i>
+          cocktail.ingredients.map((ing)=>{
+            ingredientListContent += `
+                    <div class="row ingredient-row">
+                    <div class="col-3">
+                      <div class="input-group align-items-center">
+                          <input type="text" name="ingredient[][ingredient]"  class="form-control  form-control-sm"
+                                 value="${ing.ingredient}" required>
+                                 
+                      </div>
+                    </div>
+                    <div class="col-2">
+                        <div class="input-group align-items-center">
+                          <input type="text" name="ingredient[][amount]"  class="form-control  form-control-sm"
+                                 value="${ing.amount || ''}" >
+                                 
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <div class="input-group align-items-center">
+                          <input type="text" name="ingredient[][unit]"  class="form-control  form-control-sm"
+                                 value="${ing.unit || ''}" >
+                                 
+                      </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="input-group align-items-center">
+                          <input type="text" name="ingredient[][label]"  class="form-control  form-control-sm"
+                                 value="${ing.label || ''}" >
+                                 
+                        </div>
+                    </div>
+                      
+                    <div class="col-3">
+                      <div class="input-group align-items-center">
+                          <input type="text" name="ingredient[][special]"  class="form-control  form-control-sm"
+                                 value="${ing.special || ''}" >
+                                 
+                      </div>
+                    </div>
+                    <span class="deleteIngredient" data-bs-type="deleteIng">x</span>
                     </div>
           `
-        })
-        ingredientsList.innerHTML = list
+          })
+        }
 
+
+
+        let colorsListContent = "";
+        cocktail.colors.split(",").map((color)=>{
+          colorsListContent += `
+        <div class="color-wrapper">  
+          <input type="color" name="colors[]"  class="form-control" value="${color}" >
+          <span class="close">x</span>
+        </div>
+          `
+        })
+        ingredientsList.innerHTML = ingredientListContent
+        colors.innerHTML = colorsListContent
 
         const modalInstance  = bootstrap.Modal.getOrCreateInstance(cocktailModal)
         modalInstance.show();
@@ -254,7 +343,7 @@ const handleCreateUpdateRequests = ()=>{
     const deleteIngButton =  e.target.closest('[data-bs-type="deleteIng"]');
     const addIngButton =  e.target.closest('[data-bs-type="addIng"]');
     if (deleteIngButton){
-      deleteIngButton.closest(".input-group").remove();
+      deleteIngButton.closest(".ingredient-row").remove();
     }
 
     if (addIngButton){
@@ -401,44 +490,46 @@ const login = ()=>{
   const erreurs = document.querySelector("#erreursLogin");
 
   if (!form) return;
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
+    const connexionModal = document.querySelector("#connexionModal")
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
     try {
-      fetch('/membres/login', {
+      const response = await fetch('/membres/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
-      }).then((response)=>{
-        response.json().then((result)=>{
-          if (!response.ok) {
-            erreurs.innerHTML = result.errors
-                .map((err) => {
-                  return `<p class="alert alert-danger" role="alert">
-                                <i class="bi bi-exclamation-triangle-fill text-danger"></i>
-                                ${err.msg}
-                               </p>`
-                }).join("");
-          } else {
-            alert("Vous êtes connecté !")
-            form.reset();
-          }
-        });
-
-
       });
+      const results = await response.json();
+
+      if (!response.ok) {
+        displayErrors(erreurs, results.errors)
+      } else {
+        form.reset();
+        const membre = results.membre;
+        localStorage.setItem("membreInfos",JSON.stringify(membre))
+        if (membre.roles ==="ADMIN") {
+          window.location.href = "/admin"
+        }else {
+          showToastSuccess(`Heureux de vous voir ${membre.prenom} ${membre.nom} !`)
+        }
+      }
 
     } catch (error) {
-      console.error('Erreur lors de la connexion', error);
+      console.log(error)
       erreurs.innerHTML = `<p class="alert alert-danger" role="alert">Une erreur est survenue.</p>`;
     }
 
   })
 
 }
+
+
+
+
 
 
 const displayErrors = (elem, errors)=>{

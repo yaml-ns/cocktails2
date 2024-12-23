@@ -33,10 +33,16 @@
                     </li>
                 </ul>
             </div>
-            <ul class="navbar-nav nav-perso-droit">
 
+            <ul id="loggedIn" class="navbar-nav nav-perso-droit d-none">
                 <li class="nav-item">
-                    <a type="button" class="btn btn-primary nav-link login-button" data-bs-toggle="modal" data-bs-target="#connexionModal">
+                    <img class="rounded-circle me-2" src="/images/bg/terrence.png" alt="img" width="40">
+                    <span id="memberName"></span>
+                </li>
+                <li class="nav-item">
+                    <a type="button"
+                       class="btn btn-primary nav-link login-button"
+                       title="Se déconnecter" id="logout">
                         <i class="bi bi-box-arrow-in-right"></i></a>
                 </li>
             </ul>
@@ -107,7 +113,7 @@
 </main>
 <!-- Debut Modal cocktail -->
 <div class="modal fade" id="cocktailModal" tabindex="-1" aria-labelledby="cocktailModalLabel">
-    <div class="modal-dialog modal-dialog-centered ">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
             <form id="cocktailForm" enctype="multipart/form-data">
                 <div class="modal-header">
@@ -116,37 +122,79 @@
                 </div>
                 <div class="modal-body">
                     <div id="cocktailErrors"></div>
-                    <div class="mb-3 input-group">
-                        <label for="name" class="form-label">Nom *</label>
-                        <input type="text" name="nom" id="name" class="form-control" aria-describedby="nameHelpBlock" required>
-                    </div>
-                    <div class="mb-3 input-group">
-                        <label for="prix" class="form-label" >Prix *</label>
-                        <input type="text" name="prix" id="prix" class="form-control" aria-describedby="prixHelpBlock" required>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3 input-group">
+                                <label for="name" class="form-label">Nom *</label>
+                                <input type="text" name="nom" id="name" class="form-control form-control-sm" aria-describedby="nameHelpBlock" required>
+                            </div>
+                            <div class="mb-3 input-group">
+                                <label for="prix" class="form-label" >Prix *</label>
+                                <input type="text" name="prix" id="prix" class="form-control form-control-sm" aria-describedby="prixHelpBlock" required>
 
+                            </div>
+
+                            <div class="mb-3 input-group">
+                                <label for="type" class="form-label">Catégorie</label>
+                                <select id="type" name="type" class="form-control form-control-sm" >
+                                    <option value=""></option>
+                                    <option value="Long Drink">Long Drink</option>
+                                    <option value="All Day Cocktail">All Day Cocktail</option>
+                                    <option value="Sparkling Cocktail">Sparkling Cocktail</option>
+                                    <option value="Before Dinner Cocktail">Before Dinner Cocktail</option>
+                                    <option value="After Dinner Cocktail">After Dinner Cocktail</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="mb-3 ">
+                                <div class="row">
+                                    <div class="col-2"><p class="form-label">Couleurs </p></div>
+                                    <div class="d-flex col-7 justify-content-center" id="colors">
+                                    </div>
+                                    <div class="col-2"><button type="button" class="btn btn-sm btn-secondary">Ajouter</button></div>
+                                </div>
+
+                            </div>
+                            <div class="mb-3 input-group">
+                                <label for="glass" class="form-label">Verre</label>
+                                <select id="glass" name="glass" class="form-control form-control-sm" >
+                                    <option value=""></option>
+                                    <option value="collins">collins</option>
+                                    <option value="martini">martini</option>
+                                    <option value="old-fashioned">old-fashioned</option>
+                                    <option value="highball">highball</option>
+                                    <option value="champagne-flute">champagne-flute</option>
+                                    <option value="margarita">margarita</option>
+                                    <option value="champagne-tulip">champagne-tulip</option>
+                                    <option value="hurricane">hurricane</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3 input-group">
+                                <label for="garnish" class="form-label" >Garniture</label>
+                                <input type="text" name="garnish" id="garnish" class="form-control form-control-sm" aria-describedby="garnishHelpBlock" >
+                            </div>
+
+                        </div>
                     </div>
 
-                    <div class="mb-3 input-group">
-                        <label for="type" class="form-label">Type</label>
-                        <select id="type" name="type" class="form-control" >
-                            <option value=""></option>
-                            <option value="alcoolisé">Alcoolisé</option>
-                            <option value="non alcoolisé">Non Alcoolisé</option>
-                        </select>
-                    </div>
-                    <hr>
-                    <div class="mt-5">
+                        <label for="preparation" class="form-label">Préparation *</label>
+                        <textarea  name="preparation" rows="2" id="preparation" class="form-control form-control-sm"  required></textarea>
+
+
+                    <div class="mt-3 ingredients-container">
                         <div class="d-flex justify-content-between mb-4">
-                            <h5>Les ingrédients</h5>
-                            <button type="button" id="addIng" class="btn btn-primary" data-bs-type="addIng"><i class="bi bi-plus-circle"></i> Ajouter</button>
+                            <h6>Les ingrédients</h6>
+                            <button type="button" id="addIng" class="btn btn-sm btn-secondary" data-bs-type="addIng"><i class="bi bi-plus-circle"></i> Ajouter</button>
                         </div>
                         <div id="ingredientsList">
 
                         </div>
                     </div>
-                    <div class="row">
+                    <div class="row image-container">
                         <div class="col-4">
-                            <img id="imagePreview" src="/images/bg/no_image.jpg" width="130">
+                            <img class="rounded" id="imagePreview" src="/images/bg/no_image.jpg" width="130">
                         </div>
                         <div class="col-8">
                             <label for="image" class="form-label" id="imageFileLabel">Image du cocktail</label>

@@ -9,6 +9,24 @@ import { afficherDetailsCocktail } from "./modules/affichage.js";
 
 document.addEventListener("DOMContentLoaded", async () => {
 
+    const isAdmin = document.querySelector("#admin")
+    const logout = document.querySelector("#logout")
+    logout.addEventListener("click",(e)=>{
+        localStorage.removeItem("membreInfos")
+        window.location.href = "/"
+    })
+    const membre = JSON.parse(localStorage.getItem("membreInfos"));
+    if (isAdmin){
+        if (!membre || membre.roles !== "ADMIN") window.location.href ="/"
+    }
+    if (membre){
+        document.querySelector("#loggedOut")?.classList.add("d-none")
+        document.querySelector("#loggedIn")?.classList.remove("d-none")
+            const memName = document.querySelector("#memberName");
+            if (memName) memName.textContent = `${membre.prenom} ${membre.nom}`
+    }
+
+
     login();
     register();
     handleCreateUpdateRequests();
@@ -36,7 +54,20 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 });
 
+document.body.addEventListener('mouseover', (e) => {
+    if (e.target.classList.value === "deleteIngredient"){
+        const el = e.target.closest(".ingredient-row");
+        el.classList.add("border-danger")
+    }
 
+});
+document.body.addEventListener('mouseout', (e) => {
+    if (e.target.classList.value === "deleteIngredient"){
+        const el = e.target.closest(".ingredient-row");
+        el.classList.remove("border-danger")
+    }
+
+});
     const photo = document.getElementById('image');
     if(photo) {
         photo.addEventListener('change', function (event) {

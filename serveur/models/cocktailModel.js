@@ -16,7 +16,7 @@ export const getAll = async (filters,req)=>{
         params.push(id)
     }
     if (nom){
-        query += ` AND c.nom LIKE ?`;
+        query += ` AND c.name LIKE ?`;
         params.push(`${nom}%`)
     }
 
@@ -25,11 +25,11 @@ export const getAll = async (filters,req)=>{
         params.push(params.push(`%${ingredient}%`))
     }
     if (minPrix){
-        query += ` AND c.prix >= ?`;
+        query += ` AND c.price >= ?`;
         params.push(minPrix)
     }
     if (maxPrix){
-        query += ` AND c.prix <= ?`;
+        query += ` AND c.price <= ?`;
         params.push(maxPrix)
     }
     if (orderBy){
@@ -85,12 +85,20 @@ export const getAll = async (filters,req)=>{
 }
 
 export const getById = async (id,req)=>{
-    const rows = await connexion.query(`SELECT c.*,CONCAT(?,"/",c.image) as image, i.ingredient FROM cocktails c 
+    const [rows] = await connexion.query(`SELECT DISTINCT c.*,CONCAT(?,"/",c.image) as image FROM cocktails c 
                                           LEFT JOIN ingredients i 
                                           ON c.id = i.cocktail_id
                                           WHERE c.id = ?`,[`${req.protocol}://${req.get("host")}/uploads/images/cocktail`,id])
-    const cocktails = await processRows(rows[0]);
-    return cocktails[0];
+    if (rows.length > 0){
+        const cocktail = rows[0];
+        const [ingredients] = await connexion.query(`SELECT * FROM ingredients WHERE cocktail_id = ?`, [id])
+        cocktail.ingredients = []
+        ingredients.forEach((ingredient)=>{
+            cocktail.ingredients.push(ingredient)
+        })
+        return cocktail;
+    }
+    return null
 }
 export const getOneCocktail = async (id)=>{
     const rows = await connexion.query(`SELECT c.*, i.ingredient FROM cocktails c 
@@ -157,9 +165,9 @@ const processRows = async (rows)=> {
         if (cocktail === null || cocktail.id !== row.id) {
             cocktail = {
                 id: row.id,
-                nom: row.nom,
-                type: row.type,
-                prix: row.prix,
+                name: row.name,
+                category: row.category,
+                price: row.price,
                 image: row.image,
                 ingredients: []
             };

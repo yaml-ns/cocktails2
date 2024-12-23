@@ -7,7 +7,7 @@ body {
     color: #151515;
 }
 .nav-bg-perso {
-    background-color: rgba(0, 0, 0, 0.7) !important;
+    background-color: rgba(0, 0, 0, 0.95) !important;
     position: sticky;
 }
 
@@ -41,8 +41,11 @@ body {
     outline: none;
 }
 #admin .accordion-body input, #admin .accordion-body select {
-    background-color: #eaeaea;
-    color: #646464;
+    background-color: #f6f7f7;
+    color: #4d4d4d;
+}
+#admin #colors .badge:empty {
+    display: inline-block !important;
 }
 .accordion-body .price {
     width: 110px;
@@ -279,19 +282,19 @@ p.alert{
 
 #admin .accordion-item {
     color: #000000 !important;
-    background-color: #bac5ff !important;
-    box-shadow: 1px 1px 5px #636faf;
+    background-color: #dee8ff !important;
+    /*box-shadow: 1px 1px 5px #636faf;*/
     border: none !important;
     overflow: hidden;
 }
 #admin .accordion-header {
     color: #1e1e1e !important;
-    background-color: #bac5ff !important;
+    background-color: #dee8ff !important;
     border: none !important;
 }
 #admin .accordion-button {
     color: #1e1e1e !important;
-    background-color: #bac5ff !important;
+    background-color: #dee8ff !important;
     border: none !important;
     outline: none !important;
 }
@@ -329,13 +332,91 @@ p.alert{
     box-shadow: 1px 1px 5px #034abe;
 }
 
-.deleteIngredient{
-    display: block;
-    width: 25px;
-    height: 25px;
-    background-color: #75023f;
+
+
+#loggedIn {
+    background-color: #d8d8d817;
+    padding: 2px 2px 2px 4px;
+    color: #57b201;
+    border-radius: 10px;
+    font-weight: 500;
+    border: 1px solid rgba(87, 178, 1, 0.25);
+}
+
+.card-horizontal.entete {
+    border: 1px solid #b2c9fe3d !important;
+    background-color: #dee8ff;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    color: #3b548c !important;
+}
+.color-wrapper {
+    min-width: 45px;
+    position: relative;
+    margin-right: 25px;
+}
+.color-wrapper .close {
     text-align: center;
-    color: aliceblue;
-    border-radius: 40px;
+    background-color: #000000;
+    color: #d7d5d5;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    line-height: 15px;
+    border-radius: 50px;
+    position: absolute;
+    top: -10px;
+    right: -10px;
     cursor: pointer;
 }
+.color-wrapper .close:hover{
+    background-color: #9f000d;
+}
+#ingredientsList {
+    margin: 0 15px;
+}
+.ingredient-row {
+    border: 1px solid #d5e0f4;
+    position: relative;
+    margin-bottom: 10px;
+    padding: 4px 0;
+    border-radius: 5px;
+}
+
+
+.deleteIngredient {
+    text-align: center;
+    background-color: #000000;
+    color: #d7d5d5;
+    width: 30px;
+    height: 24px;
+    line-height: 19px;
+    border-radius: 5px;
+    position: absolute;
+    top: -10px;
+    right: -8px;
+    cursor: pointer;
+}
+.deleteIngredient:hover{
+    background-color: #9f000d;
+}
+#cocktailModal .modal-header {
+    padding: 5px 15px;
+}
+.image-container, .ingredients-container{
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ced7e6;
+    margin: 10px 5px 5px 5px;
+}
+/*#admin .modal-title {*/
+/*    display: inline-block;*/
+/*    width: 35px;*/
+/*    height: 35px;*/
+/*    border-radius: 50%;*/
+/*    background-color: #0c252a;*/
+/*    color: #ffffff;*/
+/*    text-align: center;*/
+/*    line-height: 32px;*/
+/*    margin-right: 9px;*/
+/*}*/

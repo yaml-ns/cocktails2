@@ -34,19 +34,37 @@
                         <li class="nav-item">
                             <a class="nav-link" href="#">Contact</a>
                         </li>
-
-
                     </ul>
                 </div>
-                <ul class="navbar-nav nav-perso-droit">
+                <ul id="loggedOut" class="navbar-nav nav-perso-droit">
                     <li class="nav-item">
-                    <a type="button" class="btn btn-primary nav-link login-button" data-bs-toggle="modal" data-bs-target="#inscriptionModal" >
+                    <a type="button"
+                       class="btn btn-primary nav-link login-button"
+                       data-bs-toggle="modal"
+                       data-bs-target="#inscriptionModal"
+                       title="Créer un compte">
                         <i class="bi bi-person-plus"></i>
                     </a>
                     </li>
                     <li class="nav-item">
-                        <a type="button" class="btn btn-primary nav-link login-button" data-bs-toggle="modal" data-bs-target="#connexionModal">
+                        <a type="button"
+                           class="btn btn-primary nav-link login-button"
+                           data-bs-toggle="modal"
+                           data-bs-target="#connexionModal"
+                           title="Se connecter">
                             <i class="bi bi-box-arrow-in-left"></i></a>
+                    </li>
+                </ul>
+                <ul id="loggedIn" class="navbar-nav nav-perso-droit d-none">
+                    <li class="nav-item">
+                        <img class="rounded-circle me-2" src="/images/bg/terrence.png" alt="img" width="40">
+                        <span id="memberName"></span>
+                    </li>
+                    <li class="nav-item">
+                        <a type="button"
+                           class="btn btn-primary nav-link login-button"
+                           title="Se déconnecter" id="logout">
+                            <i class="bi bi-box-arrow-in-right"></i></a>
                     </li>
                 </ul>
             </div>
@@ -206,6 +224,24 @@
         </div>
     </div>
     <!-- Fin Modal Connexion-->
+    <!-- Toast Container -->
+    <div class="toast-container position-fixed top-0 end-0 mt-5 p-3">
+        <!-- Toast Success -->
+        <div id="toastSuccess" class="toast align-items-center text-bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body"><i class="bi bi-check-circle"></i><span id="toastMessage" class="mx-2">Opération réussie !</span></div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+
+        <!-- Toast Error -->
+        <div id="toastError" class="toast align-items-center text-bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">Une erreur est survenue.</div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
     <footer>
         <p>© 2024 - Cocktello</p>
     </footer>

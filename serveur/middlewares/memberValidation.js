@@ -44,8 +44,8 @@ export const validerLogin = [
         .withMessage("L'adresse Email semble invalide."),
     body('password')
         .trim()
-        .isLength({ min: 8 })
-        .withMessage("Le mot de passe doit être d'au moins 8 caractères"),
+        .notEmpty()
+        .withMessage("Veuillez saisir votre mot de passe"),
     (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
