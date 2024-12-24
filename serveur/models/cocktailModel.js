@@ -111,10 +111,8 @@ export const getOneCocktail = async (id)=>{
 
 export const getByName = async (name)=>{
 
-    const rows = await connexion.query(`SELECT c.*, i.ingredient FROM cocktails c 
-                                          LEFT JOIN ingredients i 
-                                          ON c.id = i.cocktail_id
-                                          WHERE c.nom = ?`,[name])
+    const rows = await connexion.query(`SELECT c.id FROM cocktails c
+                                          WHERE c.name = ?`,[name])
     const cocktails = await processRows(rows[0]);
     return cocktails[0];
 }
@@ -125,14 +123,33 @@ export const deleteById = async (id)=>{
 }
 
 export const create = async (cocktail)=>{
-    const [result] = await connexion.query(`INSERT INTO cocktails 
-                                               (nom, type, prix, image) VALUES(?,?,?,?)`,
-        [cocktail.nom, cocktail.type, cocktail.prix,cocktail.image]
+    const [result] = await connexion.query(
+            `INSERT INTO cocktails 
+            (name, price, colors, glass,category, garnish, preparation, image) 
+            VALUES(?,?,?,?,?,?,?,?)`,
+        [
+            cocktail.name,
+            cocktail.price,
+            cocktail.colors?cocktail.colors.join(","):"",
+            cocktail.glass,
+            cocktail.category,
+            cocktail.garnish,
+            cocktail.preparation,
+            cocktail.image
+        ]
     )
     if (result.affectedRows > 0 ){
        if (cocktail.ingredients){
-           const values = cocktail.ingredients.map((ingredient) => [result.insertId,ingredient]);
-           const query = `INSERT INTO ingredients (cocktail_id,ingredient) VALUES ?`
+           const values = cocktail.ingredients.map((ingredient) => [
+               result.insertId,
+               ingredient.unit,
+               ingredient.amount,
+               ingredient.ingredient,
+               ingredient.label,
+               ingredient.special
+           ]
+           );
+           const query = `INSERT INTO ingredients (cocktail_id,unit,amount,ingredient,label,special) VALUES ?`
            await connexion.query(query,[values]);
            return result.affectedRows
        }
@@ -144,17 +161,45 @@ export const create = async (cocktail)=>{
 
 export const update = async (cocktail)=>{
     await connexion.query(`DELETE FROM ingredients WHERE cocktail_id = ?`,cocktail.id);
-    const rows = await connexion.query(`UPDATE cocktails 
-                                               SET nom = ?, type = ?, prix = ?, image=?
-                                               WHERE id = ?`,
-                                               [cocktail.nom, cocktail.type, cocktail.prix, cocktail.image,cocktail.id,]
-                                               )
-    if (cocktail.ingredients.length > 0){
-        const values = cocktail.ingredients.map((ingredient) => [cocktail.id,ingredient, ]);
-        const query = `INSERT INTO ingredients (cocktail_id,ingredient) VALUES ?`
-        await connexion.query(query,[values]);
+    const [result] = await connexion.query(
+           `UPDATE cocktails
+            SET 
+            name = ?, price = ?, colors = ?, glass = ?,
+            category = ?, garnish = ?, preparation = ?, image = ? 
+            WHERE id = ?`,
+        [
+            cocktail.name,
+            cocktail.price,
+            cocktail.colors?cocktail.colors.join(","):"",
+            cocktail.glass,
+            cocktail.category,
+            cocktail.garnish,
+            cocktail.preparation,
+            cocktail.image,
+            cocktail.id
+        ]
+    )
+    if (result.affectedRows > 0 ){
+        if (cocktail.ingredients){
+            const values = cocktail.ingredients.map((ingredient) => [
+                    cocktail.id,
+                    ingredient.unit,
+                    ingredient.amount,
+                    ingredient.ingredient,
+                    ingredient.label,
+                    ingredient.special
+                ]
+            );
+            const query = `INSERT INTO ingredients (cocktail_id,unit,amount,ingredient,label,special) VALUES ?`
+            await connexion.query(query,[values]);
+
+        }
+        return result.affectedRows
+    }else{
+        return 0;
     }
-    return rows[0].affectedRows;
+
+
 }
 
 const processRows = async (rows)=> {

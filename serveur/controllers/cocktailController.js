@@ -25,14 +25,15 @@ export const getCocktails = async (req,res)=>{
 
 export const createCocktail = async (req,res)=>{
     const cocktail = req.body;
+
     try {
-        const cocktail_existe = await getByName(cocktail.nom)
+        const cocktail_existe = await getByName(cocktail.name)
         if (cocktail_existe){
             res.statusCode = 400;
             res.json({ok:false,errors: "Un cocktail du même nom existe déjà !"})
         }else{
 
-                cocktail.image = req.file ? req.file.filename: null;
+            cocktail.image = req.file ? req.file.filename: null;
             const r = await create(cocktail)
             if (r===1){
                 res.statusCode = 201;
@@ -80,16 +81,24 @@ export const updateCocktail = async (req,res)=>{
             cocktail.image = req.file ? req.file.filename: cocktail_exists.image;
 
             const result = await update(cocktail)
-            if (result >=1){
+            if (result > 0 ){
                 res.statusCode = 200;
                 res.json({ok:true,message:"Cocktail mis à jour avec succès !"})
+            }else{
+                res.statusCode = 400;
+                res.json({
+                    ok: false,
+                    errors: "Échec de la mise à jour du cocktail"
+                })
             }
+
         }catch (e){
             console.log(e)
             res.statusCode = 500
             res.json({ok:false,message:"Une erreur est survenue !"})
         }
     }else{
+        console.log("Le cocktail n'existe pas")
     res.statusCode = 400
     res.json({ok:false,message:"Cocktail non trouvé !"})
     }

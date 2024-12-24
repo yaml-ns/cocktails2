@@ -350,12 +350,12 @@ p.alert{
     border-radius: 5px;
     color: #3b548c !important;
 }
-.color-wrapper {
-    min-width: 45px;
+.color-row {
+    min-width: 40px;
     position: relative;
-    margin-right: 25px;
+    margin-right: 10px;
 }
-.color-wrapper .close {
+.color-row .deleteColor {
     text-align: center;
     background-color: #000000;
     color: #d7d5d5;
@@ -369,13 +369,13 @@ p.alert{
     right: -10px;
     cursor: pointer;
 }
-.color-wrapper .close:hover{
+.color-row .deleteColor:hover{
     background-color: #9f000d;
 }
-#ingredientsList {
+#ingredientsList, #ingredientsListHeader  {
     margin: 0 15px;
 }
-.ingredient-row {
+.ingredient-row{
     border: 1px solid #d5e0f4;
     position: relative;
     margin-bottom: 10px;

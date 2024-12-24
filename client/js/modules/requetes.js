@@ -15,7 +15,6 @@ const listCocktails = async (page=1, filtres, last= false)=>{
       throw new Error("Erreur lors de la récupération des données");
     }
     const jsonResponse = await response.json();
-    console.log(jsonResponse)
     totalPages = jsonResponse.pagination.totalPages;
     currentPage = jsonResponse.pagination.page;
       isAdmin ? afficherListeCocktailsCardsAdmin(jsonResponse.result)
@@ -96,47 +95,88 @@ fields.forEach((field) => {
 
 /*===================================*/
 
-function addIngredient(ingredientsList) {
-  const noIng = document.querySelector("#noIngredient");
-  if (noIng){
-    noIng.remove()
+function setIngredientListHeader(){
+  const ingredientsListHeader = document.querySelector('#ingredientsListHeader')
+  const ingredientRows = document.querySelectorAll(".ingredient-row")
+  if (!ingredientRows || ingredientRows.length === 0){
+
+    ingredientsListHeader.innerHTML = `<p id="noIngredient" class="text-center"> 
+                                Aucun ingrédient spécifié pour le moment.<br> 
+                                Appuyer sur ajouter pour ajouter un ingrédient 
+                                </p>
+`
+  }else{
+    ingredientsListHeader.innerHTML = `
+        <div class="row">
+                    <div class="col-3"><label class="form-label">Nom</label></div>
+                    <div class="col-2"><label class="form-label">Quantité</label></div>
+                    <div class="col-1"><label class="form-label">Unité</label></div>
+                    <div class="col-3"><label class="form-label">Label</label></div>
+                    <div class="col-2"><label class="form-label">Spécial</label></div>  
+                    </div>
+        `;
   }
-  const elem = `
-  <div class="row ingredient-row">
+}
+function setColorListHeader(){
+  const colorsListHeader = document.querySelector('#colorListHeader')
+  const colorRows = document.querySelectorAll(".color-row")
+  if (!colorRows || colorRows.length === 0){
+    colorsListHeader.classList.remove("d-none")
+  }
+}
+function addIngredient(ingredientsList) {
+  const numElements = document.querySelectorAll(".ingredient-row")?.length || 0;
+  const elem = document.createElement("div")
+  elem.classList.add("row")
+  elem.classList.add("ingredient-row")
+  elem.innerHTML = `
                     <div class="col-3">
                       <div class="input-group align-items-center">
-                          <input type="text" name="ingredient[][ingredient]"  class="form-control  form-control-sm">
+                          <input type="text" name="ingredients[${numElements}][ingredient]"  class="form-control  form-control-sm">
                                  
                       </div>
                     </div>
                     <div class="col-2">
                         <div class="input-group align-items-center">
-                          <input type="text" name="ingredient[][amount]"  class="form-control  form-control-sm">
+                          <input type="text" name="ingredients[${numElements}][amount]"  class="form-control  form-control-sm">
                                  
                       </div>
                     </div>
                     <div class="col-1">
                       <div class="input-group align-items-center">
-                          <input type="text" name="ingredient[][unit]"  class="form-control  form-control-sm">
+                          <input type="text" name="ingredients[${numElements}][unit]"  class="form-control  form-control-sm">
                                  
                       </div>
                     </div>
                     <div class="col-3">
                         <div class="input-group align-items-center">
-                          <input type="text" name="ingredient[][label]"  class="form-control  form-control-sm" >
+                          <input type="text" name="ingredients[${numElements}][label]"  class="form-control  form-control-sm" >
                                  
                         </div>
                     </div>
                       
                     <div class="col-3">
                       <div class="input-group align-items-center">
-                          <input type="text" name="ingredient[][special]"  class="form-control  form-control-sm">
+                          <input type="text" name="ingredients[${numElements}][special]"  class="form-control  form-control-sm">
                       </div>
                     </div>
                      <span class="deleteIngredient" data-bs-type="deleteIng">x</span>
                     </div>
   `;
-  ingredientsList.innerHTML += elem;
+  ingredientsList.appendChild(elem)
+  setIngredientListHeader()
+}
+
+function addColor(colorList) {
+  const numElements = document.querySelectorAll(".color-row")?.length || 0;
+  const elem = document.createElement("div")
+  elem.classList.add("color-row")
+  elem.innerHTML = `
+                <input type="color" name="colors[]" >
+                <span class="deleteColor">x</span>
+  `;
+  colorList.appendChild(elem)
+  setColorListHeader()
 }
 
 const detailRequest = ()=>{
@@ -162,8 +202,13 @@ const detailRequest = ()=>{
   })
 }
 
+
+
 const handleCreateUpdateRequests = ()=>{
   const cocktailModal = document.getElementById('cocktailModal')
+  cocktailModal.addEventListener("show.bs.modal",(e)=>{
+    setIngredientListHeader()
+  });
   if (!cocktailModal) return;
   const processBtn = cocktailModal.querySelector('#processBtn')
   const erreurs = document.querySelector("#cocktailErrors");
@@ -174,35 +219,36 @@ const handleCreateUpdateRequests = ()=>{
   processBtn.addEventListener('click', (e) => {
     e.preventDefault();
     const btnType = processBtn.dataset.type;
-      if (btnType ==="update"){
-
+      if (btnType ==="update") {
+        processBtn.innerHTML = `
+        <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+        <span role="status">Loading...</span>`
         if (cocktailIdToUpdate) {
-
           const formData = new FormData(form);
 
           updateCocktail(cocktailIdToUpdate, formData)
               .then((res) => {
-                if (res.ok){
+                if (res.ok) {
                   showToastSuccess("Cocktail mis à jour avec succès !")
                   listCocktails(currentPage).then(() => {
-                    const modalInstance  = bootstrap.Modal.getOrCreateInstance(cocktailModal)
+                    const modalInstance = bootstrap.Modal.getOrCreateInstance(cocktailModal)
                     modalInstance.hide();
                   });
-                }else{
-                  displayErrors(erreurs,res.errors)
+                } else {
+                  displayErrors(erreurs, res.errors)
                 }
               })
               .catch((err) => {
-                console.error('Erreur lors de la mise a jour ', err)
-                displayErrors(erreurs,err)
+                console.error('Erreur lors de la mise a jour ')
+                displayErrors(erreurs, err)
               });
         }
       }
 
-      if (btnType === "new"){
-        const createFormData = new FormData(form);
-        createCocktail(createFormData)
-            .then((res) => {
+    if (btnType === "new") {
+      const createFormData = new FormData(form);
+      createCocktail(createFormData)
+          .then((res) => {
               if (res.ok){
                 showToastSuccess("Cocktail créé avec succès")
                 listCocktails(currentPage,null,true).then(() => {
@@ -228,12 +274,15 @@ const handleCreateUpdateRequests = ()=>{
     const addButton = e.target.closest('[data-bs-type="new"]');
     const processBtn = document.querySelector("#processBtn")
     const ingredientsList = document.querySelector("#ingredientsList");
+    const colors = cocktailModal.querySelector("#colors");
+    let ingredientListContent = "";
+
+
 
     if (updateButton) {
       processBtn.dataset.type = "update";
       const cocktailId = updateButton.getAttribute('data-bs-id');
       const cocktailName = updateButton.getAttribute('data-bs-name');
-      const colors = cocktailModal.querySelector("#colors");
       cocktailIdToUpdate = cocktailId;
       const modalTitle = cocktailModal.querySelector('#cocktailModalTitle');
       modalTitle.textContent = `Mettre à jour un cocktail ${cocktailName}`;
@@ -242,7 +291,6 @@ const handleCreateUpdateRequests = ()=>{
       colors.innerHTML="";
 
       fetchCocktail(cocktailId).then((cocktail)=> {
-        console.log(cocktail)
         document.querySelector("#name").value = cocktail.name;
         document.querySelector("#prix").value = cocktail.price;
         document.querySelector("#type").value = cocktail.category || "";
@@ -251,48 +299,33 @@ const handleCreateUpdateRequests = ()=>{
         document.querySelector("#preparation").value = cocktail.preparation || "";
         document.querySelector("#imagePreview").src = cocktail.image??"/images/bg/no_image.png";
 
-        let ingredientListContent = "";
-        if (cocktail.ingredients.length === 0 ){
-            ingredientListContent = `<p id="noIngredient" class="text-center"> Aucun ingrédient spécifié.<br> Appuyer sur ajouter pour ajouter un ingrédient </p>`
-        }else{
-          ingredientListContent = `
-        <div class="row">
-                    <div class="col-3"><label class="form-label">Nom</label></div>
-                    <div class="col-2"><label class="form-label">Quantité</label></div>
-                    <div class="col-1"><label class="form-label">Unité</label></div>
-                    <div class="col-3"><label class="form-label">Label</label></div>
-                    <div class="col-2"><label class="form-label">Spécial</label></div>
-                      
-                    </div>
-        `;
-
-          cocktail.ingredients.map((ing)=>{
+          cocktail.ingredients.map((ing,index)=>{
             ingredientListContent += `
                     <div class="row ingredient-row">
                     <div class="col-3">
                       <div class="input-group align-items-center">
-                          <input type="text" name="ingredient[][ingredient]"  class="form-control  form-control-sm"
+                          <input type="text" name="ingredients[${index}][ingredient]"  class="form-control  form-control-sm"
                                  value="${ing.ingredient}" required>
                                  
                       </div>
                     </div>
                     <div class="col-2">
                         <div class="input-group align-items-center">
-                          <input type="text" name="ingredient[][amount]"  class="form-control  form-control-sm"
+                          <input type="text" name="ingredients[${index}][amount]"  class="form-control  form-control-sm"
                                  value="${ing.amount || ''}" >
                                  
                       </div>
                     </div>
                     <div class="col-1">
                       <div class="input-group align-items-center">
-                          <input type="text" name="ingredient[][unit]"  class="form-control  form-control-sm"
+                          <input type="text" name="ingredients[${index}][unit]"  class="form-control  form-control-sm"
                                  value="${ing.unit || ''}" >
                                  
                       </div>
                     </div>
                     <div class="col-3">
                         <div class="input-group align-items-center">
-                          <input type="text" name="ingredient[][label]"  class="form-control  form-control-sm"
+                          <input type="text" name="ingredients[${index}][label]"  class="form-control  form-control-sm"
                                  value="${ing.label || ''}" >
                                  
                         </div>
@@ -300,7 +333,7 @@ const handleCreateUpdateRequests = ()=>{
                       
                     <div class="col-3">
                       <div class="input-group align-items-center">
-                          <input type="text" name="ingredient[][special]"  class="form-control  form-control-sm"
+                          <input type="text" name="ingredients[${index}][special]"  class="form-control  form-control-sm"
                                  value="${ing.special || ''}" >
                                  
                       </div>
@@ -309,21 +342,21 @@ const handleCreateUpdateRequests = ()=>{
                     </div>
           `
           })
-        }
-
-
 
         let colorsListContent = "";
         cocktail.colors.split(",").map((color)=>{
           colorsListContent += `
-        <div class="color-wrapper">  
-          <input type="color" name="colors[]"  class="form-control" value="${color}" >
-          <span class="close">x</span>
+        <div class="color-row">  
+          <input type="color" name="colors[]"  class="" value="${color}" >
+          <span class="deleteColor">x</span>
         </div>
           `
         })
         ingredientsList.innerHTML = ingredientListContent
         colors.innerHTML = colorsListContent
+
+        setIngredientListHeader()
+        setColorListHeader()
 
         const modalInstance  = bootstrap.Modal.getOrCreateInstance(cocktailModal)
         modalInstance.show();
@@ -342,12 +375,20 @@ const handleCreateUpdateRequests = ()=>{
 
     const deleteIngButton =  e.target.closest('[data-bs-type="deleteIng"]');
     const addIngButton =  e.target.closest('[data-bs-type="addIng"]');
+    const deleteColorButton =  e.target.closest('.deleteColor');
+    const addColorButton =  e.target.closest('#addColor');
     if (deleteIngButton){
       deleteIngButton.closest(".ingredient-row").remove();
+    }
+ if (deleteColorButton){
+      deleteColorButton.closest(".color-row").remove();
     }
 
     if (addIngButton){
       addIngredient(ingredientsList);
+    }
+    if (addColorButton){
+      addColor(colors);
     }
   });
 

@@ -32,10 +32,12 @@ const creerCardAdmin = (cocktail) => {
         ingredients += `<span class="badge me-1 text-bg-dark">${ingredient.ingredient}</span>`
     }
     let colorsBadges = "";
-    const colors = cocktail.colors.split(",");
-    colors.map((color)=>{
-        colorsBadges += `<span class="badge me-1" style="background-color: ${color};width: 20px"></span>`
-    })
+    if (cocktail.colors){
+        const colors = cocktail.colors.split(",");
+        colors.map((color)=>{
+            colorsBadges += `<span class="badge me-1" style="background-color: ${color};width: 20px"></span>`
+        })
+    }
 
     return `<div class="card-horizontal col-12" 
                     data-bs-toggle="modal" 
@@ -53,13 +55,13 @@ const creerCardAdmin = (cocktail) => {
                         <p class="card-text" style="text-align: left">${ingredients}</p>
                     </div>
                     <div class="col-1 align-content-center">
-                        <p class="card-text" style="text-align: left;">${"🍸" + cocktail.glass || ""}</p>
+                        <p class="card-text" style="text-align: left;">${cocktail.glass || ""}</p>
                     </div>
                     <div class="col-2">
                         <p class="card-text align-content-center" style="text-align: left;font-style: italic">${cocktail.category || ""}</p>
                     </div>
                     <div class="col-1 align-content-center">
-                        <p class="card-text" style="text-align: left; font-weight: bold">${cocktail.price} $</p>
+                        <p class="card-text" style="text-align: left; font-weight: bold">${cocktail.price}</p>
                     </div>
                 </div>
                 <div class="buttons">
@@ -108,7 +110,7 @@ const afficherListeCocktailsCardsAdmin = (cocktails) => {
                         <p class="card-text fw-bold" style="text-align: left">Ingrédients</p>
                     </div>
                     <div class="col-1">
-                    <p class="card-text fw-bold" style="text-align: left">Verre</p>
+                    <p class="card-text fw-bold" style="text-align: left">🍸 Verre</p>
                     </div>
                     <div class="col-2">
                         <p class="card-text fw-bold" style="text-align: left;">Catégorie</p>

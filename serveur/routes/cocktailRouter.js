@@ -17,7 +17,7 @@ router.post("/",
     [
         uploadParams({type:"cocktail"}),
         upload.single("image"),
-        validerCocktail
+        // validerCocktail
     ]
     , createCocktail
 );
