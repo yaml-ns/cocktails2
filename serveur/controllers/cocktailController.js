@@ -98,7 +98,6 @@ export const updateCocktail = async (req,res)=>{
             res.json({ok:false,message:"Une erreur est survenue !"})
         }
     }else{
-        console.log("Le cocktail n'existe pas")
     res.statusCode = 400
     res.json({ok:false,message:"Cocktail non trouvé !"})
     }
