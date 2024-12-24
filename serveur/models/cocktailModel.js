@@ -1,7 +1,7 @@
 import connexion from "../../services/connexion.js";
 
 export const getAll = async (filters,req)=>{
-    let { id, nom, ingredient, minPrix,maxPrix, orderBy, order, page=1, perPage, last } = filters;
+    let { id, name, ingredient, minPrix,maxPrix, orderBy, order, page=1, perPage, last } = filters;
     const limit = parseInt(perPage)
     let offset = (page - 1) * limit;
     let query = `  FROM cocktails c 
@@ -15,14 +15,14 @@ export const getAll = async (filters,req)=>{
         query += ` AND c.id = ?`;
         params.push(id)
     }
-    if (nom){
+    if (name){
         query += ` AND c.name LIKE ?`;
-        params.push(`${nom}%`)
+        params.push(`${name}%`)
     }
 
     if (ingredient){
         query += ` AND i.ingredient LIKE ?`;
-        params.push(params.push(`%${ingredient}%`))
+        params.push(`${ingredient}%`)
     }
     if (minPrix){
         query += ` AND c.price >= ?`;
@@ -56,8 +56,8 @@ export const getAll = async (filters,req)=>{
     const totalPages = Math.ceil(total / limit);
     if (last ==="true") offset = (totalPages - 1) * limit;
     if (totalPages < page) page = totalPages;
-    const fetchQuery = "SELECT DISTINCT c.*, CONCAT(?,'/',c.image) as image" + query + ` LIMIT ? OFFSET ? `;
-    params.push(`${req.protocol}://${req.get("host")}/uploads/images/cocktail`)
+    const fetchQuery = "SELECT DISTINCT c.*, CONCAT(?,'/',c.image) as image " + query + ` LIMIT ? OFFSET ? `;
+    params.unshift(`${req.protocol}://${req.get("host")}/uploads/images/cocktail`)
     params.push(limit)
     params.push(offset)
     const results =  await connexion.query(fetchQuery, params);
@@ -72,7 +72,6 @@ export const getAll = async (filters,req)=>{
             }
         })
     }
-
     return {
         result:res,
         pagination: {
