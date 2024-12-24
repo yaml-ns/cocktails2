@@ -188,7 +188,7 @@ a {
 #admin .modal-content {
     background-color: #E3F2FD !important;
 }
-#admin .modal-content .form-control {
+#admin .modal-content .form-control,#admin .modal-content .form-select {
     background-color: #d5e0f4;
     flex: 2;
 }

@@ -168,8 +168,8 @@ function addIngredient(ingredientsList) {
 }
 
 function addColor(colorList) {
-  const numElements = document.querySelectorAll(".color-row")?.length || 0;
   const elem = document.createElement("div")
+  document.querySelector("#colorListHeader").classList.add("d-none")
   elem.classList.add("color-row")
   elem.innerHTML = `
                 <input type="color" name="colors[]" >
@@ -344,14 +344,16 @@ const handleCreateUpdateRequests = ()=>{
           })
 
         let colorsListContent = "";
-        cocktail.colors.split(",").map((color)=>{
-          colorsListContent += `
+        if (cocktail.colors){
+          cocktail.colors.split(",").map((color)=>{
+            colorsListContent += `
         <div class="color-row">  
           <input type="color" name="colors[]"  class="" value="${color}" >
           <span class="deleteColor">x</span>
         </div>
           `
-        })
+          })
+        }
         ingredientsList.innerHTML = ingredientListContent
         colors.innerHTML = colorsListContent
 
@@ -379,9 +381,11 @@ const handleCreateUpdateRequests = ()=>{
     const addColorButton =  e.target.closest('#addColor');
     if (deleteIngButton){
       deleteIngButton.closest(".ingredient-row").remove();
+      setIngredientListHeader()
     }
  if (deleteColorButton){
       deleteColorButton.closest(".color-row").remove();
+      setColorListHeader()
     }
 
     if (addIngButton){
@@ -400,6 +404,7 @@ const handleCreateUpdateRequests = ()=>{
     cocktailModal.querySelector('#processBtn').value = "Enregistrer"
     cocktailModal.querySelector("#cocktailErrors").innerHTML="";
     cocktailModal.querySelector("#ingredientsList").innerHTML="";
+    cocktailModal.querySelector("#colors").innerHTML="";
   })
 }
 

@@ -133,25 +133,20 @@
                                 <input type="text" name="price" id="prix" class="form-control form-control-sm" aria-describedby="prixHelpBlock" required>
 
                             </div>
-
                             <div class="mb-3 input-group">
-                                <label for="type" class="form-label">Catégorie</label>
-                                <select id="type" name="category" class="form-control form-control-sm" >
-                                    <option value=""></option>
-                                    <option value="Long Drink">Long Drink</option>
-                                    <option value="All Day Cocktail">All Day Cocktail</option>
-                                    <option value="Sparkling Cocktail">Sparkling Cocktail</option>
-                                    <option value="Before Dinner Cocktail">Before Dinner Cocktail</option>
-                                    <option value="After Dinner Cocktail">After Dinner Cocktail</option>
-                                </select>
+                                <label for="garnish" class="form-label" >Garniture</label>
+                                <input type="text" name="garnish" id="garnish" class="form-control form-control-sm" aria-describedby="garnishHelpBlock" >
                             </div>
+
                         </div>
                         <div class="col-6">
                             <div class="mb-3 ">
                                 <div class="row">
                                     <div class="col-3"><p class="form-label">Couleurs </p></div>
-                                    <div id="colorListHeader" class="d-none"></div>
-                                    <div class="d-flex col-7 flex-wrap" id="colors">
+                                    <div class="col-7">
+                                        <div id="colorListHeader" class="d-none">Aucune couleur assignée.</div>
+                                        <div class="d-flex flex-wrap" id="colors">
+                                    </div>
                                     </div>
                                     <div class="col-2">
                                         <button id="addColor" type="button" class="btn btn-sm btn-secondary" title="Ajouter une couleur">
@@ -161,9 +156,22 @@
                                 </div>
 
                             </div>
+
+                            <div class="mb-3 input-group">
+                                <label for="type" class="form-label">Catégorie</label>
+                                <select id="type" name="category" class="form-select form-select-sm" >
+                                    <option value=""></option>
+                                    <option value="Long Drink">Long Drink</option>
+                                    <option value="All Day Cocktail">All Day Cocktail</option>
+                                    <option value="Sparkling Cocktail">Sparkling Cocktail</option>
+                                    <option value="Before Dinner Cocktail">Before Dinner Cocktail</option>
+                                    <option value="After Dinner Cocktail">After Dinner Cocktail</option>
+                                </select>
+                            </div>
+
                             <div class="mb-3 input-group">
                                 <label for="glass" class="form-label">Verre</label>
-                                <select id="glass" name="glass" class="form-control form-control-sm" >
+                                <select id="glass" name="glass" class="form-select form-select-sm" >
                                     <option value=""></option>
                                     <option value="collins">collins</option>
                                     <option value="martini">martini</option>
@@ -174,11 +182,6 @@
                                     <option value="champagne-tulip">champagne-tulip</option>
                                     <option value="hurricane">hurricane</option>
                                 </select>
-                            </div>
-
-                            <div class="mb-3 input-group">
-                                <label for="garnish" class="form-label" >Garniture</label>
-                                <input type="text" name="garnish" id="garnish" class="form-control form-control-sm" aria-describedby="garnishHelpBlock" >
                             </div>
 
                         </div>
