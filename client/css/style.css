@@ -235,6 +235,7 @@ p.alert{
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
+    overflow: hidden;
     background-color: #ffffff;
     border: 1px solid #b5deff;
     border-radius: 10px;
@@ -260,7 +261,6 @@ p.alert{
 #admin  .card-img {
     width: 64px;
     height: 64px;
-    border-radius: 9px 0 0 9px;
 }
 
 #admin .card-body {

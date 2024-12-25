@@ -43,7 +43,7 @@ const creerCardAdmin = (cocktail) => {
                     data-bs-toggle="modal" 
                     data-bs-target="#detailsCocktailModal"
                     data-cocktail-id="${cocktail.id}" >
-                <img src="${cocktail.image?cocktail.image:"/images/bg/cocktail-tweed.png"}" class="card-img-top card-img" alt="${cocktail.name}">
+                <img src="${cocktail.image?cocktail.image:"/images/bg/non_disponible.png"}" class="card-img-top card-img" alt="${cocktail.name}">
                 <div class="card-body row">
                     <div class="col-3 align-content-center">
                         <h5 class="card-title">${cocktail.id} - ${cocktail.name}</h5>
