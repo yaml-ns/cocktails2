@@ -1,7 +1,38 @@
-import {login} from "../models/membreModel.js";
+import {checkMember, create, login} from "../models/membreModel.js";
 export const register = async (req,res) => {
-    console.log("in register")
-    res.json({message:"register réussi"});
+    try {
+        const member = req.body;
+        const memberExists = await checkMember(req.body.email)
+        if (!memberExists){
+            const created = await create(member)
+            if (created){
+                res.statusCode = 201;
+                res.json({
+                    ok: true,
+                    message: "Membre créé avec succès"
+                })
+            }else{
+                res.statusCode = 400;
+                res.json({
+                    ok: false,
+                    errors: [{msg: "Une erreur s'est produite lors de l'enregistrement."}]
+                })
+            }
+        }else{
+            res.statusCode = 400;
+            res.json({
+                ok: false,
+                errors: [{msg: "Un membre avec cet email existe déjà !"}]
+            })
+        }
+    }catch (e){
+        console.log(e)
+        res.statusCode = 500;
+        res.json({
+            ok: false,
+            errors: [{msg:"Une erreur inconnue s'est produite !"}]
+        })
+    }
 }
 export const loginMember = async (req, res) => {
     try {

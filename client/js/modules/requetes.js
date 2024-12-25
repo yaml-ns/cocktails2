@@ -206,10 +206,12 @@ const detailRequest = ()=>{
 
 const handleCreateUpdateRequests = ()=>{
   const cocktailModal = document.getElementById('cocktailModal')
+  if (!cocktailModal) return;
   cocktailModal.addEventListener("show.bs.modal",(e)=>{
     setIngredientListHeader()
+    setColorListHeader()
   });
-  if (!cocktailModal) return;
+
   const processBtn = cocktailModal.querySelector('#processBtn')
   const erreurs = document.querySelector("#cocktailErrors");
   const form = document.querySelector("#cocktailForm");
@@ -399,12 +401,13 @@ const handleCreateUpdateRequests = ()=>{
 
   cocktailModal.addEventListener('hidden.bs.modal', (e)=> {
     form.reset()
-    cocktailModal.querySelector("#imagePreview").setAttribute("src","/images/bg/no_image.jpg")
+    cocktailModal.querySelector("#imagePreview").setAttribute("src","/images/bg/non_disponible.png")
     cocktailModal.querySelector("#cocktailModalTitle").textContent = "Ajouter un Cocktail";
     cocktailModal.querySelector('#processBtn').value = "Enregistrer"
     cocktailModal.querySelector("#cocktailErrors").innerHTML="";
     cocktailModal.querySelector("#ingredientsList").innerHTML="";
     cocktailModal.querySelector("#colors").innerHTML="";
+    cocktailModal.querySelector("#colorListHeader").classList.add("d-none");
   })
 }
 
@@ -517,14 +520,19 @@ const register = ()=>{
                                </p>`
                 }).join("");
           } else {
-            alert('Login réussie !');
             form.reset();
+            showToastSuccess("Votre inscription a été un succès ")
+            bootstrap.Modal.getInstance(
+                document.querySelector("#inscriptionModal")
+            ).hide()
           }
         });
-      });
+      }).catch((e)=>{
+        console.log(e)
+      })
 
     } catch (error) {
-      console.error('Erreur lors de l\'inscription', error);
+      console.error(error);
       erreurs.textContent = 'Une erreur est survenue.';
     }
 

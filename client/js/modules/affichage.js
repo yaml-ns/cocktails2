@@ -29,7 +29,7 @@ const creerCard = (cocktail) => {
 const creerCardAdmin = (cocktail) => {
     let ingredients = "";
     for (let ingredient of cocktail.ingredients){
-        ingredients += `<span class="badge me-1 text-bg-dark">${ingredient.ingredient}</span>`
+        ingredients += `<span class="badge me-1 bg-dark-subtle text-dark-emphasis ">${ingredient.ingredient}</span>`
     }
     let colorsBadges = "";
     if (cocktail.colors){

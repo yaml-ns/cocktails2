@@ -80,7 +80,7 @@ document.body.addEventListener('mouseout', (e) => {
                 };
                 reader.readAsDataURL(file);
             }else{
-                imgPreview.src = "/images/bg/no_image.jpg";
+                imgPreview.src = "/images/bg/non_disponible.png";
             }
         });
     }

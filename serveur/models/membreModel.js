@@ -10,3 +10,40 @@ export const login = async (email,password)=>{
                             [email, password]
     );
 }
+
+export const create = async (membre)=>{
+    const db = await connexion.getConnection();
+    try {
+        await db.beginTransaction();
+        const [rows] = await db.query(`
+            INSERT INTO membres (nom, prenom, adresse, sexe, photo) 
+            VALUES(?,?,?,?,?)
+            `,[
+                membre.lastname,
+                membre.firstname,
+                membre.address,
+                membre.sex,
+                membre.image
+            ])
+        const id = rows.insertId;
+            const [con] = await db.query(`
+                            INSERT INTO connexion 
+                            (id_membre,email,motDePasse,roles)
+                            VALUES(?,?,?,?)`,
+                            [id, membre.email, membre.password, "ADMIN"]
+            );
+        await db.commit();
+        db.release()
+        return true;
+    }catch (err){
+        console.log(err)
+        await db.rollback();
+        db.release()
+        return false
+    }
+}
+export const checkMember = async (email)=>{
+    const [rows] = await connexion.query(`SELECT email FROM connexion WHERE email = ?
+                                    `,[email])
+    return rows.length > 0;
+}

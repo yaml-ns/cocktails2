@@ -245,8 +245,8 @@ p.alert{
     transition: .4s;
 }
 .card-horizontal:hover {
-    background-color: #b5deff;
-    border: 1px solid #b5deff;
+    background-color: #dee8ff;
+    border: 1px solid #ccdbff;
     transition: .4s;
 }
 #admin .card{
