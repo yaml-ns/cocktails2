@@ -23,7 +23,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.querySelector("#loggedOut")?.classList.add("d-none")
         document.querySelector("#loggedIn")?.classList.remove("d-none")
             const memName = document.querySelector("#memberName");
+            const memImg = document.querySelector("#memberImg");
             if (memName) memName.textContent = `${membre.prenom} ${membre.nom}`
+            if (membre.photo) memImg.src = `/uploads/images/membre/${membre.photo}`
     }
 
 

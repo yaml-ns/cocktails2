@@ -2,8 +2,13 @@ import {checkMember, create, login} from "../models/membreModel.js";
 export const register = async (req,res) => {
     try {
         const member = req.body;
+        console.log("member email : " + member.email)
         const memberExists = await checkMember(req.body.email)
         if (!memberExists){
+            console.log("req.file")
+            console.log(req.file)
+            member.image = req.file ? req.file.filename: null;
+            console.log(member.image)
             const created = await create(member)
             if (created){
                 res.statusCode = 201;
@@ -24,6 +29,7 @@ export const register = async (req,res) => {
                 ok: false,
                 errors: [{msg: "Un membre avec cet email existe déjà !"}]
             })
+
         }
     }catch (e){
         console.log(e)

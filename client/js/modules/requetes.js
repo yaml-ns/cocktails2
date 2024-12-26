@@ -500,15 +500,11 @@ const register = ()=>{
   form.addEventListener("submit", (e) => {
     e.preventDefault();
 
-    const formData = new FormData(form);
-    const data = Object.fromEntries(formData.entries());
+
     try {
       fetch('/membres/register', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
+        body: new FormData(form),
       }).then((response)=>{
         response.json().then((result)=>{
           if (!response.ok) {

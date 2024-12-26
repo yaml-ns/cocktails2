@@ -57,7 +57,7 @@
                 </ul>
                 <ul id="loggedIn" class="navbar-nav nav-perso-droit d-none">
                     <li class="nav-item">
-                        <img class="rounded-circle me-2" src="/images/bg/terrence.png" alt="img" width="40">
+                        <img id="memberImg" class="rounded-circle me-2" src="/images/bg/no_photo.png" alt="img" width="40">
                         <span id="memberName"></span>
                     </li>
                     <li class="nav-item">
@@ -174,7 +174,15 @@
                         <label for="repeat_password" class="form-label" >Répéter le mot de passe *</label>
                         <input type="password" id="repeat_password" name="repeat_password" class="form-control" aria-describedby="repeat_passwordHelpBlock" required>
                     </div>
-
+                    <div class="row image-container">
+                        <div class="col-4">
+                            <img class="rounded" id="imagePreview" src="/images/bg/no_image.png" width="130">
+                        </div>
+                        <div class="col-8">
+                            <label for="image" class="form-label" id="imageFileLabel">Votre photo</label>
+                            <input class="form-control form-control-sm" name="image" id="image" type="file">
+                        </div>
+                    </div>
                     <div class="form-text text-warning">
                         Les champs avec (*) sont obligatoires !
                     </div>
