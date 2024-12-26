@@ -95,25 +95,23 @@
                             <div class="accordion-body">
 
                                 <form method="get" id="filter" class="d-flex justify-content-between">
-                                    <label for="nom"></label><input type="text" name="nom" id="nom" placeholder="Nom du cocktail">
-                                    <label for="id"></label><input type="text" name="id" id="id" placeholder="Id du cocktail">
+                                    <label for="nom"></label><input type="text" name="name" id="nom" placeholder="Nom du cocktail">
                                     <label for="ingredient"></label><input type="text" name="ingredient" id="ingredient" placeholder="Ingredient">
                                     <label for="minPrix"></label><input type="text" name="minPrix" id="minPrix" class="price" placeholder="Prix min.">
                                     <label for="maxPrix"></label><input type="text" name="maxPrix" id="maxPrix" class="price" placeholder="Prix max.">
                                     <label for="orderBy"></label>
                                     <select class="form-select-sm" type="text" name="orderBy" id="orderBy">
-                                        <option value="">Order By</option>
-                                        <option value="id">ID</option>
-                                        <option value="prix">Prix</option>
+                                        <option value="">Trier Par</option>
+                                        <option value="name">Nom</option>
+                                        <option value="price">Prix</option>
                                     </select>
                                     <label for="order"></label>
                                     <select class="form-select-sm" type="text" name="order" id="order" >
-                                        <option value="">Order</option>
-                                        <option value="ASC">ASC</option>
-                                        <option value="DESC">DESC</option>
+                                        <option value="">Ordre</option>
+                                        <option value="ASC">ASCENDANT</option>
+                                        <option value="DESC">DESCENDANT</option>
                                     </select>
                                 </form>
-
                             </div>
                         </div>
                     </div>
