@@ -1,6 +1,7 @@
 import { afficherPage, genererPagination } from "./pagination.js";
 
 const creerCard = (cocktail) => {
+    const imgUrl = cocktail.image ??'/images/bg/non_disponible.png';
     let ingredients = "";
     for (let ingredient of cocktail.ingredients){
         ingredients += `<span class="badge me-1 text-bg-dark">${ingredient.ingredient}</span>`
@@ -8,9 +9,9 @@ const creerCard = (cocktail) => {
 
     return `
                 <div class="card h-100" data-ref="${cocktail.id}">
-                    <img src="${
-                      cocktail.image
-                    }" class="card-img-top " alt="Cocktail ${cocktail.name}" height="200">
+                    <div class="card-image-container">
+                        <img src="${imgUrl}" class="image-card-perso" alt="Cocktail ${cocktail.name}" height="200">
+                    </div>
                     <div class="card-body d-flex flex-column">
                         <h6 class="card-title">${cocktail.name.substring(0, 25)}</h6>
                         <div style="min-height: 100px">${ingredients}</div>
@@ -27,6 +28,8 @@ const creerCard = (cocktail) => {
 `;
 }
 const creerCardAdmin = (cocktail) => {
+    const imgUrl = cocktail.image ??'/images/bg/non_disponible.png';
+
     let ingredients = "";
     for (let ingredient of cocktail.ingredients){
         ingredients += `<span class="badge me-1 bg-dark-subtle text-dark-emphasis ">${ingredient.ingredient}</span>`
@@ -43,7 +46,7 @@ const creerCardAdmin = (cocktail) => {
                     data-bs-toggle="modal" 
                     data-bs-target="#detailsCocktailModal"
                     data-cocktail-id="${cocktail.id}" >
-                <img src="${cocktail.image?cocktail.image:"/images/bg/non_disponible.png"}" class="card-img-top card-img" alt="${cocktail.name}">
+                <img src="${imgUrl}" class="card-img-top card-img" alt="${cocktail.name}">
                 <div class="card-body row">
                     <div class="col-3 align-content-center">
                         <h5 class="card-title">${cocktail.id} - ${cocktail.name}</h5>
