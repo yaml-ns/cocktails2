@@ -68,7 +68,8 @@ const creerCardAdmin = (cocktail) => {
                     </div>
                 </div>
                 <div class="buttons">
-                    <button class="btn btn-outline-primary btn-modifier" 
+                    <button class="btn btn-sm btn-outline-primary btn-modifier" 
+                    title="Modifier le cocktail"
                     data-bs-toggle="modal" 
                     data-bs-target="#updateCocktailModal"
                     data-bs-type="update"
@@ -77,7 +78,8 @@ const creerCardAdmin = (cocktail) => {
                     >
                         <i class="bi bi-pencil" data-id="${cocktail.id}"></i>
                     </button>
-                    <button class="btn btn-outline-danger btn-supprimer" 
+                    <button class="btn btn-sm btn-outline-danger btn-supprimer" 
+                    title="Supprimer le cocktail"
                     data-bs-toggle="modal" 
                     data-bs-target="#cocktailDeleteModal"
                     data-bs-type="delete"
