@@ -2,7 +2,6 @@ import {checkMember, create, login} from "../models/membreModel.js";
 export const register = async (req,res) => {
     try {
         const member = req.body;
-        console.log("member email : " + member.email)
         const memberExists = await checkMember(req.body.email)
         if (!memberExists){
             member.roles ="USER"
@@ -18,14 +17,18 @@ export const register = async (req,res) => {
                 res.statusCode = 400;
                 res.json({
                     ok: false,
-                    errors: [{msg: "Une erreur s'est produite lors de l'enregistrement."}]
+                    errors: [
+                        {msg: "Une erreur s'est produite lors de l'enregistrement."}
+                    ]
                 })
             }
         }else{
             res.statusCode = 400;
             res.json({
                 ok: false,
-                errors: [{msg: "Un membre avec cet email existe déjà !"}]
+                errors: [
+                    { msg: "Un membre avec cet email existe déjà !"}
+                ]
             })
 
         }
@@ -34,7 +37,9 @@ export const register = async (req,res) => {
         res.statusCode = 500;
         res.json({
             ok: false,
-            errors: [{msg:"Une erreur inconnue s'est produite !"}]
+            errors: [
+                { msg:"Une erreur inconnue s'est produite !"}
+            ]
         })
     }
 }
@@ -53,7 +58,9 @@ export const loginMember = async (req, res) => {
             res.json({
                 ok: false,
                 statusCode:403,
-                errors: "Login ou mot de passe invalide. Veuillez réessayer !"
+                errors: [
+                    { msg:"Login ou mot de passe invalide. Veuillez réessayer !"}
+                ]
             });
         }
     }catch (e) {
@@ -62,7 +69,9 @@ export const loginMember = async (req, res) => {
         res.json({
             ok:false,
             statusCode:403,
-            errors:[{msg:"Une erreur s'est produite pendant cette operation!"}]
+            errors:[
+                { msg:"Une erreur s'est produite pendant cette operation!"}
+            ]
         });
     }
 
