@@ -30,7 +30,7 @@ export const create = async (membre)=>{
                             INSERT INTO connexion 
                             (id_membre,email,motDePasse,roles)
                             VALUES(?,?,?,?)`,
-                            [id, membre.email, membre.password, "ADMIN"]
+                            [id, membre.email, membre.password, membre.roles]
             );
         await db.commit();
         db.release()

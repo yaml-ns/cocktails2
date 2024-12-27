@@ -5,10 +5,8 @@ export const register = async (req,res) => {
         console.log("member email : " + member.email)
         const memberExists = await checkMember(req.body.email)
         if (!memberExists){
-            console.log("req.file")
-            console.log(req.file)
+            member.roles ="USER"
             member.image = req.file ? req.file.filename: null;
-            console.log(member.image)
             const created = await create(member)
             if (created){
                 res.statusCode = 201;
