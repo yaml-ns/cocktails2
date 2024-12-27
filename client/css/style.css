@@ -275,7 +275,7 @@ p.alert{
     flex: 1;
     margin-left: 15px;
     margin-top: 10px;
-    padding: 0px;
+    padding: 0;
 }
 
 #admin .card-body h5 {
@@ -417,14 +417,14 @@ p.alert{
     border: 1px solid #ced7e6;
     margin: 10px 5px 5px 5px;
 }
-/*#admin .modal-title {*/
-/*    display: inline-block;*/
-/*    width: 35px;*/
-/*    height: 35px;*/
-/*    border-radius: 50%;*/
-/*    background-color: #0c252a;*/
-/*    color: #ffffff;*/
-/*    text-align: center;*/
-/*    line-height: 32px;*/
-/*    margin-right: 9px;*/
-/*}*/
+#inscriptionModal .image-container {
+    padding: 15px 0;
+    border: 1px solid #2e2e2e;
+    margin: 0;
+}
+#memberImg {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+}
+
