@@ -10,9 +10,8 @@ const listCocktails = async (page=1, filtres, last= false)=>{
   const url = `http://127.0.0.1:3000/cocktails?${queryParams.toString()}`;
   try {
     const response = await fetch(url);
-
     if (!response.ok) {
-      throw new Error("Erreur lors de la récupération des données");
+      showToastError("Erreur lors de la récupération des données")
     }
     const jsonResponse = await response.json();
     totalPages = jsonResponse.pagination.totalPages;
@@ -87,7 +86,6 @@ fields.forEach((field) => {
   field.addEventListener("input", async () => {
     const formData = new FormData(form);
     const filters = Object.fromEntries(formData.entries());
-
     await listCocktails(1, filters);
   });
 });
@@ -207,7 +205,7 @@ const detailRequest = ()=>{
 const handleCreateUpdateRequests = ()=>{
   const cocktailModal = document.getElementById('cocktailModal')
   if (!cocktailModal) return;
-  cocktailModal.addEventListener("show.bs.modal",(e)=>{
+  cocktailModal.addEventListener("show.bs.modal",()=>{
     setIngredientListHeader()
     setColorListHeader()
   });
@@ -399,7 +397,7 @@ const handleCreateUpdateRequests = ()=>{
   });
 
 
-  cocktailModal.addEventListener('hidden.bs.modal', (e)=> {
+  cocktailModal.addEventListener('hidden.bs.modal', ()=> {
     form.reset()
     cocktailModal.querySelector("#imagePreview").setAttribute("src","/images/bg/non_disponible.png")
     cocktailModal.querySelector("#cocktailModalTitle").textContent = "Ajouter un Cocktail";
@@ -542,7 +540,6 @@ const login = ()=>{
   if (!form) return;
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
-    const connexionModal = document.querySelector("#connexionModal")
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
     try {
@@ -580,7 +577,7 @@ const login = ()=>{
 
 const connectionModal = document.querySelector("#connexionModal");
 if(connectionModal){
-connectionModal.addEventListener("hidden.bs.modal",(e)=>{
+connectionModal.addEventListener("hidden.bs.modal",()=>{
     document.querySelector("#erreursLogin").innerHTML="";
     document.querySelector("#loginForm").reset()
   })

@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const isAdmin = document.querySelector("#admin")
     const logout = document.querySelector("#logout")
-    logout.addEventListener("click",(e)=>{
+    logout.addEventListener("click",()=>{
         localStorage.removeItem("membreInfos")
         window.location.href = "/"
     })
@@ -21,8 +21,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (!membre || membre.roles !== "ADMIN") window.location.href ="/"
     }
     if (membre){
-        console.log(membre)
-        console.log(membre.firstLogin)
         if (membre.firstLogin === true){
             showToastSuccess(`Heureux de vous voir ${membre.prenom} ${membre.nom} !`)
             membre.firstLogin = false;
@@ -36,7 +34,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (memName) memName.textContent = `${membre.prenom} ${membre.nom}`
             if (membre.photo) memImg.src = `/uploads/images/membre/${membre.photo}`
     }
-
 
     login();
     register();
