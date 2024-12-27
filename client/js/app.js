@@ -3,7 +3,8 @@ import {
     register,
     login,
     handleCreateUpdateRequests,
-    deleteRequest, detailRequest
+    deleteRequest, detailRequest,
+    showToastSuccess
 } from "./modules/requetes.js";
 import { afficherDetailsCocktail } from "./modules/affichage.js";
 
@@ -20,6 +21,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (!membre || membre.roles !== "ADMIN") window.location.href ="/"
     }
     if (membre){
+        console.log(membre)
+        console.log(membre.firstLogin)
+        if (membre.firstLogin === true){
+            showToastSuccess(`Heureux de vous voir ${membre.prenom} ${membre.nom} !`)
+            membre.firstLogin = false;
+            localStorage.setItem("membreInfos",JSON.stringify(membre))
+
+        }
         document.querySelector("#loggedOut")?.classList.add("d-none")
         document.querySelector("#loggedIn")?.classList.remove("d-none")
             const memName = document.querySelector("#memberName");

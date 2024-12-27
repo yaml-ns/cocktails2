@@ -560,11 +560,12 @@ const login = ()=>{
       } else {
         form.reset();
         const membre = results.membre;
+        membre.firstLogin = true
         localStorage.setItem("membreInfos",JSON.stringify(membre))
         if (membre.roles ==="ADMIN") {
           window.location.href = "/admin"
         }else {
-          showToastSuccess(`Heureux de vous voir ${membre.prenom} ${membre.nom} !`)
+          window.location.href = "/"
         }
       }
 
@@ -577,6 +578,13 @@ const login = ()=>{
 
 }
 
+const connectionModal = document.querySelector("#connexionModal");
+if(connectionModal){
+connectionModal.addEventListener("hidden.bs.modal",(e)=>{
+    document.querySelector("#erreursLogin").innerHTML="";
+    document.querySelector("#loginForm").reset()
+  })
+}
 
 
 
@@ -599,7 +607,7 @@ const displayErrors = (elem, errors)=>{
                       </p>`;
   }
 }
-const showToastSuccess = (message) =>{
+export const showToastSuccess = (message) =>{
   const toastEl = document.getElementById('toastSuccess');
   const toastBody = toastEl.querySelector('#toastMessage');
   toastBody.textContent = message || "Opération réussie !";

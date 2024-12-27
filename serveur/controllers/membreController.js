@@ -59,7 +59,7 @@ export const loginMember = async (req, res) => {
                 ok: false,
                 statusCode:403,
                 errors: [
-                    { msg:"Login ou mot de passe invalide. Veuillez réessayer !"}
+                    { msg:"Email ou mot de passe invalide. Veuillez réessayer !"}
                 ]
             });
         }
