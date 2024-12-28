@@ -1,4 +1,4 @@
-import { afficherPage, genererPagination } from "./pagination.js";
+// import { afficherPage, genererPagination } from "./pagination.js";
 
 const creerCard = (cocktail) => {
     const imgUrl = cocktail.image ??'/images/bg/non_disponible.png';
@@ -165,4 +165,44 @@ const  afficherDetailsCocktail = (cocktail)=>{
     `
 }
 
-export { afficherListeCocktailsCards,afficherListeCocktailsCardsAdmin,afficherDetailsCocktail };
+export const displayErrors = (elem, errors)=>{
+    elem.textContent = "";
+    if (Array.isArray(errors)){
+        elem.innerHTML = errors
+            .map((err) => {
+                return `<p class="alert alert-danger" role="alert">
+                                <i class="bi bi-exclamation-triangle-fill text-danger"></i>
+                                ${err.msg}
+                               </p>`
+            }).join("");
+    }else{
+        elem.innerHTML = `<p class="alert alert-danger" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill text-danger"></i>
+                        ${errors}
+                      </p>`;
+    }
+}
+export const showToastSuccess = (message) =>{
+    const toastEl = document.getElementById('toastSuccess');
+    const toastBody = toastEl.querySelector('#toastMessage');
+    toastBody.textContent = message || "Opération réussie !";
+    const toast = new bootstrap.Toast(toastEl,{
+        animation: true,
+        autohide: true,
+        delay: 3000
+    });
+    toast.show();
+}
+
+export const showToastError = (message) =>{
+    const toastEl = document.getElementById('toastError');
+    const toastBody = toastEl.querySelector('.toast-body');
+    toastBody.textContent = message || "Une erreur est survenue.";
+    const toast = new bootstrap.Toast(toastEl);
+    toast.show();
+}
+
+export {
+    afficherListeCocktailsCards,
+    afficherListeCocktailsCardsAdmin,
+    afficherDetailsCocktail };

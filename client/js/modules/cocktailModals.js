@@ -3,10 +3,14 @@ import {
     updateCocktail,
     listCocktails,
     getCocktail,
+    deleteCocktail,
+} from "./requetes.js";
+
+import {
     displayErrors,
     showToastError,
-    showToastSuccess, deleteCocktail,
-} from "./requetes.js";
+    showToastSuccess
+} from "./affichage.js"
 
 const cocktailModal = document.querySelector("#cocktailModal");
 const cocktailDeleteModal = document.getElementById('cocktailDeleteModal');
@@ -90,6 +94,7 @@ export const handleDeleteCocktailModal = ()=>{
 
     })
 }
+
 const addCocktail = (data)=>{
     createCocktail(data).then((res)=>{
         if (res.ok){
@@ -105,6 +110,7 @@ const addCocktail = (data)=>{
 
     })
 }
+
 const update = (data,id)=>{
     const activePage = document.querySelector(".page.active")
     const currentPage = activePage ? parseInt(activePage.innerText) : 1;
@@ -125,6 +131,7 @@ const update = (data,id)=>{
                 displayErrors(erreurs, err)
               });
 }
+
 const handleButtonsEvents  = ()=>{
     const ingredientsList = document.querySelector("#ingredientsList");
     const colors = document.querySelector("#cocktailColors");
