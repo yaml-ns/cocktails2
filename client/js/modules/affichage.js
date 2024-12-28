@@ -1,6 +1,4 @@
-// import { afficherPage, genererPagination } from "./pagination.js";
-
-const creerCard = (cocktail) => {
+const createFrontCard = (cocktail) => {
     const imgUrl = cocktail.image ??'/images/bg/non_disponible.png';
     let ingredients = "";
     for (let ingredient of cocktail.ingredients){
@@ -8,26 +6,26 @@ const creerCard = (cocktail) => {
     }
 
     return `
-                <div class="card h-100" data-ref="${cocktail.id}">
-                    <div class="card-image-container">
-                        <img src="${imgUrl}" class="image-card-perso" alt="Cocktail ${cocktail.name}" height="200">
-                    </div>
-                    <div class="card-body d-flex flex-column">
-                        <h6 class="card-title">${cocktail.name.substring(0, 25)}</h6>
-                        <div style="min-height: 100px">${ingredients}</div>
-                        <div class="row">
-                            <div class="col">
-                                <span class="badge m-1 text-bg-info">${cocktail.price} $</span>
-                            </div>
-                            <div class="col">
-                                <a href="#" class="btn btn-dark" >Détail</a>
-                            </div>
+            <div class="card h-100" data-ref="${cocktail.id}">
+                <div class="card-image-container">
+                    <img src="${imgUrl}" class="image-card-perso" alt="Cocktail ${cocktail.name}" height="200">
+                </div>
+                <div class="card-body d-flex flex-column">
+                    <h6 class="card-title">${cocktail.name.substring(0, 25)}</h6>
+                    <div style="min-height: 100px">${ingredients}</div>
+                    <div class="row">
+                        <div class="col">
+                            <span class="badge m-1 text-bg-info">${cocktail.price} $</span>
+                        </div>
+                        <div class="col">
+                            <a href="#" class="btn btn-dark" >Détails</a>
                         </div>
                     </div>
                 </div>
+            </div>
 `;
 }
-const creerCardAdmin = (cocktail) => {
+const createAdminCard = (cocktail) => {
     const imgUrl = cocktail.image ??'/images/bg/non_disponible.png';
 
     let ingredients = "";
@@ -96,7 +94,7 @@ const creerCardAdmin = (cocktail) => {
 const afficherListeCocktailsCards = (cocktails) => {
     let listeCards = "";
     for (const cocktail of cocktails) {
-      listeCards += creerCard(cocktail);
+      listeCards += createFrontCard(cocktail);
     }
     document.getElementById("contenu").innerHTML = listeCards;
 }
@@ -128,7 +126,7 @@ const afficherListeCocktailsCardsAdmin = (cocktails) => {
             </div>
     `;
     for (const cocktail of cocktails) {
-      listeCards += creerCardAdmin(cocktail);
+      listeCards += createAdminCard(cocktail);
     }
     document.getElementById("contenu").innerHTML = listeCards;
 }
@@ -182,7 +180,7 @@ export const displayErrors = (elem, errors)=>{
                       </p>`;
     }
 }
-export const showToastSuccess = (message) =>{
+const showToastSuccess = (message) =>{
     const toastEl = document.getElementById('toastSuccess');
     const toastBody = toastEl.querySelector('#toastMessage');
     toastBody.textContent = message || "Opération réussie !";
@@ -194,7 +192,7 @@ export const showToastSuccess = (message) =>{
     toast.show();
 }
 
-export const showToastError = (message) =>{
+const showToastError = (message) =>{
     const toastEl = document.getElementById('toastError');
     const toastBody = toastEl.querySelector('.toast-body');
     toastBody.textContent = message || "Une erreur est survenue.";
@@ -203,6 +201,9 @@ export const showToastError = (message) =>{
 }
 
 export {
-    afficherListeCocktailsCards,
     afficherListeCocktailsCardsAdmin,
-    afficherDetailsCocktail };
+    afficherListeCocktailsCards,
+    afficherDetailsCocktail,
+    showToastSuccess,
+    showToastError
+};

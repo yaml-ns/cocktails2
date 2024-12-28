@@ -65,4 +65,10 @@ export const register = ()=>{
 
     })
 
+    const registerModal = document.querySelector("#inscriptionModal")
+    if (!registerModal) return;
+    registerModal.addEventListener("hidden.bs.modal",()=>{
+        form.reset();
+        document.querySelector("#imagePreview").src = "/images/bg/no_image.png"
+    })
 }
