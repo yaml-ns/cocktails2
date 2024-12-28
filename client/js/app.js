@@ -2,12 +2,13 @@ import {
     listCocktails,
     register,
     login,
-    handleCreateUpdateRequests,
-    deleteRequest, detailRequest,
+    // handleCreateUpdateRequests,
+    // deleteRequest,
+    detailRequest,
     showToastSuccess
 } from "./modules/requetes.js";
 import { afficherDetailsCocktail } from "./modules/affichage.js";
-
+import { handleCocktailModal, handleDeleteCocktailModal } from "./modules/modals.js";
 document.addEventListener("DOMContentLoaded", async () => {
 
     const isAdmin = document.querySelector("#admin")
@@ -37,8 +38,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     login();
     register();
-    handleCreateUpdateRequests();
-    deleteRequest();
+    handleCocktailModal();
+    handleDeleteCocktailModal()
+    // handleCreateUpdateRequests();
+    // deleteRequest();
     detailRequest();
     const conteneur = document.querySelector("#mainContent");
     await listCocktails();
@@ -59,6 +62,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       console.error("Erreur réseau :", error);
     }
   });
+
+
 
 });
 

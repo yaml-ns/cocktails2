@@ -68,10 +68,10 @@ const creerCardAdmin = (cocktail) => {
                     </div>
                 </div>
                 <div class="buttons">
-                    <button class="btn btn-sm btn-outline-primary btn-modifier" 
+                    <button class="btn btn-sm btn-primary btn-modifier" 
                     title="Modifier le cocktail"
                     data-bs-toggle="modal" 
-                    data-bs-target="#updateCocktailModal"
+                    data-bs-target="#cocktailModal"
                     data-bs-type="update"
                     data-bs-id="${cocktail.id}"
                     data-bs-name="${cocktail.name}"

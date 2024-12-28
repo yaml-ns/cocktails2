@@ -427,4 +427,13 @@ p.alert{
     height: 40px;
     object-fit: cover;
 }
-
+.btn-modifier {
+        color: #ffffff;
+        background-color: #42a5f5;
+        border-color: #42a5f5;
+}
+.btn-modifier:hover {
+        color: #ffffff;
+        background-color: rgba(13, 71, 161, 0.8);
+        border-color: #42a5f5;
+}
