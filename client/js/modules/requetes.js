@@ -1,4 +1,4 @@
-import {afficherListeCocktailsCards, afficherListeCocktailsCardsAdmin} from "./affichage.js";
+import {afficherListeCocktailsCards, afficherListeCocktailsCardsAdmin, showToastError} from "./affichage.js";
 
 
 const isAdmin = document.querySelector("#admin")
@@ -94,28 +94,6 @@ fields.forEach((field) => {
 /*===================================*/
 
 
-const detailRequest = ()=>{
-  const detailModal = document.getElementById('detailsCocktailModal')
-  if (!detailModal) return;
-  detailModal.addEventListener("shown.bs.modal",(e)=>{
-      const target = e.relatedTarget;
-      const title = detailModal.querySelector("#cocktailDetailModalTitle")
-      const name = detailModal.querySelector("#cocktailDetailsName")
-      const cocktailImage = detailModal.querySelector("#cocktailImage")
-      const updateButton = detailModal.querySelector("#updateCocktail")
-      const deleteButton = detailModal.querySelector("#deleteCocktail")
-      getCocktail(target.dataset.cocktailId).then((response)=>{
-        title.textContent = response.name
-        cocktailImage.src = response.image
-        name.textContent = response.name
-        updateButton.dataset.bsId = response.id
-        deleteButton.dataset.bsId = response.id
-        updateButton.dataset.bsName = response.name
-        deleteButton.dataset.bsName = response.name
-      })
-
-  })
-}
 export const getCocktail = async (id)=>{
   const res = await fetch(`/cocktails/${id}`)
   return await res.json();
@@ -135,6 +113,7 @@ export const updateCocktail = async (id,data)=>{
   })
   return await res.json();
 }
+
 export const deleteCocktail = async (id)=>{
   const res = await fetch(`/cocktails/${id}`,{
     method: "delete",
@@ -166,14 +145,4 @@ export const registerRequest = async (data)=>{
 }
 
 
-
-
-
-
-
-
-
-export {
-  listCocktails,
-  detailRequest
-};
+export { listCocktails };

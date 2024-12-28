@@ -95,6 +95,30 @@ export const handleDeleteCocktailModal = ()=>{
     })
 }
 
+
+export const handleCocktailDetailsModal = () => {
+    const detailModal = document.getElementById('detailsCocktailModal')
+    if (!detailModal) return;
+    detailModal.addEventListener("show.bs.modal",(e)=>{
+        const target = e.relatedTarget;
+        const title = detailModal.querySelector("#cocktailDetailModalTitle")
+        const name = detailModal.querySelector("#cocktailDetailsName")
+        const cocktailImage = detailModal.querySelector("#cocktailImage")
+        const updateButton = detailModal.querySelector("#updateCocktail")
+        const deleteButton = detailModal.querySelector("#deleteCocktail")
+        getCocktail(target.dataset.cocktailId).then((response)=>{
+            title.textContent = response.name
+            cocktailImage.src = response.image
+            name.textContent = response.name
+            updateButton.dataset.bsId = response.id
+            deleteButton.dataset.bsId = response.id
+            updateButton.dataset.bsName = response.name
+            deleteButton.dataset.bsName = response.name
+        })
+
+    })
+}
+
 const addCocktail = (data)=>{
     createCocktail(data).then((res)=>{
         if (res.ok){

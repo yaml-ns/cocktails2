@@ -1,9 +1,6 @@
-import {
-    listCocktails,
-    detailRequest
-} from "./modules/requetes.js";
-import {afficherDetailsCocktail, showToastSuccess} from "./modules/affichage.js";
-import { handleCocktailModal, handleDeleteCocktailModal } from "./modules/cocktailModals.js";
+import { listCocktails } from "./modules/requetes.js";
+import { afficherDetailsCocktail, showToastSuccess } from "./modules/affichage.js";
+import { handleCocktailDetailsModal, handleCocktailModal, handleDeleteCocktailModal } from "./modules/cocktailModals.js";
 import { login, register } from "./modules/memberModals.js";
 document.addEventListener("DOMContentLoaded", async () => {
 
@@ -35,8 +32,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     login();
     register();
     handleCocktailModal();
-    handleDeleteCocktailModal()
-    detailRequest();
+    handleDeleteCocktailModal();
+    handleCocktailDetailsModal();
 
     const conteneur = document.querySelector("#mainContent");
     await listCocktails();
