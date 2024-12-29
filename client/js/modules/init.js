@@ -30,8 +30,9 @@ const handleLogin = () => {
         if (!membre || membre.roles !== "ADMIN") window.location.href ="/"
     }
     if (membre){
+        const [nom,prenom,photo] = membre;
         if (membre.firstLogin === true){
-            showToastSuccess(`Heureux de vous voir ${membre.prenom} ${membre.nom} !`)
+            showToastSuccess(`Heureux de vous voir ${prenom} ${nom} !`)
             membre.firstLogin = false;
             localStorage.setItem("membreInfos",JSON.stringify(membre))
 
@@ -40,8 +41,8 @@ const handleLogin = () => {
         document.querySelector("#loggedIn")?.classList.remove("d-none")
         const memName = document.querySelector("#memberName");
         const memImg = document.querySelector("#memberImg");
-        if (memName) memName.textContent = `${membre.prenom} ${membre.nom}`
-        if (membre.photo) memImg.src = `/uploads/images/membre/${membre.photo}`
+        if (memName) memName.textContent = `${prenom} ${nom}`
+        if (photo) memImg.src = `/uploads/images/membre/${photo}`
     }
 }
 
@@ -49,7 +50,8 @@ const handleImagePreview = () => {
     const photo = document.getElementById('image');
     if(photo) {
         photo.addEventListener('change', function (event) {
-            const file = event.target.files[0];
+            const [files] = event.target
+            const file = files[0];
             const imgPreview = document.getElementById('imagePreview');
             if (file) {
                 const reader = new FileReader();
