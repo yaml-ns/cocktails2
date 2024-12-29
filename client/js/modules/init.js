@@ -30,8 +30,8 @@ const handleLogin = () => {
         if (!membre || membre.roles !== "ADMIN") window.location.href ="/"
     }
     if (membre){
-        const [nom,prenom,photo] = membre;
-        if (membre.firstLogin === true){
+        const {nom, prenom, photo,firstLogin} = membre;
+        if (firstLogin === true){
             showToastSuccess(`Heureux de vous voir ${prenom} ${nom} !`)
             membre.firstLogin = false;
             localStorage.setItem("membreInfos",JSON.stringify(membre))
