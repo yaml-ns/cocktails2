@@ -87,10 +87,10 @@ export const handleDeleteCocktailModal = ()=>{
                 const filters = Object.fromEntries(formData.entries());
 
                 showToastSuccess("Cocktail supprimé avec succès")
-                listCocktails(currentPage, filters, last ).then(() => {
-                      const modalInstance  = bootstrap.Modal.getOrCreateInstance(cocktailDeleteModal)
+                listCocktails(currentPage, filters, last )
+                const modalInstance  = bootstrap.Modal.getOrCreateInstance(cocktailDeleteModal)
                       modalInstance.hide();
-                });
+
           })
             })
 
@@ -125,10 +125,9 @@ const addCocktail = (data)=>{
     createCocktailRequest(data).then((res)=>{
         if (res.ok){
             showToastSuccess("Cocktail créé avec succès")
-            listCocktails(1,null,true).then(() => {
-                const modalInstance  = bootstrap.Modal.getOrCreateInstance(cocktailModal)
-                modalInstance.hide();
-            });
+            listCocktails(1,null,true)
+            const modalInstance  = bootstrap.Modal.getOrCreateInstance(cocktailModal)
+            modalInstance.hide();
         }else{
             displayErrors(erreurs,res.errors)
         }
@@ -143,11 +142,10 @@ const update = (data,id)=>{
     updateCocktailRequest(id, data)
               .then((res) => {
                 if (res.ok) {
-                  showToastSuccess("Cocktail mis à jour avec succès !")
-                  listCocktails(currentPage).then(() => {
+                    showToastSuccess("Cocktail mis à jour avec succès !")
+                    listCocktails(currentPage)
                     const modalInstance = bootstrap.Modal.getOrCreateInstance(cocktailModal)
                     modalInstance.hide();
-                  });
                 } else {
                   displayErrors(erreurs, res.errors)
                 }
