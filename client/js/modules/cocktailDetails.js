@@ -1,4 +1,4 @@
-import {afficherDetailsCocktail} from "./affichage.js";
+import {showCocktailDetails, showToastError} from "./affichage.js";
 
 export const displayCocktailDetails = () => {
     const conteneur = document.querySelector("#mainContent");
@@ -10,12 +10,12 @@ export const displayCocktailDetails = () => {
             const response = await fetch(`/cocktails/${card.dataset.ref}`);
             if (response.ok) {
                 const data = await response.json();
-                conteneur.innerHTML = afficherDetailsCocktail(data);
+                conteneur.innerHTML = showCocktailDetails(data);
             } else {
-                console.error("Erreur lors de la récupération des données");
+                showToastError("Erreur lors de la récupération des données")
             }
         } catch (error) {
-            console.error("Erreur réseau :", error);
+            showToastError("Erreur lors de la récupération des données")
         }
     });
 }

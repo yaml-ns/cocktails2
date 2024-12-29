@@ -134,31 +134,59 @@ const afficherListeCocktailsCardsAdmin = (cocktails) => {
  
 
 
-const  afficherDetailsCocktail = (cocktail)=>{
+const  showCocktailDetails = (cocktail)=>{
     let ingredients = "";
     for (let ingredient of cocktail.ingredients){
-        ingredients += `<li class="ingredient">${ingredient}</li>`
+        if (ingredient.ingredient){
+            const amount = ingredient.amount?`(${ingredient.amount}${ingredient.unit||""})`:"";
+            const label = ingredient.label || ingredient.special ?`  ${ingredient.label || ""} ${ingredient.special || ""}`:"";
+            ingredients += `<li class="ingredient"> <span class="ingredient-name"> <i class="bi bi-record-circle"></i> <b>${ingredient.ingredient}</b> ${ amount }</span>${label} </li>`
+        }
     }
-
+    let colors = "";
+    for (let color of cocktail.colors.split(",")){
+        colors += `<span class="cocktail-color" style="background-color: ${color}"></span>`
+    }
     return `
     <div class="container">
-        <div class="row p-3">
-        <div class="col d-flex flex-column justify-content-between p-5 detail-text">
-            <h1 class="detail-title">${cocktail.name} <span class="badge bg-warning-subtle text-info">${cocktail.price} $</span> </h1>
-            <div>
-                <h2>Les ingrédients</h2>
-                <ul class="ingredients">
-                    ${ingredients}
-                </ul>        
+        <div class="row p-3 justify-content-between">
+            <div class="col-7 d-flex flex-column justify-content-between p-5 detail-text">
+                <h1 class="detail-title">${cocktail.name} <span class="badge bg-warning-subtle text-info">${cocktail.price} $</span> </h1>
+                <div>
+                    <h2>Les ingrédients</h2>
+                    <ul class="ingredients">
+                        ${ingredients}
+                    </ul>        
+                </div>
+                <div class="mt-4">
+                   <h2>Garniture</h2>
+                   <p>${cocktail.garnish || "Aucune garniture"}</p>
+                </div>
+                <div class="mt-4">
+                   <h2>Préparation</h2>
+                   <p>${cocktail.preparation}</p>
+                </div>
             </div>
-            <div class="row justify-content-center align-content-center">
-                <button class="btn btn-warning">Acheter Maintenant</button>
+            
+            <div class="col-4 d-flex flex-column justify-content-between p-0 rounded-4 overflow-hidden detail-card">
+                    <img height="450" src="${cocktail.image}" alt="${cocktail.name}">
+                    <div class="p-5">
+                        <div class="mt-2 card-line">
+                            <p class="d-flex align-items-center"><span class="me-2">Couleurs : </span> ${colors}</p>
+                        </div>
+                        <div class="mt-2 card-line">
+                            <p class="d-flex align-items-center"><span class="me-2">Catégorie : </span> ${cocktail.category}</p>
+                        </div>
+                        <div class="mt-2 card-line">
+                            <p class="d-flex align-items-center"><span class="me-2"> Verre 🍸 : </span> ${cocktail.glass}</p>
+                        </div>
+                    </div>
+                   
+                        <div class="d-flex justify-content-center align-content-stretch flex-column m-3">
+                            <button class="btn btn-warning"><b><i class="bi bi-cart3"></i> Ajouter au pagner</b></button>
+                        </div>
             </div>
         </div>
-        <div class="col">
-            <img height="450" src="${cocktail.image}" alt="${cocktail.name}">
-        </div>
-    </div>
     </div>
     `
 }
@@ -203,7 +231,7 @@ const showToastError = (message) =>{
 export {
     afficherListeCocktailsCardsAdmin,
     afficherListeCocktailsCards,
-    afficherDetailsCocktail,
+    showCocktailDetails,
     showToastSuccess,
     showToastError
 };
