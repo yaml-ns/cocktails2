@@ -1,9 +1,8 @@
 import {
-    createCocktail,
-    updateCocktail,
-    listCocktails,
-    getCocktail,
-    deleteCocktail,
+    createCocktailRequest,
+    updateCocktailRequest,
+    getCocktailRequest,
+    deleteCocktailRequest,
 } from "./requetes.js";
 
 import {
@@ -11,6 +10,7 @@ import {
     showToastError,
     showToastSuccess
 } from "./affichage.js"
+import {listCocktails} from "./cocktailList.js";
 
 const cocktailModal = document.querySelector("#cocktailModal");
 const cocktailDeleteModal = document.getElementById('cocktailDeleteModal');
@@ -30,7 +30,7 @@ export const handleCocktailModal = () => {
         }
         if (actionType === "update"){
             const cocktailID = e.relatedTarget.dataset.bsId
-            getCocktail(cocktailID).then((cocktail)=>{
+            getCocktailRequest(cocktailID).then((cocktail)=>{
                 const modalTitle = cocktailModal.querySelector('#cocktailModalTitle');
                 const processBtn = cocktailModal.querySelector('#processBtn');
                       modalTitle.textContent = `Mettre à jour le cocktail "${cocktail.name}"`;
@@ -79,7 +79,7 @@ export const handleDeleteCocktailModal = ()=>{
             const currentPage = activePage ? parseInt(activePage.innerText) : 1;
             const last = currentPage === totalPages;
 
-            deleteCocktail(cocktailId).then(()=>{
+            deleteCocktailRequest(cocktailId).then(()=>{
                 const form = document.querySelector("#filter");
                 const formData = new FormData(form);
                 const filters = Object.fromEntries(formData.entries());
@@ -106,7 +106,7 @@ export const handleCocktailDetailsModal = () => {
         const cocktailImage = detailModal.querySelector("#cocktailImage")
         const updateButton = detailModal.querySelector("#updateCocktail")
         const deleteButton = detailModal.querySelector("#deleteCocktail")
-        getCocktail(target.dataset.cocktailId).then((response)=>{
+        getCocktailRequest(target.dataset.cocktailId).then((response)=>{
             title.textContent = response.name
             cocktailImage.src = response.image
             name.textContent = response.name
@@ -120,7 +120,7 @@ export const handleCocktailDetailsModal = () => {
 }
 
 const addCocktail = (data)=>{
-    createCocktail(data).then((res)=>{
+    createCocktailRequest(data).then((res)=>{
         if (res.ok){
             showToastSuccess("Cocktail créé avec succès")
             listCocktails(1,null,true).then(() => {
@@ -138,7 +138,7 @@ const addCocktail = (data)=>{
 const update = (data,id)=>{
     const activePage = document.querySelector(".page.active")
     const currentPage = activePage ? parseInt(activePage.innerText) : 1;
-    updateCocktail(id, data)
+    updateCocktailRequest(id, data)
               .then((res) => {
                 if (res.ok) {
                   showToastSuccess("Cocktail mis à jour avec succès !")
@@ -347,3 +347,17 @@ const populateForm = (modal, cocktail) => {
         setColorListHeader()
 }
 
+document.body.addEventListener('mouseover', (e) => {
+    if (e.target.classList.value === "deleteIngredient"){
+        const el = e.target.closest(".ingredient-row");
+        el.classList.add("border-danger")
+    }
+
+});
+document.body.addEventListener('mouseout', (e) => {
+    if (e.target.classList.value === "deleteIngredient"){
+        const el = e.target.closest(".ingredient-row");
+        el.classList.remove("border-danger")
+    }
+
+});

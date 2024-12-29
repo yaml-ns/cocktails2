@@ -1,4 +1,6 @@
+import {listCocktails} from "./cocktailList.js";
 
+const currentPage = parseInt(document.querySelector(".page.active")?.innerText) || 1;
 export function afficherPage(liste, page, itemsPerPage, afficherListe) {
     const startIndex = (page - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
@@ -63,4 +65,58 @@ export function genererPagination(liste, itemsPerPage, afficherPage, afficherLis
         genererPagination(liste, itemsPerPage, afficherPage, afficherListe, pageCount); // Met à jour la pagination
     });
     pagination.appendChild(lastButton);
+}
+
+export const paginate = (page,filtres)=> {
+    const pagination = document.getElementById("pagination");
+    pagination.innerHTML = "";
+    const maxButtons = 5;
+
+    const prevButton = document.createElement("button");
+    prevButton.className = `btn btn-outline-primary me-1 ${parseInt(page.page) === 1 ? "disabled" : ""}`;
+    prevButton.innerHTML = `<i class="bi bi-chevron-double-left"></i>`;
+    prevButton.addEventListener("click", async (e) => {
+        e.preventDefault();
+        if (page.hasPreviousPage){
+            await listCocktails(parseInt(page.page) - 1,filtres)
+        }
+    });
+    pagination.appendChild(prevButton);
+
+    let startPage = Math.max(currentPage - Math.floor(maxButtons / 2), 1);
+    let endPage = Math.min(startPage + maxButtons - 1, page.totalPages);
+
+    if (endPage - startPage + 1 < maxButtons) {
+        startPage = Math.max(endPage - maxButtons + 1, 1);
+    }
+
+    for (let i = startPage; i <= parseInt(page.totalPages); i++) {
+        const pageButton = document.createElement("button");
+        pageButton.className = `btn btn-outline-primary me-1 page ${i === parseInt(page.page) ? "active disabled" : ""}`;
+        pageButton.innerHTML = `${i}`;
+        pageButton.addEventListener("click", async (e) => {
+            e.preventDefault();
+            await listCocktails(i,filtres)
+        });
+        pagination.appendChild(pageButton);
+    }
+
+
+    if (endPage < page.totalPages) {
+        const ellipsis = document.createElement('span');
+        ellipsis.textContent = '...';
+        ellipsis.classList.add('me-2');
+        pagination.appendChild(ellipsis);
+    }
+
+    const nextButton = document.createElement("button");
+    nextButton.className = `btn btn-outline-primary me-1 ${parseInt(page.page) === parseInt(page.totalPages) ? "disabled" : ""}`;
+    nextButton.innerHTML = `<i class="bi bi-chevron-double-right"></i>`;
+    nextButton.addEventListener("click", async (e) => {
+        e.preventDefault();
+        if (page.hasNextPage){
+            await listCocktails(parseInt(page.page) + 1,filtres)
+        }
+    });
+    pagination.appendChild(nextButton);
 }
