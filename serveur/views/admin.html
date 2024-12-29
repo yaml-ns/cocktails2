@@ -228,28 +228,55 @@
 
 <!-- Debut Modal Details cocktail -->
 <div class="modal fade" id="detailsCocktailModal" tabindex="-1" aria-labelledby="cocktailModalLabel">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title"><i class="bi bi-cup-straw"></i> Détail du cocktail  <span id="cocktailDetailModalTitle"></span></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
                 </div>
                 <div class="modal-body">
-                <div class="row">
-                    <div class="col-4">
-                        <div style="height: 220px;width: 220px; overflow: clip">
-                            <img id="cocktailImage" src="" height="220" alt="image du cocktail">
+                    <div class="row p-3 justify-content-between">
+                        <div class="col-7 d-flex flex-column p-5 detail-text rounded-1 border-secondary-subtle">
+
+                            <div class="mt-2 card-line">
+                                <p class="d-flex align-items-center mb-1"><span class="me-2">Nom : </span><span id="detail-name"></span></p>
+                            </div>
+                            <div class="mt-2 card-line">
+                                <p class="d-flex align-items-center mb-1"><span class="me-2">Prix : </span> <span id="detail-price"></span></p>
+                            </div>
+                            <div class="mt-2 card-line">
+                                <p class="d-flex align-items-center mb-1"><span class="me-2">Couleurs : </span><span id="detail-colors"></span></p>
+                            </div>
+                            <div class="mt-2 card-line">
+                                <p class="d-flex align-items-center mb-1"><span class="me-2">Catégorie : </span> <span id="detail-category"></span></p>
+                            </div>
+                            <div class="mt-2 card-line">
+                                <p class="d-flex align-items-center mb-1"><span class="me-2">Verre 🍸 : </span> <span id="detail-glass"></span> </p>
+                            </div>
+                            <div class="mt-2 card-line">
+                                <p class="d-flex align-items-center mb-1"><span class="me-2">Garniture : </span> <span id="detail-garnish"></span> </p>
+                            </div>
+                            <div>
+                                <h6>Les ingrédients</h6>
+                                <ul id="detail-ingredients" class="ingredients">
+                                    ${ingredients}
+                                </ul>
+                            </div>
+                            <div class="mt-2">
+                                <h6>Préparation</h6>
+                                <p id="detail-preparation"></p>
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <img style="max-width: 100%;" id="detail-image" src="" alt="" class="detail-card rounded-4 overflow-hidden shadow" >
                         </div>
                     </div>
-                    <div class="col-8">
-                        <h2 id="cocktailDetailsName"></h2>
-                    </div>
-                </div>
                 </div>
                 <div class="modal-footer">
                     <button id="updateCocktail" class="btn btn-primary btn-modifier"
                             data-bs-toggle="modal"
-                            data-bs-target="#updateCocktailModal"
+                            data-bs-target="#cocktailModal"
                             data-bs-type="update"
                             data-bs-id=""
                             data-bs-name=""

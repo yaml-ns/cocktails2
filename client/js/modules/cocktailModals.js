@@ -103,15 +103,45 @@ export const handleCocktailDetailsModal = () => {
     if (!detailModal) return;
     detailModal.addEventListener("show.bs.modal",(e)=>{
         const target = e.relatedTarget;
+        const name = detailModal.querySelector("#detail-name")
         const title = detailModal.querySelector("#cocktailDetailModalTitle")
-        const name = detailModal.querySelector("#cocktailDetailsName")
-        const cocktailImage = detailModal.querySelector("#cocktailImage")
+        const glass = detailModal.querySelector("#detail-glass")
+        const price = detailModal.querySelector("#detail-price")
+        const colorsList = detailModal.querySelector("#detail-colors")
+        const garnish = detailModal.querySelector("#detail-garnish")
+        const category = detailModal.querySelector("#detail-category")
+        const preparation = detailModal.querySelector("#detail-preparation")
+        const ingredientsList = detailModal.querySelector("#detail-ingredients")
+        const cocktailImage = detailModal.querySelector("#detail-image")
         const updateButton = detailModal.querySelector("#updateCocktail")
         const deleteButton = detailModal.querySelector("#deleteCocktail")
+
         getCocktailRequest(target.dataset.cocktailId).then((response)=>{
             title.textContent = response.name
-            cocktailImage.src = response.image
             name.textContent = response.name
+            cocktailImage.src = response.image
+            glass.textContent = response.glass
+            price.textContent = response.price + " $"
+            garnish.textContent = response.garnish
+            category.textContent = response.category
+            preparation.textContent = response.preparation
+
+            let ingredients = "";
+            for (let ingredient of response.ingredients){
+                if (ingredient.ingredient){
+                    const amount = ingredient.amount?`(${ingredient.amount}${ingredient.unit||""})`:"";
+                    const label = ingredient.label || ingredient.special ?`  ${ingredient.label || ""} ${ingredient.special || ""}`:"";
+                    ingredients += `<li class=""> <span class=""> <i class="bi bi-check2"></i> <b>${ingredient.ingredient}</b> ${ amount }</span>${label} </li>`
+                }
+            }
+            let colors = "";
+            for (let color of response.colors.split(",")){
+                colors += `<span class="cocktail-color" style="background-color: ${color}"></span>`
+            }
+
+            colorsList.innerHTML = colors
+            ingredientsList.innerHTML = ingredients
+
             updateButton.dataset.bsId = response.id
             deleteButton.dataset.bsId = response.id
             updateButton.dataset.bsName = response.name
