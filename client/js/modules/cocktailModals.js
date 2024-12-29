@@ -27,6 +27,8 @@ export const handleCocktailModal = () => {
         if (!form) return;
         if (actionType === "new"){
             actionToPerform = addCocktail
+            setColorListHeader()
+            setIngredientListHeader()
         }
         if (actionType === "update"){
             const cocktailID = e.relatedTarget.dataset.bsId
