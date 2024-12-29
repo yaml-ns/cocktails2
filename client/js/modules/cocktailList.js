@@ -14,7 +14,7 @@ export const listCocktails = (page=1, filtres, last= false) => {
     const queryParams = new URLSearchParams({ page, ...filtres, perPage, last });
     const url = `${COCKTAIL_URL}?${queryParams.toString()}`;
     try {
-        getCocktails(url).then((response)=>{
+        return getCocktails(url).then((response)=>{
             totalPages = response.pagination.totalPages;
             currentPage = response.pagination.page;
             isAdmin ? afficherListeCocktailsCardsAdmin(response.result)
