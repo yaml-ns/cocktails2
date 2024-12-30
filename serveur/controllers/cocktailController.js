@@ -30,7 +30,6 @@ export const getCocktails = async (req,res)=>{
 
 export const createCocktail = async (req,res)=>{
     const cocktail = req.body;
-
     try {
         const cocktail_existe = await getByName(cocktail.name)
         if (cocktail_existe){

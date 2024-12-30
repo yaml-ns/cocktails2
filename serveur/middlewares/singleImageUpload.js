@@ -3,7 +3,6 @@ import path from 'path';
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-
         cb(null, `client/uploads/images/${req.uploadParams.type}`);
     },
     filename: function (req, file, cb) {
@@ -24,7 +23,7 @@ const fileFilter = (req, file, cb) => {
 };
 
 
-const upload = multer({
+export const upload = multer({
     storage: storage,
     fileFilter: fileFilter,
     limits: {
@@ -32,4 +31,3 @@ const upload = multer({
     }
 });
 
-export default upload;
