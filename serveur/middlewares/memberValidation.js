@@ -1,4 +1,5 @@
 import { body,validationResult } from "express-validator";
+import fs from "node:fs";
 
 export const validerInscription = [
     body('firstname')
@@ -27,11 +28,13 @@ export const validerInscription = [
             }
             return true;
         }),
-    (req, res, next) => {
+    async (req, res, next) => {
         const errors = validationResult(req);
-        console.log(errors)
         if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
+            if (fs.existsSync(req.uploadInfo?.filename)) {
+                await fs.promises.unlink(req.uploadInfo.filename);
+            }
+            return res.status(400).json({errors: errors.array()});
         }
         next();
     }
