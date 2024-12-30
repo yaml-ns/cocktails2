@@ -1,7 +1,7 @@
 import connexion from "../../services/connexion.js";
 
 export const login = async (email)=>{
-    return connexion.query(`SELECT m.id, m.nom, m.prenom, m.adresse, m.sexe, m.photo, c.email,c.motDePasse, c.roles 
+    return connexion.query(`SELECT m.id, m.nom, m.prenom, m.adresse, m.sexe, m.photo, c.email,c.password, c.roles 
                                 FROM connexion c
                                 LEFT JOIN membres m 
                                 ON c.id_membre = m.id
@@ -27,7 +27,7 @@ export const create = async (membre)=>{
         const id = rows.insertId;
             const [con] = await db.query(`
                             INSERT INTO connexion 
-                            (id_membre,email,motDePasse,roles)
+                            (id_membre,email,password,roles)
                             VALUES(?,?,?,?)`,
                             [id, membre.email, membre.password, membre.roles]
             );

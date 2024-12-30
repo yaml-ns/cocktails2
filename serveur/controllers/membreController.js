@@ -52,9 +52,9 @@ export const loginMember = async (req, res) => {
         const [rows] = await login(req.body.email)
         if (rows.length > 0){
             const membre = rows[0];
-            const match = await bcrypt.compare(req.body.password,membre.motDePasse)
+            const match = await bcrypt.compare(req.body.password,membre.password)
             if (match){
-                delete membre.motDePasse
+                delete membre.password
                 res.json({
                     ok: true,
                     statusCode: 200,
