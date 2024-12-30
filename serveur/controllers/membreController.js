@@ -54,6 +54,7 @@ export const loginMember = async (req, res) => {
             const membre = rows[0];
             const match = await bcrypt.compare(req.body.password,membre.motDePasse)
             if (match){
+                delete membre.motDePasse
                 res.json({
                     ok: true,
                     statusCode: 200,
