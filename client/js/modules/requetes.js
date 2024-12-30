@@ -49,7 +49,7 @@ export const loginRequest = async (data) => {
 }
 
 export const registerRequest = async (data)=>{
-  const response = await fetch(`/${ MEMBER_URL }/register`, {
+  const response = await fetch(`${ MEMBER_URL }/register`, {
     method: 'POST',
     body: data,
   });

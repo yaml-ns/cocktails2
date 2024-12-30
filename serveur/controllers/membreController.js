@@ -1,12 +1,16 @@
 import {checkMember, create, login} from "../models/membreModel.js";
+import bcrypt from "bcrypt";
 export const register = async (req,res) => {
     try {
         const member = req.body;
         const memberExists = await checkMember(req.body.email)
         if (!memberExists){
+
             member.roles ="USER"
             member.image = req.file ? req.file.filename: null;
+            member.password = await bcrypt.hash(member.password, 10);
             const created = await create(member)
+
             if (created){
                 res.statusCode = 201;
                 res.json({
@@ -45,14 +49,26 @@ export const register = async (req,res) => {
 }
 export const loginMember = async (req, res) => {
     try {
-        const [rows] = await login(req.body.email,req.body.password)
+        const [rows] = await login(req.body.email)
         if (rows.length > 0){
             const membre = rows[0];
-            res.json({
-                ok: true,
-                statusCode: 200,
-                membre: membre
-            })
+            const match = await bcrypt.compare(req.body.password,membre.motDePasse)
+            if (match){
+                res.json({
+                    ok: true,
+                    statusCode: 200,
+                    membre: membre
+                })
+            }else{
+                res.statusCode = 403
+                res.json({
+                    ok: false,
+                    statusCode:403,
+                    errors: [
+                        { msg:"Email ou mot de passe invalide. Veuillez réessayer !"}
+                    ]
+                });
+            }
         }else {
             res.statusCode = 403
             res.json({
