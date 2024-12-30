@@ -150,9 +150,8 @@ export const create = async (cocktail)=>{
            );
            const query = `INSERT INTO ingredients (cocktail_id,unit,amount,ingredient,label,special) VALUES ?`
            await connexion.query(query,[values]);
-           return result.affectedRows
        }
-
+        return 1
     }
     return 0;
 

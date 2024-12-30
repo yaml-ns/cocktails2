@@ -52,7 +52,6 @@ export const createCocktail = async (req,res)=>{
                     message:"Cocktail crée avec succès"
                 })
             }else{
-                console.log(e);
                 res.statusCode = 500;
                 res.json({ok:false, errors:[{msg:"une erreur s'est produite"}]});
             }

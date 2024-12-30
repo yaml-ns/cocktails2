@@ -16,51 +16,57 @@ const cocktailModal = document.querySelector("#cocktailModal");
 const cocktailDeleteModal = document.getElementById('cocktailDeleteModal');
 const erreurs = document.querySelector("#cocktailErrors")
 export const handleCocktailModal = () => {
-
-    const form = document.querySelector("#cocktailForm")
-    if (!cocktailModal) return;
-    handleButtonsEvents()
-    cocktailModal.addEventListener("show.bs.modal",(e)=>{
-        const actionType = e.relatedTarget.dataset.bsType
+        if (!cocktailModal) return;
         let actionToPerform = null;
+        const form = document.querySelector("#cocktailForm");
+        handleButtonsEvents();
 
-        if (!form) return;
-        if (actionType === "new"){
-            actionToPerform = addCocktail
-            setColorListHeader()
-            setIngredientListHeader()
-        }
-        if (actionType === "update"){
-            const cocktailID = e.relatedTarget.dataset.bsId
-            getCocktailRequest(cocktailID).then((cocktail)=>{
-                const modalTitle = cocktailModal.querySelector('#cocktailModalTitle');
-                const processBtn = cocktailModal.querySelector('#processBtn');
-                      modalTitle.textContent = `Mettre à jour le cocktail "${cocktail.name}"`;
-                      processBtn.textContent = `Mettre à jour`;
-                populateForm(cocktailModal,cocktail)
-                actionToPerform = (data)=> update(data,cocktailID)
-            }).catch(()=>{
-                showToastError("Impossible de récupérer les données. Réessayez SVP!")
-            })
-        }
-        form.addEventListener("submit",(e)=>{
-            e.preventDefault()
+        cocktailModal.addEventListener("show.bs.modal", (e) => {
+            const actionType = e.relatedTarget.dataset.bsType;
+
+            if (!form) return;
+            if (actionType === "new") {
+                actionToPerform = addCocktail;
+                setColorListHeader();
+                setIngredientListHeader();
+                resetForm();
+            }
+
+            if (actionType === "update") {
+                const cocktailID = e.relatedTarget.dataset.bsId;
+                getCocktailRequest(cocktailID).then((cocktail) => {
+                    const modalTitle = cocktailModal.querySelector('#cocktailModalTitle');
+                    const processBtn = cocktailModal.querySelector('#processBtn');
+                    modalTitle.textContent = `Mettre à jour le cocktail "${cocktail.name}"`;
+                    processBtn.textContent = `Mettre à jour`;
+                    populateForm(cocktailModal, cocktail);
+                    actionToPerform = (data) => update(data, cocktailID);
+                }).catch(() => {
+                    showToastError("Impossible de récupérer les données. Réessayez SVP!");
+                });
+            }
+        });
+
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
             if (actionToPerform) actionToPerform(new FormData(form));
-        })
-    })
+        });
 
-    cocktailModal.addEventListener('hidden.bs.modal', ()=> {
-    form.reset()
-    cocktailModal.querySelector("#imagePreview").setAttribute("src","/images/bg/non_disponible.png")
-    cocktailModal.querySelector("#cocktailModalTitle").textContent = "Ajouter un Cocktail";
-    cocktailModal.querySelector('#processBtn').value = "Enregistrer"
-    cocktailModal.querySelector("#cocktailErrors").innerHTML="";
-    cocktailModal.querySelector("#ingredientsList").innerHTML="";
-    cocktailModal.querySelector("#cocktailColors").innerHTML="";
-    cocktailModal.querySelector("#colorListHeader").classList.add("d-none");
-  })
-}
+        cocktailModal.addEventListener('hidden.bs.modal', () => {
+            resetForm();
+        });
 
+        const resetForm = () => {
+            form.reset();
+            cocktailModal.querySelector("#imagePreview").setAttribute("src", "/images/bg/non_disponible.png");
+            cocktailModal.querySelector("#cocktailModalTitle").textContent = "Ajouter un Cocktail";
+            cocktailModal.querySelector('#processBtn').textContent = "Enregistrer";
+            cocktailModal.querySelector("#cocktailErrors").innerHTML = "";
+            cocktailModal.querySelector("#ingredientsList").innerHTML = "";
+            cocktailModal.querySelector("#cocktailColors").innerHTML = "";
+            cocktailModal.querySelector("#colorListHeader").classList.add("d-none");
+        }
+    }
 export const handleDeleteCocktailModal = ()=>{
     if (!cocktailDeleteModal) return;
     cocktailDeleteModal.addEventListener("show.bs.modal",(e)=>{
@@ -161,8 +167,9 @@ const addCocktail = (data)=>{
         }else{
             displayErrors(erreurs,res.errors)
         }
-    }).catch(()=>{
-
+    }).catch((e)=>{
+        console.error('Erreur lors de la mise a jour ')
+        displayErrors(erreurs, e)
     })
 }
 
@@ -181,8 +188,8 @@ const update = (data,id)=>{
                 }
               })
               .catch((err) => {
-                console.error('Erreur lors de la mise a jour ')
-                displayErrors(erreurs, err)
+                  console.error('Erreur lors de la mise a jour ')
+                  displayErrors(erreurs, err)
               });
 }
 
