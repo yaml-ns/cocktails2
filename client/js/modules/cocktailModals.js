@@ -137,7 +137,7 @@ export const handleCocktailDetailsModal = () => {
                 if (ingredient.ingredient){
                     const amount = ingredient.amount?`(${ingredient.amount}${ingredient.unit||""})`:"";
                     const label = ingredient.label || ingredient.special ?`  ${ingredient.label || ""} ${ingredient.special || ""}`:"";
-                    ingredients += `<li class=""> <span class=""> <i class="bi bi-check2"></i> <b>${ingredient.ingredient}</b> ${ amount }</span>${label} </li>`
+                    ingredients += `<li class=""> <span class=""> <i class="bi bi-check2 text-success"></i> <b>${ingredient.ingredient}</b> ${ amount }</span>${label} </li>`
                 }
             }
             let colors = "";

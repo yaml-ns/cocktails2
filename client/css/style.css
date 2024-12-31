@@ -454,11 +454,31 @@ p.alert{
     margin-right: 10px;
 }
 .detail-card {
-    box-shadow: 5px 5px 15px rgba(31,73,1,0.4);
-}
-.detail-card:hover {
-    box-shadow: 5px 5px 15px rgba(31,73,1,0.7);
+    /*box-shadow: 5px 5px 15px rgba(31,73,1,0.4);*/
 }
 .card-line {
-    border-bottom: 1px solid rgba(87, 178, 1, 0.12);
+    border-bottom: 1px dashed #c2dff5;
+}
+
+.line-label {
+    display: inline-block;
+    min-width: 100px;
+    border-radius: 2px;
+    padding: 0 10px;
+    border-right: 1px dashed #c2dff5;
+ }
+.detail-section {
+    background-color: #d9e9f5;
+    margin-top: 25px !important;
+    border-radius: 10px;
+    padding: 5px 15px;
+}
+.references {
+    color: #818181;
+    font-size: 0.9rem;
+    font-style: italic;
+}
+.references a {
+    color: #42a5f5 !important;
+    font-size: 15px !important;
 }

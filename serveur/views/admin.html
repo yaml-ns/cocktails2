@@ -239,60 +239,67 @@
                         <div class="col-7 d-flex flex-column p-5 detail-text rounded-1 border-secondary-subtle">
 
                             <div class="mt-2 card-line">
-                                <p class="d-flex align-items-center mb-1"><span class="me-2">Nom : </span><span id="detail-name"></span></p>
+                                <p class="d-flex align-items-center mb-1"><span class="me-2 line-label">Nom  </span><span class="fst-italic" id="detail-name"></span></p>
                             </div>
                             <div class="mt-2 card-line">
-                                <p class="d-flex align-items-center mb-1"><span class="me-2">Prix : </span> <span id="detail-price"></span></p>
+                                <p class="d-flex align-items-center mb-1"><span class="me-2 line-label">Prix  </span> <span class="fst-italic" id="detail-price"></span></p>
                             </div>
                             <div class="mt-2 card-line">
-                                <p class="d-flex align-items-center mb-1"><span class="me-2">Couleurs : </span><span id="detail-colors"></span></p>
+                                <p class="d-flex align-items-center mb-1"><span class="me-2 line-label">Couleurs  </span><span class="fst-italic" id="detail-colors"></span></p>
                             </div>
                             <div class="mt-2 card-line">
-                                <p class="d-flex align-items-center mb-1"><span class="me-2">Catégorie : </span> <span id="detail-category"></span></p>
+                                <p class="d-flex align-items-center mb-1"><span class="me-2 line-label">Catégorie  </span> <span class="fst-italic" id="detail-category"></span></p>
                             </div>
                             <div class="mt-2 card-line">
-                                <p class="d-flex align-items-center mb-1"><span class="me-2">Verre 🍸 : </span> <span id="detail-glass"></span> </p>
+                                <p class="d-flex align-items-center mb-1"><span class="me-2 line-label">Verre 🍸  </span> <span class="fst-italic" id="detail-glass"></span> </p>
                             </div>
                             <div class="mt-2 card-line">
-                                <p class="d-flex align-items-center mb-1"><span class="me-2">Garniture : </span> <span id="detail-garnish"></span> </p>
+                                <p class="d-flex align-items-center mb-1"><span class="me-2 line-label">Garniture  </span> <span class="fst-italic" id="detail-garnish"></span> </p>
                             </div>
-                            <div>
+                            <div class="mt-3 detail-section">
                                 <h6>Les ingrédients</h6>
                                 <ul id="detail-ingredients" class="ingredients">
-                                    ${ingredients}
+
                                 </ul>
                             </div>
-                            <div class="mt-2">
+                            <div class="mt-2 detail-section">
                                 <h6>Préparation</h6>
                                 <p id="detail-preparation"></p>
                             </div>
                         </div>
 
-                        <div class="col-4">
-                            <img style="max-width: 100%;" id="detail-image" src="" alt="" class="detail-card rounded-4 overflow-hidden shadow" >
+                        <div class="col d-flex flex-column justify-content-between">
+                            <img style="max-width: 100%;" id="detail-image" src="" alt="" class="detail-card rounded-1 overflow-hidden " >
+                            <p class="references">
+                                <b>Réf :</b> Les informations et images de ce cocktail appartiennent au site thecocktaildb qui propose une API et base assez fournie sur les cocktails. Si vous voulez voir ou les aider, cliquez sur le lien juste après
+                                <br> <a href="https://www.thecocktaildb.com/">se rendre sur thecocktaildb</a>
+                            </p>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button id="updateCocktail" class="btn btn-primary btn-modifier"
-                            data-bs-toggle="modal"
-                            data-bs-target="#cocktailModal"
-                            data-bs-type="update"
-                            data-bs-id=""
-                            data-bs-name=""
-                    >
-                        <i class="bi bi-pencil" data-id=""></i> Mettre à jour
-                    </button>
+                <div class="modal-footer justify-content-between">
+                    <p class=""><img src="/images/logo/logo_cocktello_light_bg.png" height="35" alt="logo cocktello" class="rounded-1"> 2025 © Tous droits réservés</p>
+                    <div>
+                        <button id="updateCocktail" class="btn btn-outline-primary btn-modifier"
+                                data-bs-toggle="modal"
+                                data-bs-target="#cocktailModal"
+                                data-bs-type="update"
+                                data-bs-id=""
+                                data-bs-name=""
+                        >
+                            <i class="bi bi-pencil" data-id=""></i> Mettre à jour
+                        </button>
 
-                    <button id="deleteCocktail" class="btn btn-danger btn-supprimer"
-                            data-bs-toggle="modal"
-                            data-bs-target="#cocktailDeleteModal"
-                            data-bs-type="delete"
-                            data-bs-id=""
-                            data-bs-name=""
-                    >
-                        <i class="bi bi-trash" data-id=""></i> Supprimer
-                    </button>
+                        <button id="deleteCocktail" class="btn btn-danger btn-supprimer"
+                                data-bs-toggle="modal"
+                                data-bs-target="#cocktailDeleteModal"
+                                data-bs-type="delete"
+                                data-bs-id=""
+                                data-bs-name=""
+                        >
+                            <i class="bi bi-trash" data-id=""></i> Supprimer
+                        </button>
+                    </div>
                 </div>
         </div>
     </div>
@@ -341,7 +348,7 @@
 </div>
 
 <footer>
-    <p><img src="/images/logo/logo_cocktello_light_bg.png" height="35" alt="logo cocktello"> 2024 © Tous droits réservés</p>
+    <p><img src="/images/logo/logo_cocktello_light_bg.png" height="35" alt="logo cocktello"> 2025 © Tous droits réservés</p>
 </footer>
 
 <script>
