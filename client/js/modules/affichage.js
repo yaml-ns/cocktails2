@@ -11,8 +11,12 @@ const createFrontCard = (cocktail) => {
                     <img src="${imgUrl}" class="image-card-perso" alt="Cocktail ${cocktail.name}" height="200">
                 </div>
                 <div class="card-body d-flex flex-column">
-                    <h6 class="card-title">${cocktail.name.substring(0, 25)}</h6>
-                    <div style="min-height: 100px">${ingredients}</div>
+                    <h4 class="card-title mb-0">${cocktail.name.substring(0, 25)}</h4>
+                    <p class="mb-2 fst-italic fs-6">${cocktail.category}</p>
+                    <hr class="m-0">
+                    <p class="card-text mb-0"><span class="badge m-1 text-bg-success">🍸 ${cocktail.glass}</span></p>
+                    <hr class="m-0">
+                    <div class="mt-4" style="min-height: 100px">${ingredients}</div>
                     <div class="row">
                         <div class="col">
                             <span class="badge m-1 text-bg-info">${cocktail.price} $</span>
