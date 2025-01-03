@@ -12,16 +12,16 @@ const createFrontCard = (cocktail) => {
                 </div>
                 <div class="card-body d-flex flex-column">
                     <h4 class="card-title mb-0">${cocktail.name.substring(0, 25)}</h4>
-                    <p class="mb-2 fst-italic fs-6">${cocktail.category}</p>
+                    <p class="mb-2 fst-italic fs-6 text-secondary">${cocktail.category}</p>
                     <hr class="m-0">
-                    <p class="card-text mb-0"><span class="badge m-1 text-bg-success">🍸 ${cocktail.glass}</span></p>
+                    <p class="card-text mb-0"><span class="badge m-1 text-bg-secondary">🍸 ${cocktail.glass}</span></p>
                     <hr class="m-0">
                     <div class="mt-4" style="min-height: 100px">${ingredients}</div>
                     <div class="row">
                         <div class="col">
-                            <span class="badge m-1 text-bg-info">${cocktail.price} $</span>
+                            <span class="badge m-1 text-bg-dark">${cocktail.price} $</span>
                         </div>
-                        <div class="col">
+                        <div class="col d-flex justify-content-end align-content-stretch">
                             <a href="#" class="btn btn-dark" >Détails</a>
                         </div>
                     </div>
