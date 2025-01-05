@@ -41,10 +41,22 @@
                     <span id="memberName"></span>
 
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#"><i class="bi bi-person-lines-fill me-2 "></i> Modifier le profil</a></li>
-                        <li><a class="dropdown-item" href="#"><i class="bi bi-shield-lock me-2 "></i> Modifier le Mot de passe</a></li>
+                        <li><a class="dropdown-item"
+                               href="#"
+                               data-bs-toggle="modal"
+                               data-bs-target="#inscriptionModal"
+                               data-type="update"
+                               id="profile-link"
+                        >
+                            <i class="bi bi-person-lines-fill me-2 "></i> Modifier le profil</a></li>
+                        <li><a class="dropdown-item"
+                               href="#"
+                               data-type="change-password"
+                               id="profile-password"
+                        >
+                            <i class="bi bi-shield-lock me-2"></i> Modifier le Mot de passe</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#"><i class="bi bi-box-arrow-in-right me-2 "></i> Se déconnecter</a></li>
+                        <li><a id="logout-link" class="dropdown-item" href="#"><i class="bi bi-box-arrow-in-right me-2 "></i> Se déconnecter</a></li>
                     </ul>
                 </li>
 

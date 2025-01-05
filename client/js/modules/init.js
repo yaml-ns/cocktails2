@@ -17,20 +17,26 @@ export const initApplication = () => {
     handleDeleteCocktailModal();
     handleCocktailDetailsModal();
 }
-const handleLogin = () => {
-    const isAdmin = document.querySelector("#admin")
-    const logout = document.querySelector("#logout")
 
-    logout.addEventListener("click",()=>{
-        localStorage.removeItem("membreInfos")
-        window.location.href = "/"
-    })
+const handleLogout = () => {
+    localStorage.removeItem("membreInfos")
+    window.location.href = "/"
+}
+const handleLogin = () => {
+    const isAdminPage = document.querySelector("#admin")
+    const logout = document.querySelector("#logout")
+    const logoutLink = document.querySelector("#logout-link")
+
+    logout.addEventListener("click",handleLogout)
+    logoutLink.addEventListener("click",handleLogout)
+
     const membre = JSON.parse(localStorage.getItem("membreInfos"));
-    if (isAdmin){
+    if (isAdminPage){
         if (!membre || membre.roles !== "ADMIN") window.location.href ="/"
     }
     if (membre){
         const {nom, prenom, photo,firstLogin} = membre;
+        if (!isAdminPage && membre.roles ==="ADMIN") document.querySelector("#admin-link").classList.remove("d-none")
         if (firstLogin === true){
             showToastSuccess(`Heureux de vous voir ${prenom} ${nom} !`)
             membre.firstLogin = false;

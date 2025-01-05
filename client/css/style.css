@@ -504,3 +504,11 @@ p.alert{
     color: #42a5f5 !important;
     font-size: 15px !important;
 }
+#admin-link {
+    background-color: rgba(87, 178, 1, 0.15);
+    border: 1px solid rgba(82, 168, 1, 0.18);
+    border-radius: 5px;
+}
+#admin-link:hover {
+    background-color: rgba(87, 178, 1, 0.3);
+}
