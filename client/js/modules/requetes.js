@@ -55,4 +55,16 @@ export const registerRequest = async (data)=>{
   });
   return await response.json()
 }
+export const updateMemberRequest = async (id,data)=>{
+  const response = await fetch(`${ MEMBER_URL }/${id}`, {
+    method: 'PUT',
+    body: data,
+  });
+  return await response.json()
+}
+
+export const getMemberRequest = async (id)=>{
+  const response = await fetch(`${ MEMBER_URL }/${id}`);
+  return await response.json()
+}
 

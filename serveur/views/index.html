@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="/utilitaires/bootstrap-icons-1.8.1/bootstrap-icons.min.css">
     <link rel="stylesheet" href="/css/style.css">
     <script src="/utilitaires/jquery-3.7.1.min.js"></script>
-    <script src="/utilitaires/bootstrap-5.3.3-dist/js/bootstrap.min.js"></script>
+    <script src="/utilitaires/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script>
     <script src="/js/app.js" type="module"></script>
 
 </head>
@@ -57,11 +57,31 @@
                             <i class="bi bi-box-arrow-in-left"></i></a>
                     </li>
                 </ul>
-                <ul id="loggedIn" class="navbar-nav nav-perso-droit d-none">
-                    <li class="nav-item">
+                <ul id="loggedIn" class="navbar-nav nav-perso-droit d-none dropdown">
+                    <li class="nav-item dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <img id="memberImg" class="rounded-circle me-2" src="/images/bg/no_photo.png" alt="img" width="40">
                         <span id="memberName"></span>
+
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item"
+                                   href="#"
+                                   data-bs-toggle="modal"
+                                   data-bs-target="#inscriptionModal"
+                                   data-type="update"
+                                   id="profile-link"
+                            >
+                                <i class="bi bi-person-lines-fill me-2 "></i> Modifier le profil</a></li>
+                            <li><a class="dropdown-item"
+                                   href="#"
+                                   data-type="change-password"
+                                   id="profile-password"
+                            >
+                                <i class="bi bi-shield-lock me-2"></i> Modifier le Mot de passe</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-box-arrow-in-right me-2 "></i> Se déconnecter</a></li>
+                        </ul>
                     </li>
+
                     <li class="nav-item">
                         <a type="button"
                            class="btn btn-primary nav-link login-button"
@@ -135,7 +155,7 @@
             <div class="modal-content">
                 <form id="inscriptionForm">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="inscriptionModalLabel"><i class="bi bi-person-plus"></i> Devenir Membre</h5>
+                    <h5 class="modal-title" id="inscriptionModalLabel"><i class="bi bi-person-plus"></i> <span id="memberModalTitle">Devenir Membre</span> </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
                 </div>
                 <div class="modal-body">

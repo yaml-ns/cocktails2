@@ -46,3 +46,20 @@ export const checkMember = async (email)=>{
                                     `,[email])
     return rows.length > 0;
 }
+export const getMemberById = async (id)=>{
+    const [rows] = await connexion.query(`SELECT m.id, m.nom, m.prenom, m.adresse, m.sexe, m.photo, c.roles 
+                                FROM membres m
+                                LEFT JOIN connexion c 
+                                ON c.id_membre = m.id
+                                WHERE m.id = ?`,
+        [id])
+    return rows[0];
+}
+
+export const update = async (id,data)=>{
+    const [rows] = await connexion.query(`UPDATE membres 
+                                          SET prenom = ?, nom = ?, adresse = ?, sexe = ?, photo = ? 
+                                          WHERE id = ?
+                                    `,[ data.firstname,data.lastname,data.address,data.sex,data.image, id ])
+    return rows;
+}

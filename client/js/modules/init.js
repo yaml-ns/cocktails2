@@ -50,7 +50,7 @@ const handleImagePreview = () => {
     const photo = document.getElementById('image');
     if(photo) {
         photo.addEventListener('change', function (event) {
-            const [files] = event.target
+            const files = event.target.files
             const file = files[0];
             const imgPreview = document.getElementById('imagePreview');
             if (file) {

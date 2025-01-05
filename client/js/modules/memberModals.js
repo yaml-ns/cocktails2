@@ -1,5 +1,6 @@
-import {displayErrors, showToastSuccess} from "./affichage.js";
-import {loginRequest, registerRequest} from "./requetes.js"
+import {displayErrors, showToastError, showToastSuccess} from "./affichage.js";
+import {getMemberRequest, loginRequest, registerRequest, updateMemberRequest} from "./requetes.js"
+
 const connectionModal = document.querySelector("#connexionModal");
 export const login = ()=>{
     if (!connectionModal) return;
@@ -51,22 +52,91 @@ export const register = ()=>{
 
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
+        const buttonName = form.querySelector("#registerBtn").textContent
+        if (buttonName ==="Mettre à jour"){
+            const member = JSON.parse(localStorage.getItem("membreInfos"));
+            if (member === null){
+                bootstrap.Modal.getInstance(
+                    document.querySelector("#inscriptionModal")
+                ).hide()
+                showToastError("Impossible d'effectuer cette opération !")
+            }else{
+                const response = await updateMemberRequest(member.id, new FormData(form))
 
-        const response = await registerRequest(new FormData(form))
-        if (response.ok){
-            form.reset();
-            showToastSuccess("Votre inscription a été un succès ")
-            bootstrap.Modal.getInstance(
-                document.querySelector("#inscriptionModal")
-            ).hide()
+                if (response.ok){
+                    const membre = response.membre
+                    membre.firstLogin = false
+                    localStorage.setItem("membreInfos",JSON.stringify(membre))
+                    form.reset();
+                    const memName = document.querySelector("#memberName");
+                    const memImg = document.querySelector("#memberImg");
+                    if (memName) memName.textContent = `${membre.prenom} ${membre.nom}`
+                    if (membre.photo) memImg.src = `/uploads/images/membre/${membre.photo}`
+                    showToastSuccess("Votre profil à été mis à jour avec succès")
+                    bootstrap.Modal.getInstance(
+                        document.querySelector("#inscriptionModal")
+                    ).hide()
+
+                }else{
+                    displayErrors(erreurs,response.errors)
+                }
+            }
         }else{
-            displayErrors(erreurs,response.errors)
+            const response = await registerRequest(new FormData(form))
+            if (response.ok){
+                form.reset();
+                showToastSuccess("Votre inscription a été un succès ")
+                bootstrap.Modal.getInstance(
+                    document.querySelector("#inscriptionModal")
+                ).hide()
+            }else{
+                displayErrors(erreurs,response.errors)
+            }
         }
 
     })
 
     const registerModal = document.querySelector("#inscriptionModal")
     if (!registerModal) return;
+
+    registerModal.addEventListener("show.bs.modal",(e)=>{
+        const button = e.relatedTarget;
+        if (button.dataset.type === "update"){
+            let loggedMember = localStorage.getItem("membreInfos");
+            if (loggedMember != null) {
+                loggedMember = JSON.parse(loggedMember);
+                const memberID = loggedMember.id;
+                registerModal.querySelector("#registerBtn").textContent = "Mettre à jour"
+                registerModal.querySelector("#memberModalTitle").textContent = "Mettre à jour le profil"
+                const modalBody = registerModal.querySelector(".modal-body");
+                const pw = registerModal.querySelector("#password")
+                const rpw = registerModal.querySelector("#repeat_password")
+                const email = registerModal.querySelector("#email")
+                if (pw)    modalBody.removeChild(pw.parentNode)
+                if (rpw)   modalBody.removeChild(rpw.parentNode)
+                if (email) modalBody.removeChild(email.parentNode)
+
+                getMemberRequest(memberID).then((response)=>{
+                    if (response.ok){
+                        const member = response.result
+                        document.querySelector("#firstname").value = member.prenom;
+                        document.querySelector("#lastname").value = member.nom;
+                        document.querySelector("#address").value = member.adresse;
+                        document.querySelector("#sex").value = member.sexe;
+                        document.querySelector("#imagePreview").src = member.photo ?
+                            "/uploads/images/membre/"+member.photo:
+                            "/images/bg/no_image.png";
+                    }
+                })
+            }else{
+                showToastError("Impossible d'effectuer cette opération !")
+                bootstrap.Modal.getInstance(
+                    document.querySelector("#inscriptionModal")
+                ).hide()
+            }
+
+        }
+    })
     registerModal.addEventListener("hidden.bs.modal",()=>{
         form.reset();
         document.querySelector("#imagePreview").src = "/images/bg/no_image.png"

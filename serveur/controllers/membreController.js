@@ -1,5 +1,8 @@
-import {checkMember, create, login} from "../models/membreModel.js";
+import {checkMember, create, login, getMemberById, update} from "../models/membreModel.js";
 import bcrypt from "bcrypt";
+import {fileURLToPath} from "url";
+import path from "path";
+import fs from "node:fs";
 export const register = async (req,res) => {
     try {
         const member = req.body;
@@ -92,4 +95,64 @@ export const loginMember = async (req, res) => {
         });
     }
 
+}
+
+export const updateMember = async (req,res) => {
+        try {
+            const memberID = parseInt(req.params.id)
+            const memberExists = await getMemberById(memberID)
+            const membre = req.body
+            if (memberExists){
+                if (req.file){
+                    const __filename = fileURLToPath(import.meta.url);
+                    const __dirname = path.dirname(__filename);
+                    const image_path = path.join(__dirname,"../../" ,'client/uploads/images/membre/'+memberExists.photo)
+                    if (memberExists.photo){
+                        if (fs.existsSync(image_path)) {
+                            await fs.promises.unlink(image_path);
+                        }
+                    }
+                }
+                membre.image = req.file ? req.file.filename: memberExists.photo;
+                membre.id = memberID
+                const response = await update(memberID,membre);
+                if (response.affectedRows === 1){
+
+                    res.statusCode = 200;
+                    res.json({
+                        ok:true,
+                        membre:{
+                            id: memberID,
+                            nom: membre.lastname,
+                            prenom: membre.firstname,
+                            adresse: membre.address,
+                            sexe : membre.sex,
+                            photo: membre.image,
+                            roles: memberExists.roles
+                        },
+                        message:"La mise à jour a été un succès !"})
+                }else{
+                    res.statusCode = 400
+                    res.json({ok:false,errors:"une erreur s'est produite" })
+                }
+            }else{
+                res.statusCode = 404
+                res.json({ok:false,errors:"Le membre avec l'id "+memberID+" n'existe pas !" })
+            }
+        }catch (e) {
+            console.log(e)
+            res.statusCode = 500
+            res.json({ok:false,errors:"une erreur s'est produite" })
+        }
+}
+
+export const getMember = async (req,res) => {
+  try{
+      const id = parseInt(req.params.id);
+      const member = await getMemberById(id)
+      res.json({ok: true, result: member})
+  }catch (e){
+      console.log(e)
+      res.json({ok:false,errors:[{msg:"Une erreur s'est produite !"}]})
+  }
 }

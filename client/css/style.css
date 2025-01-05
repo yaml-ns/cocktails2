@@ -6,11 +6,30 @@ body {
     background-color: #eef8ff;
     color: #151515;
 }
-.nav-bg-perso {
+.nav-bg-perso, .dropdown-menu {
     background-color: rgba(0, 0, 0, 0.95) !important;
     position: sticky;
 }
 
+.dropdown-menu {
+    background-color: rgba(0, 0, 0, 0.95) !important;
+
+}
+.dropdown-item{
+    box-sizing: border-box;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.95);
+    border-top: 1px solid rgba(0, 0, 0, 0.95);
+    font-weight: 400 !important;
+}
+.dropdown-item:focus, .dropdown-item:hover {
+    color: #f1f1f1;
+    background-color: #193f2c;
+    border-bottom: 1px solid rgba(87, 178, 1, 0.25);
+    border-top: 1px solid rgba(87, 178, 1, 0.25);
+}
+.dropdown-divider {
+    border-top: 1px solid rgb(64 255 107 / 18%);
+}
 .ingredients{
     list-style-type: none;
     margin: 0;
@@ -351,7 +370,10 @@ p.alert{
     font-weight: 500;
     border: 1px solid rgba(87, 178, 1, 0.25);
 }
-
+#loggedIn:hover{
+    background-color: #193f2c;
+    cursor: pointer;
+}
 .card-horizontal.entete {
     border: 1px solid #b2c9fe3d !important;
     background-color: #dee8ff;

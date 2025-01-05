@@ -39,6 +39,30 @@ export const validerInscription = [
         next();
     }
 ];
+export const validerProfil = [
+    body('firstname')
+        .trim()
+        .isLength({ min: 3, max: 20 })
+        .withMessage('Le prénom doit être entre 3 et 20 caractères.'),
+    body('lastname')
+        .trim()
+        .isLength({ min: 3, max: 30 })
+        .withMessage('Le nom doit être entre 3 et 30 caractères.'),
+    body('address')
+        .trim()
+        .notEmpty()
+        .withMessage("L'adresse ne doit pas être vide."),
+    async (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            if (fs.existsSync(req.uploadInfo?.filename)) {
+                await fs.promises.unlink(req.uploadInfo.filename);
+            }
+            return res.status(400).json({errors: errors.array()});
+        }
+        next();
+    }
+];
 
 export const validerLogin = [
     body('email')
