@@ -135,9 +135,6 @@ const afficherListeCocktailsCardsAdmin = (cocktails) => {
     document.getElementById("contenu").innerHTML = listeCards;
 }
 
- 
-
-
 const  showCocktailDetails = (cocktail)=>{
     let ingredients = "";
     for (let ingredient of cocktail.ingredients){
@@ -155,34 +152,40 @@ const  showCocktailDetails = (cocktail)=>{
     <div class="container">
         <div class="row p-3 justify-content-between">
             <div class="col-7 d-flex flex-column justify-content-between p-5 detail-text">
-                <h1 class="detail-title">${cocktail.name} <span class="badge bg-warning-subtle text-info">${cocktail.price} $</span> </h1>
+                <h1 class="detail-title">${cocktail.name} <span class="badge price-badge">${cocktail.price} $</span> </h1>
                 <div>
                     <h2>Les ingrédients</h2>
                     <ul class="ingredients">
                         ${ingredients}
                     </ul>        
                 </div>
-                <div class="mt-4">
+                <div class="mt-1">
                    <h2>Garniture</h2>
                    <p>${cocktail.garnish || "Aucune garniture"}</p>
                 </div>
-                <div class="mt-4">
+                <div class="mt-1">
                    <h2>Préparation</h2>
                    <p>${cocktail.preparation}</p>
+                </div>
+                <div class="mt-2">
+                   <p class="references">
+                                <b>Réf :</b> Les informations et images de ce cocktail appartiennent au site thecocktaildb qui propose une API et base assez fournie sur les cocktails. Si vous voulez voir ou les aider, cliquez sur le lien juste après
+                                <br> <a href="https://www.thecocktaildb.com/" target="_blank">se rendre sur thecocktaildb</a>
+                   </p>
                 </div>
             </div>
             
             <div class="col-4 d-flex flex-column justify-content-between p-0 rounded-4 overflow-hidden detail-card">
                     <img height="450" src="${cocktail.image}" alt="${cocktail.name}">
                     <div class="p-5">
-                        <div class="mt-2 card-line">
-                            <p class="d-flex align-items-center"><span class="me-2">Couleurs : </span> ${colors}</p>
+                        <div class="mt-1 card-line">
+                            <p class="d-flex align-items-center mb-1"><span class="me-2">Couleurs : </span> ${colors}</p>
                         </div>
-                        <div class="mt-2 card-line">
-                            <p class="d-flex align-items-center"><span class="me-2">Catégorie : </span> ${cocktail.category}</p>
+                        <div class="mt-1 card-line">
+                            <p class="d-flex align-items-center mb-1"><span class="me-2">Catégorie : </span> ${cocktail.category}</p>
                         </div>
-                        <div class="mt-2 card-line">
-                            <p class="d-flex align-items-center"><span class="me-2"> Verre 🍸 : </span> ${cocktail.glass}</p>
+                        <div class="mt-1 card-line">
+                            <p class="d-flex align-items-center mb-1"><span class="me-2"> Verre 🍸 : </span> ${cocktail.glass}</p>
                         </div>
                     </div>
                    
@@ -250,12 +253,36 @@ const handleImagePreview = (element,elementPreview) => {
     }
 }
 
+const handleListNavLink = ()=>{
+    const listNavItem = document.querySelector("#listerCocktails");
+    if (window.location.hash === "#listeCocktails") {
+        setTimeout(() => {
+            const targetElement = document.querySelector("#listeCocktails");
+            if (targetElement) {
+                targetElement.scrollIntoView({behavior: "smooth"});
+            }
+        }, 100);
+    }
+    if (listNavItem) {
+        listNavItem.addEventListener("click", (e) => {
+            e.preventDefault();
+            if (window.location.hash === "#listeCocktails") {
+                window.location.reload()
+            }else{
+                window.location.hash ="listeCocktails";
+                window.location.reload()
+            }
+
+        });
+    }
+}
 
 export {
     afficherListeCocktailsCardsAdmin,
     afficherListeCocktailsCards,
     showCocktailDetails,
     handleImagePreview,
+    handleListNavLink,
     showToastSuccess,
     showToastError
 };

@@ -476,7 +476,7 @@ p.alert{
     margin-right: 10px;
 }
 .detail-card {
-    /*box-shadow: 5px 5px 15px rgba(31,73,1,0.4);*/
+    box-shadow: 2px 2px 15px rgba(31, 73, 1, 0.4);
 }
 .card-line {
     border-bottom: 1px dashed #c2dff5;
@@ -534,4 +534,9 @@ p.alert{
 }
 #admin .membre .modal-footer {
     border-top: 1px solid #dee2e6;
+}
+.price-badge {
+    border-radius: 10px 10px 10px 0;
+    padding: 5px 15px;
+    background-color: #10717e;
 }

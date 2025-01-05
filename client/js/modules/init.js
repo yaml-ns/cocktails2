@@ -2,7 +2,7 @@ import {login, register} from "./memberModals.js";
 import {listCocktails} from "./cocktailList.js";
 import {filterCocktails} from "./filters.js";
 import {handleCocktailDetailsModal, handleCocktailModal, handleDeleteCocktailModal} from "./cocktailModals.js";
-import {showToastSuccess} from "./affichage.js";
+import {handleListNavLink, showToastSuccess} from "./affichage.js";
 import { displayCocktailDetails } from "./cocktailDetails.js";
 
 export const initApplication = () => {
@@ -11,6 +11,7 @@ export const initApplication = () => {
     handleLogin()
     listCocktails()
     filterCocktails()
+    handleListNavLink();
     handleCocktailModal();
     displayCocktailDetails()
     handleDeleteCocktailModal();
