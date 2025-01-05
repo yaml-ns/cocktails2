@@ -232,10 +232,30 @@ const showToastError = (message) =>{
     toast.show();
 }
 
+const handleImagePreview = (element,elementPreview) => {
+    if(element) {
+        element.addEventListener('change', function (event) {
+            const files = event.target.files
+            const file = files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    elementPreview.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }else{
+                elementPreview.src = "/images/bg/non_disponible.png";
+            }
+        });
+    }
+}
+
+
 export {
     afficherListeCocktailsCardsAdmin,
     afficherListeCocktailsCards,
     showCocktailDetails,
+    handleImagePreview,
     showToastSuccess,
     showToastError
 };

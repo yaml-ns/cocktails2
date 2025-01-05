@@ -6,7 +6,7 @@ import {
 } from "./requetes.js";
 
 import {
-    displayErrors,
+    displayErrors, handleImagePreview,
     showToastError,
     showToastSuccess
 } from "./affichage.js"
@@ -17,6 +17,10 @@ const cocktailDeleteModal = document.getElementById('cocktailDeleteModal');
 const erreurs = document.querySelector("#cocktailErrors")
 export const handleCocktailModal = () => {
         if (!cocktailModal) return;
+        const imagePreview = cocktailModal.querySelector("#imagePreview")
+        const image = cocktailModal.querySelector("#image")
+        handleImagePreview(image,imagePreview)
+
         let actionToPerform = null;
         const form = document.querySelector("#cocktailForm");
         handleButtonsEvents();

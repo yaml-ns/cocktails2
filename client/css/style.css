@@ -512,3 +512,26 @@ p.alert{
 #admin-link:hover {
     background-color: rgba(87, 178, 1, 0.3);
 }
+#admin .membre .modal-content {
+    color: #1e1e1e !important;
+    border: 1px solid #8a8a8a;
+}
+
+#admin .membre .modal-content input, #admin .membre .modal-content select {
+    color: #0a1610;
+    font-weight: 600;
+    border: 1px solid #dee2e6;
+    outline: none !important;
+}
+#admin .membre .modal-header {
+    border-bottom: 1px solid #dee2e6;
+}
+
+#admin #inscriptionModal .image-container {
+    padding: 15px 0;
+    border: 1px solid #dee2e6;
+    margin: 0;
+}
+#admin .membre .modal-footer {
+    border-top: 1px solid #dee2e6;
+}

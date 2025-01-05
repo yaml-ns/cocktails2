@@ -1,4 +1,4 @@
-import {displayErrors, showToastError, showToastSuccess} from "./affichage.js";
+import {displayErrors, handleImagePreview, showToastError, showToastSuccess} from "./affichage.js";
 import {getMemberRequest, loginRequest, registerRequest, updateMemberRequest} from "./requetes.js"
 
 const connectionModal = document.querySelector("#connexionModal");
@@ -100,6 +100,13 @@ export const register = ()=>{
     if (!registerModal) return;
 
     registerModal.addEventListener("show.bs.modal",(e)=>{
+        const imagePreview = registerModal.querySelector("#imagePreview") ||
+                                     registerModal.querySelector("#memberImagePreview")
+        const image = registerModal.querySelector("#image") ||
+                              registerModal.querySelector("#memberImage")
+
+        handleImagePreview(image,imagePreview)
+
         const button = e.relatedTarget;
         if (button.dataset.type === "update"){
             let loggedMember = localStorage.getItem("membreInfos");
@@ -119,11 +126,12 @@ export const register = ()=>{
                 getMemberRequest(memberID).then((response)=>{
                     if (response.ok){
                         const member = response.result
+
                         document.querySelector("#firstname").value = member.prenom;
                         document.querySelector("#lastname").value = member.nom;
                         document.querySelector("#address").value = member.adresse;
                         document.querySelector("#sex").value = member.sexe;
-                        document.querySelector("#imagePreview").src = member.photo ?
+                        imagePreview.src = member.photo ?
                             "/uploads/images/membre/"+member.photo:
                             "/images/bg/no_image.png";
                     }

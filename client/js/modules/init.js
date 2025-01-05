@@ -11,7 +11,6 @@ export const initApplication = () => {
     handleLogin()
     listCocktails()
     filterCocktails()
-    handleImagePreview()
     handleCocktailModal();
     displayCocktailDetails()
     handleDeleteCocktailModal();
@@ -52,22 +51,3 @@ const handleLogin = () => {
     }
 }
 
-const handleImagePreview = () => {
-    const photo = document.getElementById('image');
-    if(photo) {
-        photo.addEventListener('change', function (event) {
-            const files = event.target.files
-            const file = files[0];
-            const imgPreview = document.getElementById('imagePreview');
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    imgPreview.src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }else{
-                imgPreview.src = "/images/bg/non_disponible.png";
-            }
-        });
-    }
-}
