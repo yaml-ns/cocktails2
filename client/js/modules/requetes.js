@@ -62,6 +62,16 @@ export const updateMemberRequest = async (id,data)=>{
   });
   return await response.json()
 }
+export const resetPasswordRequest = async (id,data)=>{
+  const response = await fetch(`${ MEMBER_URL }/reset/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: data,
+  });
+  return await response.json()
+}
 
 export const getMemberRequest = async (id)=>{
   const response = await fetch(`${ MEMBER_URL }/${id}`);

@@ -9,6 +9,16 @@ export const login = async (email)=>{
                             [email]
     );
 }
+export const checkMember = async (id)=>{
+    const [rows] = await connexion.query(`SELECT m.id,c.password
+                                FROM connexion c
+                                LEFT JOIN membres m 
+                                ON c.id_membre = m.id
+                                WHERE m.id = ?`,
+                            [id]
+    );
+    return rows[0]
+}
 
 export const create = async (membre)=>{
     const db = await connexion.getConnection();
@@ -41,7 +51,7 @@ export const create = async (membre)=>{
         return false
     }
 }
-export const checkMember = async (email)=>{
+export const checkMemberByMail = async (email)=>{
     const [rows] = await connexion.query(`SELECT email FROM connexion WHERE email = ?
                                     `,[email])
     return rows.length > 0;
@@ -61,5 +71,12 @@ export const update = async (id,data)=>{
                                           SET prenom = ?, nom = ?, adresse = ?, sexe = ?, photo = ? 
                                           WHERE id = ?
                                     `,[ data.firstname,data.lastname,data.address,data.sex,data.image, id ])
+    return rows;
+}
+export const updatePassword = async (id,newPassword)=>{
+    const [rows] = await connexion.query(`UPDATE connexion 
+                                          SET password = ? 
+                                          WHERE id_membre = ?
+                                    `,[ newPassword, id ])
     return rows;
 }

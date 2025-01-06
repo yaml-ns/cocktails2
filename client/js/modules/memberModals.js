@@ -1,5 +1,5 @@
 import {displayErrors, handleImagePreview, showToastError, showToastSuccess} from "./affichage.js";
-import {getMemberRequest, loginRequest, registerRequest, updateMemberRequest} from "./requetes.js"
+import {getMemberRequest, loginRequest, registerRequest, resetPasswordRequest, updateMemberRequest} from "./requetes.js"
 
 const connectionModal = document.querySelector("#connexionModal");
 export const login = ()=>{
@@ -149,4 +149,44 @@ export const register = ()=>{
         form.reset();
         document.querySelector("#imagePreview").src = "/images/bg/no_image.png"
     })
+}
+
+export const resetPassword = ()=>{
+    const form = document.querySelector("#resetPasswordForm");
+    const erreurs = document.querySelector("#erreursResetPassword");
+    if (!form) return;
+
+    form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const member = JSON.parse(localStorage.getItem("membreInfos"));
+
+        if (member === null){
+            bootstrap.Modal.getInstance(
+                document.querySelector("#inscriptionModal")
+            ).hide()
+            showToastError("Impossible d'effectuer cette opération !")
+        }else {
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+            resetPasswordRequest(member.id, JSON.stringify(data))
+                .then((response)=>{
+                    if (response.ok) {
+                        form.reset();
+                        showToastSuccess("Votre mot de passe a été changé avec succès")
+                        bootstrap.Modal.getInstance(
+                            document.querySelector("#resetPasswordModal")
+                        ).hide()
+
+                    } else {
+                        displayErrors(erreurs, response.errors)
+                    }
+                    })
+                .catch((e)=>{
+                    displayErrors(erreurs, "Une erreur s'est produite durant l'opération")
+            })
+
+        }
+    })
+
+
 }

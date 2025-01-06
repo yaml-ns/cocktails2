@@ -82,3 +82,28 @@ export const validerLogin = [
     }
 
 ];
+export const validerResetPassword = [
+    body('oldPassword')
+        .trim()
+        .notEmpty()
+        .withMessage("Veuillez saisir votre ancien mot de passe"),
+    body('newPassword')
+        .trim()
+        .notEmpty()
+        .withMessage("Veuillez saisir votre ancien mot de passe"),
+    body('newPasswordRepeat')
+        .custom((value, { req }) => {
+            if (value !== req.body.newPassword) {
+                throw new Error('Les nouveaux mots de passe ne matchent pas');
+            }
+            return true;
+        }),
+    (req, res, next) => {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+        next();
+    }
+
+];

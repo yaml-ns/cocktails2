@@ -1,6 +1,11 @@
-import {getMember, loginMember, register, updateMember} from "../controllers/membreController.js";
+import {changePassword, getMember, loginMember, register, updateMember} from "../controllers/membreController.js";
 import {Router} from "express";
-import {validerInscription, validerLogin, validerProfil} from "../middlewares/memberValidation.js";
+import {
+    validerInscription,
+    validerLogin,
+    validerProfil,
+    validerResetPassword
+} from "../middlewares/memberValidation.js";
 import {uploadParams} from "../middlewares/uploadParams.js";
 import { upload } from "../middlewares/singleImageUpload.js";
 import {uploadPath} from "../middlewares/uploadPath.js";
@@ -20,6 +25,10 @@ router.put("/:id",
     uploadPath,
     validerProfil,
     updateMember
+)
+router.put("/reset/:id",
+    validerResetPassword,
+    changePassword
 )
 router.post("/login", validerLogin, loginMember)
 

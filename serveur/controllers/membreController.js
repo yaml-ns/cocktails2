@@ -1,4 +1,12 @@
-import {checkMember, create, login, getMemberById, update} from "../models/membreModel.js";
+import {
+    checkMemberByMail,
+    create,
+    login,
+    getMemberById,
+    update,
+    checkMember,
+    updatePassword
+} from "../models/membreModel.js";
 import bcrypt from "bcrypt";
 import {fileURLToPath} from "url";
 import path from "path";
@@ -6,7 +14,7 @@ import fs from "node:fs";
 export const register = async (req,res) => {
     try {
         const member = req.body;
-        const memberExists = await checkMember(req.body.email)
+        const memberExists = await checkMemberByMail(req.body.email)
         if (!memberExists){
 
             member.roles ="USER"
@@ -155,4 +163,59 @@ export const getMember = async (req,res) => {
       console.log(e)
       res.json({ok:false,errors:[{msg:"Une erreur s'est produite !"}]})
   }
+}
+
+export const changePassword = async (req,res) => {
+    try {
+        const memberID = parseInt(req.params.id);
+        const {oldPassword, newPassword } = req.body
+
+        const memberExists = await checkMember(memberID)
+
+        if (! memberExists){
+            res.statusCode = 404;
+            return res.json(
+                {
+                    ok:false,
+                    errors:"Le membre avec l'ID "+memberID + " n'existe pas !"
+                }
+            )
+        }
+
+        const match = await bcrypt.compare(oldPassword,memberExists.password)
+        if (!match){
+            res.statusCode = 400;
+            return res.json(
+                {
+                    ok:false,
+                    errors:"Votre ancien mot de passe n'est pas correct !"
+                }
+            )
+        }
+        const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+        const result = await updatePassword(memberID, hashedNewPassword)
+
+        if (result.affectedRows !== 1){
+            res.statusCode = 400;
+            return res.json(
+                {
+                    ok:false,
+                    errors:"Votre mot de passe n'a pas été mis à jour !"
+                }
+            )
+        }
+        res.statusCode = 200
+        res.json({
+            ok:true,
+            message:"Votre mot de passe a bien été mis à jour !"
+        }
+        )
+
+    }catch (e) {
+        console.log(e)
+        res.status(500).json({
+            ok: false,
+            errors: "Une erreur s'est produite pendant la mise à jour"
+        })
+    }
 }

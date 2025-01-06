@@ -1,4 +1,4 @@
-import {login, register} from "./memberModals.js";
+import {login, register, resetPassword} from "./memberModals.js";
 import {listCocktails} from "./cocktailList.js";
 import {filterCocktails} from "./filters.js";
 import {handleCocktailDetailsModal, handleCocktailModal, handleDeleteCocktailModal} from "./cocktailModals.js";
@@ -8,12 +8,13 @@ import { displayCocktailDetails } from "./cocktailDetails.js";
 export const initApplication = () => {
     login();
     register();
-    handleLogin()
-    listCocktails()
-    filterCocktails()
+    handleLogin();
+    listCocktails();
+    resetPassword();
+    filterCocktails();
     handleListNavLink();
     handleCocktailModal();
-    displayCocktailDetails()
+    displayCocktailDetails();
     handleDeleteCocktailModal();
     handleCocktailDetailsModal();
 }
