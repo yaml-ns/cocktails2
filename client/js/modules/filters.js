@@ -1,4 +1,4 @@
-import {listCocktails} from "./cocktailList.js";
+import { listCocktails } from "./cocktailList.js";
 
 export const filterCocktails = () => {
     const form = document.getElementById("filter");

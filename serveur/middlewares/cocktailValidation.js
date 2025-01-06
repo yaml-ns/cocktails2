@@ -1,5 +1,6 @@
-import { body,validationResult } from "express-validator";
+import { body, validationResult } from "express-validator";
 import fs from "node:fs";
+
 export const validerCocktail = [
     body('name')
         .trim()
@@ -23,7 +24,7 @@ export const validerCocktail = [
             if (fs.existsSync(req.uploadInfo?.filename)) {
                 await fs.promises.unlink(req.uploadInfo.filename);
             }
-            return res.status(400).json({errors: errors.array()});
+            return res.status(400).json({ errors: errors.array() });
         }
         next();
     }

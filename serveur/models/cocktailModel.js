@@ -1,7 +1,7 @@
 import connexion from "../../services/connexion.js";
 
-export const getAll = async (filters,req)=>{
-    let { id, name, ingredient, minPrix,maxPrix, orderBy, order, page=1, perPage, last } = filters;
+export const getAll = async (filters, req) => {
+    let { id, name, ingredient, minPrix, maxPrix, orderBy, order, page = 1, perPage, last } = filters;
     const limit = parseInt(perPage)
     let offset = (page - 1) * limit;
     let query = `  FROM cocktails c 
@@ -11,69 +11,69 @@ export const getAll = async (filters,req)=>{
                           `
     const params = []
 
-    if (id){
+    if (id) {
         query += ` AND c.id = ?`;
         params.push(id)
     }
-    if (name){
+    if (name) {
         query += ` AND c.name LIKE ?`;
         params.push(`${name}%`)
     }
 
-    if (ingredient){
+    if (ingredient) {
         query += ` AND i.ingredient LIKE ?`;
         params.push(`${ingredient}%`)
     }
-    if (minPrix){
+    if (minPrix) {
         query += ` AND c.price >= ?`;
         params.push(minPrix)
     }
-    if (maxPrix){
+    if (maxPrix) {
         query += ` AND c.price <= ?`;
         params.push(maxPrix)
     }
-    if (orderBy){
+    if (orderBy) {
         query += ` Order By c.${orderBy}`;
-        if (order){
+        if (order) {
             query += ` ${order}`;
         }
     }
 
     const countQuery = "SELECT COUNT(DISTINCT c.id) AS total " + query;
-    const [result] = await connexion.query(countQuery,params)
-    const total  = result[0].total;
-    if (total === 0){
+    const [result] = await connexion.query(countQuery, params)
+    const total = result[0].total;
+    if (total === 0) {
         return {
-            result:[],
+            result: [],
             pagination: {
-                page:1,
-                totalPages:1,
+                page: 1,
+                totalPages: 1,
                 hasNextPage: false,
                 hasPreviousPage: false
             }
         }
     }
     const totalPages = Math.ceil(total / limit);
-    if (last ==="true") offset = (totalPages - 1) * limit;
+    if (last === "true") offset = (totalPages - 1) * limit;
     if (totalPages < page) page = totalPages;
     const fetchQuery = "SELECT DISTINCT c.*, CONCAT(?,'/',c.image) as image " + query + ` LIMIT ? OFFSET ? `;
     params.unshift(`${req.protocol}://${req.get("host")}/uploads/images/cocktail`)
     params.push(limit)
     params.push(offset)
-    const results =  await connexion.query(fetchQuery, params);
-    const cocktailIds = results[0].map((c)=> c.id);
-    let res =[];
-    if (cocktailIds.length > 0){
-        const [ingRows] = await connexion.query("SELECT * FROM ingredients WHERE cocktail_id IN (?) ",[cocktailIds])
-        res = results[0].map((cock)=>{
+    const results = await connexion.query(fetchQuery, params);
+    const cocktailIds = results[0].map((c) => c.id);
+    let res = [];
+    if (cocktailIds.length > 0) {
+        const [ingRows] = await connexion.query("SELECT * FROM ingredients WHERE cocktail_id IN (?) ", [cocktailIds])
+        res = results[0].map((cock) => {
             return {
                 ...cock,
-                ingredients: ingRows.filter((i)=> cock.id === i.cocktail_id)
+                ingredients: ingRows.filter((i) => cock.id === i.cocktail_id)
             }
         })
     }
     return {
-        result:res,
+        result: res,
         pagination: {
             page: last === "true" ? totalPages : page,
             totalPages,
@@ -83,53 +83,54 @@ export const getAll = async (filters,req)=>{
     }
 }
 
-export const getById = async (id,req)=>{
+export const getById = async (id, req) => {
     const [rows] = await connexion.query(`SELECT DISTINCT c.*,CONCAT(?,"/",c.image) as image FROM cocktails c 
                                           LEFT JOIN ingredients i 
                                           ON c.id = i.cocktail_id
-                                          WHERE c.id = ?`,[`${req.protocol}://${req.get("host")}/uploads/images/cocktail`,id])
-    if (rows.length > 0){
+                                          WHERE c.id = ?`, [`${req.protocol}://${req.get("host")}/uploads/images/cocktail`, id])
+    if (rows.length > 0) {
         const cocktail = rows[0];
         const [ingredients] = await connexion.query(`SELECT * FROM ingredients WHERE cocktail_id = ?`, [id])
         cocktail.ingredients = []
-        ingredients.forEach((ingredient)=>{
+        ingredients.forEach((ingredient) => {
             cocktail.ingredients.push(ingredient)
         })
         return cocktail;
     }
     return null
 }
-export const getOneCocktail = async (id)=>{
+
+export const getOneCocktail = async (id) => {
     const rows = await connexion.query(`SELECT c.*, i.ingredient FROM cocktails c 
                                           LEFT JOIN ingredients i 
                                           ON c.id = i.cocktail_id
-                                          WHERE c.id = ?`,[id])
+                                          WHERE c.id = ?`, [id])
     const cocktails = await processRows(rows[0]);
     return cocktails[0];
 }
 
-export const getByName = async (name)=>{
+export const getByName = async (name) => {
 
     const rows = await connexion.query(`SELECT c.id FROM cocktails c
-                                          WHERE c.name = ?`,[name])
+                                          WHERE c.name = ?`, [name])
     const cocktails = await processRows(rows[0]);
     return cocktails[0];
 }
 
-export const deleteById = async (id)=>{
-    const rows = await connexion.query(`DELETE FROM cocktails WHERE cocktails.id = ?`,[id])
+export const deleteById = async (id) => {
+    const rows = await connexion.query(`DELETE FROM cocktails WHERE cocktails.id = ?`, [id])
     return rows[0].affectedRows
 }
 
-export const create = async (cocktail)=>{
+export const create = async (cocktail) => {
     const [result] = await connexion.query(
-            `INSERT INTO cocktails 
+        `INSERT INTO cocktails 
             (name, price, colors, glass,category, garnish, preparation, image) 
             VALUES(?,?,?,?,?,?,?,?)`,
         [
             cocktail.name,
             cocktail.price,
-            cocktail.colors?cocktail.colors.join(","):"",
+            cocktail.colors ? cocktail.colors.join(",") : "",
             cocktail.glass,
             cocktail.category,
             cocktail.garnish,
@@ -137,30 +138,30 @@ export const create = async (cocktail)=>{
             cocktail.image
         ]
     )
-    if (result.affectedRows > 0 ){
-       if (cocktail.ingredients){
-           const values = cocktail.ingredients.map((ingredient) => [
-               result.insertId,
-               ingredient.unit,
-               ingredient.amount,
-               ingredient.ingredient,
-               ingredient.label,
-               ingredient.special
-           ]
-           );
-           const query = `INSERT INTO ingredients (cocktail_id,unit,amount,ingredient,label,special) VALUES ?`
-           await connexion.query(query,[values]);
-       }
+    if (result.affectedRows > 0) {
+        if (cocktail.ingredients) {
+            const values = cocktail.ingredients.map((ingredient) => [
+                    result.insertId,
+                    ingredient.unit,
+                    ingredient.amount,
+                    ingredient.ingredient,
+                    ingredient.label,
+                    ingredient.special
+                ]
+            );
+            const query = `INSERT INTO ingredients (cocktail_id,unit,amount,ingredient,label,special) VALUES ?`
+            await connexion.query(query, [values]);
+        }
         return 1
     }
     return 0;
 
 }
 
-export const update = async (cocktail)=>{
-    await connexion.query(`DELETE FROM ingredients WHERE cocktail_id = ?`,cocktail.id);
+export const update = async (cocktail) => {
+    await connexion.query(`DELETE FROM ingredients WHERE cocktail_id = ?`, cocktail.id);
     const [result] = await connexion.query(
-           `UPDATE cocktails
+        `UPDATE cocktails
             SET 
             name = ?, price = ?, colors = ?, glass = ?,
             category = ?, garnish = ?, preparation = ?, image = ? 
@@ -168,7 +169,7 @@ export const update = async (cocktail)=>{
         [
             cocktail.name,
             cocktail.price,
-            cocktail.colors?cocktail.colors.join(","):"",
+            cocktail.colors ? cocktail.colors.join(",") : "",
             cocktail.glass,
             cocktail.category,
             cocktail.garnish,
@@ -177,8 +178,8 @@ export const update = async (cocktail)=>{
             cocktail.id
         ]
     )
-    if (result.affectedRows > 0 ){
-        if (cocktail.ingredients){
+    if (result.affectedRows > 0) {
+        if (cocktail.ingredients) {
             const values = cocktail.ingredients.map((ingredient) => [
                     cocktail.id,
                     ingredient.unit,
@@ -189,18 +190,18 @@ export const update = async (cocktail)=>{
                 ]
             );
             const query = `INSERT INTO ingredients (cocktail_id,unit,amount,ingredient,label,special) VALUES ?`
-            await connexion.query(query,[values]);
+            await connexion.query(query, [values]);
 
         }
         return result.affectedRows
-    }else{
+    }else {
         return 0;
     }
 
 
 }
 
-const processRows = async (rows)=> {
+const processRows = async (rows) => {
 
     const cocktails = []
     let cocktail = null;

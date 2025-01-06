@@ -1,4 +1,4 @@
-import {showCocktailDetails, showToastError} from "./affichage.js";
+import { showCocktailDetails, showToastError } from "./affichage.js";
 
 export const displayCocktailDetails = () => {
     const conteneur = document.querySelector("#mainContent");
@@ -11,11 +11,12 @@ export const displayCocktailDetails = () => {
             if (response.ok) {
                 const data = await response.json();
                 conteneur.innerHTML = showCocktailDetails(data);
-            } else {
+            }else {
                 showToastError("Erreur lors de la récupération des données")
             }
-        } catch (error) {
+        }catch(error) {
             showToastError("Erreur lors de la récupération des données")
         }
     });
+
 }

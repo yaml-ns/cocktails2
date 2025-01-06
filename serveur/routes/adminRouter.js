@@ -1,7 +1,6 @@
 import { Router } from "express";
-import {index} from "../controllers/mainController.js";
+import { index } from "../controllers/mainController.js";
 
 const router = Router();
-
-router.get("/",index);
+router.get("/", index);
 export default router;

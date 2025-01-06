@@ -1,4 +1,4 @@
-import { body,validationResult } from "express-validator";
+import { body, validationResult } from "express-validator";
 import fs from "node:fs";
 
 export const validerInscription = [
@@ -34,7 +34,7 @@ export const validerInscription = [
             if (fs.existsSync(req.uploadInfo?.filename)) {
                 await fs.promises.unlink(req.uploadInfo.filename);
             }
-            return res.status(400).json({errors: errors.array()});
+            return res.status(400).json({ errors: errors.array() });
         }
         next();
     }
@@ -58,7 +58,7 @@ export const validerProfil = [
             if (fs.existsSync(req.uploadInfo?.filename)) {
                 await fs.promises.unlink(req.uploadInfo.filename);
             }
-            return res.status(400).json({errors: errors.array()});
+            return res.status(400).json({ errors: errors.array() });
         }
         next();
     }
@@ -105,5 +105,4 @@ export const validerResetPassword = [
         }
         next();
     }
-
 ];

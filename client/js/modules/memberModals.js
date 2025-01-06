@@ -1,8 +1,14 @@
-import {displayErrors, handleImagePreview, showToastError, showToastSuccess} from "./affichage.js";
-import {getMemberRequest, loginRequest, registerRequest, resetPasswordRequest, updateMemberRequest} from "./requetes.js"
+import { displayErrors, handleImagePreview, showToastError, showToastSuccess } from "./affichage.js";
+import {
+    getMemberRequest,
+    loginRequest,
+    registerRequest,
+    resetPasswordRequest,
+    updateMemberRequest
+} from "./requetes.js"
 
 const connectionModal = document.querySelector("#connexionModal");
-export const login = ()=>{
+export const login = () => {
     if (!connectionModal) return;
     const form = document.querySelector("#loginForm");
     const erreurs = document.querySelector("#erreursLogin");
@@ -16,18 +22,18 @@ export const login = ()=>{
             const response = await loginRequest(JSON.stringify(data))
             if (!response.ok) {
                 displayErrors(erreurs, response.errors)
-            } else {
+            }else {
                 form.reset();
                 const membre = response.membre;
                 membre.firstLogin = true
-                localStorage.setItem("membreInfos",JSON.stringify(membre))
-                if (membre.roles ==="ADMIN") {
+                localStorage.setItem("membreInfos", JSON.stringify(membre))
+                if (membre.roles === "ADMIN") {
                     window.location.href = "/admin"
                 }else {
                     window.location.href = "/"
                 }
             }
-        } catch (error) {
+        }catch(error) {
             console.log(error)
             erreurs.innerHTML = `<p class="alert alert-danger" role="alert">Une erreur est survenue.</p>`;
         }
@@ -37,14 +43,14 @@ export const login = ()=>{
 }
 
 
-if(connectionModal){
-    connectionModal.addEventListener("hidden.bs.modal",()=>{
-        document.querySelector("#erreursLogin").innerHTML="";
+if (connectionModal) {
+    connectionModal.addEventListener("hidden.bs.modal", () => {
+        document.querySelector("#erreursLogin").innerHTML = "";
         document.querySelector("#loginForm").reset()
     })
 }
 
-export const register = ()=>{
+export const register = () => {
     const form = document.querySelector("#inscriptionForm");
     const erreurs = document.querySelector("#erreursInscription");
 
@@ -53,20 +59,20 @@ export const register = ()=>{
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
         const buttonName = form.querySelector("#registerBtn").textContent
-        if (buttonName ==="Mettre à jour"){
+        if (buttonName === "Mettre à jour") {
             const member = JSON.parse(localStorage.getItem("membreInfos"));
-            if (member === null){
+            if (member === null) {
                 bootstrap.Modal.getInstance(
                     document.querySelector("#inscriptionModal")
                 ).hide()
                 showToastError("Impossible d'effectuer cette opération !")
-            }else{
+            }else {
                 const response = await updateMemberRequest(member.id, new FormData(form))
 
-                if (response.ok){
+                if (response.ok) {
                     const membre = response.membre
                     membre.firstLogin = false
-                    localStorage.setItem("membreInfos",JSON.stringify(membre))
+                    localStorage.setItem("membreInfos", JSON.stringify(membre))
                     form.reset();
                     const memName = document.querySelector("#memberName");
                     const memImg = document.querySelector("#memberImg");
@@ -77,20 +83,20 @@ export const register = ()=>{
                         document.querySelector("#inscriptionModal")
                     ).hide()
 
-                }else{
-                    displayErrors(erreurs,response.errors)
+                }else {
+                    displayErrors(erreurs, response.errors)
                 }
             }
-        }else{
+        }else {
             const response = await registerRequest(new FormData(form))
-            if (response.ok){
+            if (response.ok) {
                 form.reset();
                 showToastSuccess("Votre inscription a été un succès ")
                 bootstrap.Modal.getInstance(
                     document.querySelector("#inscriptionModal")
                 ).hide()
-            }else{
-                displayErrors(erreurs,response.errors)
+            }else {
+                displayErrors(erreurs, response.errors)
             }
         }
 
@@ -99,16 +105,16 @@ export const register = ()=>{
     const registerModal = document.querySelector("#inscriptionModal")
     if (!registerModal) return;
 
-    registerModal.addEventListener("show.bs.modal",(e)=>{
+    registerModal.addEventListener("show.bs.modal", (e) => {
         const imagePreview = registerModal.querySelector("#imagePreview") ||
-                                     registerModal.querySelector("#memberImagePreview")
+            registerModal.querySelector("#memberImagePreview")
         const image = registerModal.querySelector("#image") ||
-                              registerModal.querySelector("#memberImage")
+            registerModal.querySelector("#memberImage")
 
-        handleImagePreview(image,imagePreview)
+        handleImagePreview(image, imagePreview)
 
         const button = e.relatedTarget;
-        if (button.dataset.type === "update"){
+        if (button.dataset.type === "update") {
             let loggedMember = localStorage.getItem("membreInfos");
             if (loggedMember != null) {
                 loggedMember = JSON.parse(loggedMember);
@@ -119,12 +125,12 @@ export const register = ()=>{
                 const pw = registerModal.querySelector("#password")
                 const rpw = registerModal.querySelector("#repeat_password")
                 const email = registerModal.querySelector("#email")
-                if (pw)    modalBody.removeChild(pw.parentNode)
-                if (rpw)   modalBody.removeChild(rpw.parentNode)
+                if (pw) modalBody.removeChild(pw.parentNode)
+                if (rpw) modalBody.removeChild(rpw.parentNode)
                 if (email) modalBody.removeChild(email.parentNode)
 
-                getMemberRequest(memberID).then((response)=>{
-                    if (response.ok){
+                getMemberRequest(memberID).then((response) => {
+                    if (response.ok) {
                         const member = response.result
 
                         document.querySelector("#firstname").value = member.prenom;
@@ -132,11 +138,11 @@ export const register = ()=>{
                         document.querySelector("#address").value = member.adresse;
                         document.querySelector("#sex").value = member.sexe;
                         imagePreview.src = member.photo ?
-                            "/uploads/images/membre/"+member.photo:
+                            "/uploads/images/membre/" + member.photo :
                             "/images/bg/no_image.png";
                     }
                 })
-            }else{
+            }else {
                 showToastError("Impossible d'effectuer cette opération !")
                 bootstrap.Modal.getInstance(
                     document.querySelector("#inscriptionModal")
@@ -145,13 +151,13 @@ export const register = ()=>{
 
         }
     })
-    registerModal.addEventListener("hidden.bs.modal",()=>{
+    registerModal.addEventListener("hidden.bs.modal", () => {
         form.reset();
         document.querySelector("#imagePreview").src = "/images/bg/no_image.png"
     })
 }
 
-export const resetPassword = ()=>{
+export const resetPassword = () => {
     const form = document.querySelector("#resetPasswordForm");
     const erreurs = document.querySelector("#erreursResetPassword");
     if (!form) return;
@@ -160,7 +166,7 @@ export const resetPassword = ()=>{
         e.preventDefault();
         const member = JSON.parse(localStorage.getItem("membreInfos"));
 
-        if (member === null){
+        if (member === null) {
             bootstrap.Modal.getInstance(
                 document.querySelector("#inscriptionModal")
             ).hide()
@@ -169,7 +175,7 @@ export const resetPassword = ()=>{
             const formData = new FormData(form);
             const data = Object.fromEntries(formData.entries());
             resetPasswordRequest(member.id, JSON.stringify(data))
-                .then((response)=>{
+                .then((response) => {
                     if (response.ok) {
                         form.reset();
                         showToastSuccess("Votre mot de passe a été changé avec succès")
@@ -177,16 +183,14 @@ export const resetPassword = ()=>{
                             document.querySelector("#resetPasswordModal")
                         ).hide()
 
-                    } else {
+                    }else {
                         displayErrors(erreurs, response.errors)
                     }
-                    })
-                .catch((e)=>{
+                })
+                .catch((e) => {
                     displayErrors(erreurs, "Une erreur s'est produite durant l'opération")
-            })
+                })
 
         }
     })
-
-
 }

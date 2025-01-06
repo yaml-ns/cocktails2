@@ -1,6 +1,7 @@
-import {listCocktails} from "./cocktailList.js";
+import { listCocktails } from "./cocktailList.js";
 
 const currentPage = parseInt(document.querySelector(".page.active")?.innerText) || 1;
+
 export function afficherPage(liste, page, itemsPerPage, afficherListe) {
     const startIndex = (page - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
@@ -67,7 +68,7 @@ export function genererPagination(liste, itemsPerPage, afficherPage, afficherLis
     pagination.appendChild(lastButton);
 }
 
-export const paginate = (page,filtres)=> {
+export const paginate = (page, filtres) => {
     const pagination = document.getElementById("pagination");
     pagination.innerHTML = "";
     const maxButtons = 5;
@@ -77,8 +78,8 @@ export const paginate = (page,filtres)=> {
     prevButton.innerHTML = `<i class="bi bi-chevron-double-left"></i>`;
     prevButton.addEventListener("click", async (e) => {
         e.preventDefault();
-        if (page.hasPreviousPage){
-            await listCocktails(parseInt(page.page) - 1,filtres)
+        if (page.hasPreviousPage) {
+            await listCocktails(parseInt(page.page) - 1, filtres)
         }
     });
     pagination.appendChild(prevButton);
@@ -96,7 +97,7 @@ export const paginate = (page,filtres)=> {
         pageButton.innerHTML = `${i}`;
         pageButton.addEventListener("click", async (e) => {
             e.preventDefault();
-            await listCocktails(i,filtres)
+            await listCocktails(i, filtres)
         });
         pagination.appendChild(pageButton);
     }
@@ -114,8 +115,8 @@ export const paginate = (page,filtres)=> {
     nextButton.innerHTML = `<i class="bi bi-chevron-double-right"></i>`;
     nextButton.addEventListener("click", async (e) => {
         e.preventDefault();
-        if (page.hasNextPage){
-            await listCocktails(parseInt(page.page) + 1,filtres)
+        if (page.hasNextPage) {
+            await listCocktails(parseInt(page.page) + 1, filtres)
         }
     });
     pagination.appendChild(nextButton);

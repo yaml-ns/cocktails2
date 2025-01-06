@@ -1,7 +1,7 @@
 const createFrontCard = (cocktail) => {
-    const imgUrl = cocktail.image ??'/images/bg/non_disponible.png';
+    const imgUrl = cocktail.image ?? '/images/bg/non_disponible.png';
     let ingredients = "";
-    for (let ingredient of cocktail.ingredients){
+    for (let ingredient of cocktail.ingredients) {
         ingredients += `<span class="badge me-1 text-bg-dark">${ingredient.ingredient}</span>`
     }
 
@@ -30,16 +30,16 @@ const createFrontCard = (cocktail) => {
 `;
 }
 const createAdminCard = (cocktail) => {
-    const imgUrl = cocktail.image ??'/images/bg/non_disponible.png';
+    const imgUrl = cocktail.image ?? '/images/bg/non_disponible.png';
 
     let ingredients = "";
-    for (let ingredient of cocktail.ingredients){
+    for (let ingredient of cocktail.ingredients) {
         ingredients += `<span class="badge me-1 bg-dark-subtle text-dark-emphasis ">${ingredient.ingredient}</span>`
     }
     let colorsBadges = "";
-    if (cocktail.colors){
+    if (cocktail.colors) {
         const colors = cocktail.colors.split(",");
-        colors.map((color)=>{
+        colors.map((color) => {
             colorsBadges += `<span class="badge me-1" style="background-color: ${color};width: 20px"></span>`
         })
     }
@@ -98,12 +98,12 @@ const createAdminCard = (cocktail) => {
 const afficherListeCocktailsCards = (cocktails) => {
     let listeCards = "";
     for (const cocktail of cocktails) {
-      listeCards += createFrontCard(cocktail);
+        listeCards += createFrontCard(cocktail);
     }
     document.getElementById("contenu").innerHTML = listeCards;
 }
 const afficherListeCocktailsCardsAdmin = (cocktails) => {
-    let listeCards =`
+    let listeCards = `
     <div class="card-horizontal col-12 entete">
                 <div class="card-img-top card-img" style="max-height: 40px;"></div>
                 <div class="card-body row">
@@ -130,22 +130,22 @@ const afficherListeCocktailsCardsAdmin = (cocktails) => {
             </div>
     `;
     for (const cocktail of cocktails) {
-      listeCards += createAdminCard(cocktail);
+        listeCards += createAdminCard(cocktail);
     }
     document.getElementById("contenu").innerHTML = listeCards;
 }
 
-const  showCocktailDetails = (cocktail)=>{
+const showCocktailDetails = (cocktail) => {
     let ingredients = "";
-    for (let ingredient of cocktail.ingredients){
-        if (ingredient.ingredient){
-            const amount = ingredient.amount?`(${ingredient.amount}${ingredient.unit||""})`:"";
-            const label = ingredient.label || ingredient.special ?`  ${ingredient.label || ""} ${ingredient.special || ""}`:"";
-            ingredients += `<li class="ingredient"> <span class="ingredient-name"> <i class="bi bi-record-circle"></i> <b>${ingredient.ingredient}</b> ${ amount }</span>${label} </li>`
+    for (let ingredient of cocktail.ingredients) {
+        if (ingredient.ingredient) {
+            const amount = ingredient.amount ? `(${ingredient.amount}${ingredient.unit || ""})` : "";
+            const label = ingredient.label || ingredient.special ? `  ${ingredient.label || ""} ${ingredient.special || ""}` : "";
+            ingredients += `<li class="ingredient"> <span class="ingredient-name"> <i class="bi bi-record-circle"></i> <b>${ingredient.ingredient}</b> ${amount}</span>${label} </li>`
         }
     }
     let colors = "";
-    for (let color of cocktail.colors.split(",")){
+    for (let color of cocktail.colors.split(",")) {
         colors += `<span class="cocktail-color" style="background-color: ${color}"></span>`
     }
     return `
@@ -198,9 +198,9 @@ const  showCocktailDetails = (cocktail)=>{
     `
 }
 
-export const displayErrors = (elem, errors)=>{
+export const displayErrors = (elem, errors) => {
     elem.textContent = "";
-    if (Array.isArray(errors)){
+    if (Array.isArray(errors)) {
         elem.innerHTML = errors
             .map((err) => {
                 return `<p class="alert alert-danger" role="alert">
@@ -208,18 +208,18 @@ export const displayErrors = (elem, errors)=>{
                                 ${err.msg}
                                </p>`
             }).join("");
-    }else{
+    }else {
         elem.innerHTML = `<p class="alert alert-danger" role="alert">
                         <i class="bi bi-exclamation-triangle-fill text-danger"></i>
                         ${errors}
                       </p>`;
     }
 }
-const showToastSuccess = (message) =>{
+const showToastSuccess = (message) => {
     const toastEl = document.getElementById('toastSuccess');
     const toastBody = toastEl.querySelector('#toastMessage');
     toastBody.textContent = message || "Opération réussie !";
-    const toast = new bootstrap.Toast(toastEl,{
+    const toast = new bootstrap.Toast(toastEl, {
         animation: true,
         autohide: true,
         delay: 3000
@@ -227,7 +227,7 @@ const showToastSuccess = (message) =>{
     toast.show();
 }
 
-const showToastError = (message) =>{
+const showToastError = (message) => {
     const toastEl = document.getElementById('toastError');
     const toastBody = toastEl.querySelector('.toast-body');
     toastBody.textContent = message || "Une erreur est survenue.";
@@ -235,31 +235,30 @@ const showToastError = (message) =>{
     toast.show();
 }
 
-const handleImagePreview = (element,elementPreview) => {
-    if(element) {
-        element.addEventListener('change', function (event) {
+const handleImagePreview = (element, elementPreview) => {
+    if (element) {
+        element.addEventListener('change', function(event) {
             const files = event.target.files
             const file = files[0];
             if (file) {
                 const reader = new FileReader();
-                reader.onload = function (e) {
+                reader.onload = function(e) {
                     elementPreview.src = e.target.result;
                 };
                 reader.readAsDataURL(file);
-            }else{
+            }else {
                 elementPreview.src = "/images/bg/non_disponible.png";
             }
         });
     }
 }
-
-const handleListNavLink = ()=>{
+const handleListNavLink = () => {
     const listNavItem = document.querySelector("#listerCocktails");
     if (window.location.hash === "#listeCocktails") {
         setTimeout(() => {
             const targetElement = document.querySelector("#listeCocktails");
             if (targetElement) {
-                targetElement.scrollIntoView({behavior: "smooth"});
+                targetElement.scrollIntoView({ behavior: "smooth" });
             }
         }, 100);
     }
@@ -268,8 +267,8 @@ const handleListNavLink = ()=>{
             e.preventDefault();
             if (window.location.hash === "#listeCocktails") {
                 window.location.reload()
-            }else{
-                window.location.hash ="listeCocktails";
+            }else {
+                window.location.hash = "listeCocktails";
                 window.location.reload()
             }
 
