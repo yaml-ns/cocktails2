@@ -19,8 +19,10 @@ export const validerInscription = [
         .isEmail()
         .withMessage("L'adresse Email semble invalide."),
     body('password')
-        .isLength({ min: 8 })
-        .withMessage("Le mot de passe doit être d'au moins 8 caractères"),
+        .isLength({ min: 8, max: 20 })
+        .withMessage('Le mot de passe doit contenir entre 8 et 20 caractères.')
+        .matches(/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/)
+        .withMessage('Le mot de passe doit contenir au moins une majuscule, un chiffre et un caractère spécial.'),
     body('repeat_password')
         .custom((value, { req }) => {
             if (value !== req.body.password) {
@@ -88,9 +90,10 @@ export const validerResetPassword = [
         .notEmpty()
         .withMessage("Veuillez saisir votre ancien mot de passe"),
     body('newPassword')
-        .trim()
-        .notEmpty()
-        .withMessage("Veuillez saisir votre ancien mot de passe"),
+        .isLength({ min: 8, max: 20 })
+        .withMessage('Le mot de passe doit contenir entre 8 et 20 caractères.')
+        .matches(/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/)
+        .withMessage('Le mot de passe doit contenir au moins une majuscule, un chiffre et un caractère spécial.'),
     body('newPasswordRepeat')
         .custom((value, { req }) => {
             if (value !== req.body.newPassword) {
